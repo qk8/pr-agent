@@ -2,7 +2,6 @@ import difflib
 import re
 
 from packaging.version import parse as parse_version
-from typing import Optional
 from urllib.parse import quote_plus, urlparse
 
 from atlassian.bitbucket import Bitbucket
@@ -23,8 +22,8 @@ from .git_provider import GitProvider, get_git_ssl_env
 
 class BitbucketServerProvider(GitProvider):
     def __init__(
-            self, pr_url: Optional[str] = None, incremental: Optional[bool] = False,
-            bitbucket_client: Optional[Bitbucket] = None,
+            self, pr_url: str | None = None, incremental: bool | None = False,
+            bitbucket_client: Bitbucket | None = None,
     ):
         self.bitbucket_server_url = None
         self.workspace_slug = None
@@ -447,7 +446,7 @@ class BitbucketServerProvider(GitProvider):
             "Bitbucket provider does not support issue comments yet"
         )
 
-    def add_eyes_reaction(self, issue_comment_id: int, disable_eyes: bool = False) -> Optional[int]:
+    def add_eyes_reaction(self, issue_comment_id: int, disable_eyes: bool = False) -> int | None:
         return True
 
     def remove_reaction(self, issue_comment_id: int, reaction_id: int) -> bool:

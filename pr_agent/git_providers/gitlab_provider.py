@@ -1,7 +1,6 @@
 import difflib
 import re
 import urllib.parse
-from typing import Optional
 from urllib.parse import urlparse
 
 import gitlab
@@ -28,7 +27,7 @@ class DiffNotFoundError(Exception):
 
 class GitLabProvider(GitProvider):
 
-    def __init__(self, merge_request_url: Optional[str] = None, incremental: Optional[bool] = False):
+    def __init__(self, merge_request_url: str | None = None, incremental: bool | None = False):
         gitlab_url = get_settings().get("GITLAB.URL", None)
         if not gitlab_url:
             raise ValueError("GitLab URL is not set in the config file")
@@ -637,7 +636,7 @@ class GitLabProvider(GitProvider):
                 except Exception as e:
                     get_logger().exception(f"Failed to create comment in MR {self.id_mr}")
 
-    def get_relevant_diff(self, relevant_file: str, relevant_line_in_file: str) -> Optional[dict]:
+    def get_relevant_diff(self, relevant_file: str, relevant_line_in_file: str) -> dict | None:
         _changes = self.mr.changes()  # dict
         _changes['changes'] = self._expand_submodule_changes(_changes.get('changes', []))
         changes = _changes
@@ -852,7 +851,7 @@ class GitLabProvider(GitProvider):
     def get_workspace_name(self):
         return self.id_project.split('/')[0]
 
-    def add_eyes_reaction(self, issue_comment_id: int, disable_eyes: bool = False) -> Optional[int]:
+    def add_eyes_reaction(self, issue_comment_id: int, disable_eyes: bool = False) -> int | None:
         if disable_eyes:
             return None
         try:

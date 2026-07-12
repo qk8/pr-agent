@@ -1,5 +1,5 @@
 import json
-from typing import Any, Optional
+from typing import Any
 from urllib.parse import urlparse
 
 import giteapy
@@ -19,7 +19,7 @@ from pr_agent.log import get_logger
 
 
 class GiteaProvider(GitProvider):
-    def __init__(self, url: Optional[str] = None):
+    def __init__(self, url: str | None = None):
         super().__init__()
         self.logger = get_logger()
 
@@ -347,7 +347,7 @@ class GiteaProvider(GitProvider):
             else:
                 self.publish_inline_comments([payload])
 
-    def add_eyes_reaction(self, issue_comment_id: int, disable_eyes: bool = False) -> Optional[int]:
+    def add_eyes_reaction(self, issue_comment_id: int, disable_eyes: bool = False) -> int | None:
         """Add eyes reaction to a comment"""
         try:
             if disable_eyes:

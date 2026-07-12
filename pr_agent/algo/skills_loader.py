@@ -39,7 +39,6 @@ from __future__ import annotations
 
 import os
 from dataclasses import dataclass, field
-from typing import Optional
 
 import yaml
 from starlette_context import context
@@ -125,7 +124,7 @@ def _gather_resources(skill_md_path: str) -> tuple[SkillResource, ...]:
     return tuple(resources)
 
 
-def _parse_skill_file(file_path: str) -> Optional[Skill]:
+def _parse_skill_file(file_path: str) -> Skill | None:
     """Parse a single SKILL.md file. Returns None and logs a warning on malformed input."""
     try:
         with open(file_path, "r", encoding="utf-8") as f:
@@ -275,7 +274,7 @@ def format_skills_context(skills: list[Skill], max_tokens: int) -> str:
     return separator.join(pieces).strip()
 
 
-def _get_cached_context() -> Optional[str]:
+def _get_cached_context() -> str | None:
     try:
         return context.get(_CONTEXT_CACHE_KEY, None)
     except ContextDoesNotExistError:

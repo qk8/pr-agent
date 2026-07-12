@@ -4,7 +4,7 @@ import os
 import shutil
 import subprocess
 import time
-from typing import TYPE_CHECKING, Any, Optional
+from typing import TYPE_CHECKING, Any
 
 from pr_agent.algo.types import FilePatchInfo
 
@@ -421,7 +421,7 @@ class GitProvider(ABC):
         return []
 
     @abstractmethod
-    def add_eyes_reaction(self, issue_comment_id: int, disable_eyes: bool = False) -> Optional[int]:
+    def add_eyes_reaction(self, issue_comment_id: int, disable_eyes: bool = False) -> int | None:
         pass
 
     @abstractmethod

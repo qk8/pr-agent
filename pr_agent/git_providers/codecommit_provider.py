@@ -1,7 +1,6 @@
 import os
 import re
 from collections import Counter
-from typing import Optional
 from urllib.parse import urlparse
 
 from pr_agent.algo.language_handler import is_valid_file
@@ -55,7 +54,7 @@ class CodeCommitProvider(GitProvider):
     This class implements the GitProvider interface for AWS CodeCommit repositories.
     """
 
-    def __init__(self, pr_url: Optional[str] = None, incremental: Optional[bool] = False):
+    def __init__(self, pr_url: str | None = None, incremental: bool | None = False):
         self.codecommit_client = CodeCommitClient()
         self.aws_client = None
         self.repo_name = None
@@ -299,7 +298,7 @@ class CodeCommitProvider(GitProvider):
         settings_filename = ".pr_agent.toml"
         return self.codecommit_client.get_file(self.repo_name, settings_filename, self.pr.source_commit, optional=True)
 
-    def add_eyes_reaction(self, issue_comment_id: int, disable_eyes: bool = False) -> Optional[int]:
+    def add_eyes_reaction(self, issue_comment_id: int, disable_eyes: bool = False) -> int | None:
         get_logger().info("CodeCommit provider does not support eyes reaction yet")
         return True
 

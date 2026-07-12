@@ -8,7 +8,6 @@ import re
 import time
 import traceback
 from datetime import datetime
-from typing import Optional
 from urllib.parse import urlparse
 
 from github.Issue import Issue
@@ -42,7 +41,7 @@ def _next_page_url(headers: dict) -> str:
 
 
 class GithubProvider(GitProvider):
-    def __init__(self, pr_url: Optional[str] = None):
+    def __init__(self, pr_url: str | None = None):
         self.repo_obj = None
         try:
             self.installation_id = context.get("installation_id", None)
@@ -71,7 +70,7 @@ class GithubProvider(GitProvider):
         else: #Instantiated the provider without a PR / Issue
             self.pr_commits = None
 
-    def _get_issue_handle(self, issue_url) -> Optional[Issue]:
+    def _get_issue_handle(self, issue_url) -> Issue | None:
         repo_name, issue_number = self._parse_issue_url(issue_url)
         if not repo_name or not issue_number:
             get_logger().error(f"Given url: {issue_url} is not a valid issue.")
@@ -452,7 +451,7 @@ class GithubProvider(GitProvider):
             get_logger().warning(f"Failed to create check run, falling back to comment")
             return False
 
-    def _find_existing_check_run(self, check_run_name: str, head_sha: str) -> Optional[int]:
+    def _find_existing_check_run(self, check_run_name: str, head_sha: str) -> int | None:
         pr = getattr(self, 'pr', None)
         if not pr:
             return None
@@ -938,7 +937,7 @@ class GithubProvider(GitProvider):
     def get_workspace_name(self):
         return self.repo.split('/')[0]
 
-    def add_eyes_reaction(self, issue_comment_id: int, disable_eyes: bool = False) -> Optional[int]:
+    def add_eyes_reaction(self, issue_comment_id: int, disable_eyes: bool = False) -> int | None:
         if disable_eyes:
             return None
         try:

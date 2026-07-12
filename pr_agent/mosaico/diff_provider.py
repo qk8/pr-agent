@@ -8,7 +8,7 @@ The diff is parsed by parse_unified_diff(); per-request the parsed files/languag
 are read from MOSAICO.INPUT on the (context) settings.
 """
 import re
-from typing import List, Optional
+from typing import List
 
 from pr_agent.algo.types import EDIT_TYPE, FilePatchInfo
 from pr_agent.config_loader import get_settings
@@ -109,7 +109,7 @@ class DiffInputProvider(GitProvider):
     with a single positional ``pr_url`` arg (unused here); reads the parsed diff,
     languages and title from MOSAICO.INPUT on the (context) settings."""
 
-    def __init__(self, pr_url: Optional[str] = None):
+    def __init__(self, pr_url: str | None = None):
         self.pr_url = pr_url
         mosaico_input = get_settings().get("MOSAICO.INPUT", {}) or {}
         self.diff_files: list[FilePatchInfo] = list(mosaico_input.get("files", []) or [])

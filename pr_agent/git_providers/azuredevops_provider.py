@@ -2,7 +2,6 @@ from __future__ import annotations
 
 import datetime as _dt
 import os
-from typing import Optional
 from urllib.parse import quote, unquote, urlparse
 
 from pr_agent.algo.types import EDIT_TYPE, FilePatchInfo
@@ -62,7 +61,7 @@ class _AzureCommitAdapter:
 class AzureDevopsProvider(GitProvider):
 
     def __init__(
-            self, pr_url: Optional[str] = None, incremental: Optional[bool] = False
+            self, pr_url: str | None = None, incremental: bool | None = False
     ):
         if not AZURE_DEVOPS_AVAILABLE:
             raise ImportError(
@@ -767,7 +766,7 @@ class AzureDevopsProvider(GitProvider):
                     comment_list.append(comment)
         return comment_list
 
-    def add_eyes_reaction(self, issue_comment_id: int, disable_eyes: bool = False) -> Optional[int]:
+    def add_eyes_reaction(self, issue_comment_id: int, disable_eyes: bool = False) -> int | None:
         return True
 
     def remove_reaction(self, issue_comment_id: int, reaction_id: int) -> bool:

@@ -1,6 +1,5 @@
 import os
 from pathlib import Path
-from typing import Optional
 
 from pr_agent.config_loader import get_settings
 from pr_agent.log import get_logger
@@ -11,7 +10,7 @@ DEFAULT_ARTIFACT_INSTRUCTIONS = (
 )
 
 
-def resolve_artifact_path(path: str) -> Optional[Path]:
+def resolve_artifact_path(path: str) -> Path | None:
     if not path:
         return None
     try:

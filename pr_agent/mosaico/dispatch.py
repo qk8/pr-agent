@@ -16,7 +16,7 @@ import asyncio
 import ipaddress
 import re
 import socket
-from typing import NamedTuple, Optional
+from typing import NamedTuple
 from urllib.parse import urljoin, urlparse
 
 import aiohttp
@@ -158,7 +158,7 @@ async def _url_is_safe(url: str) -> bool:
     return await _host_resolves_public(u.hostname)
 
 
-async def _fetch_public_diff(pr_url: str) -> Optional[str]:
+async def _fetch_public_diff(pr_url: str) -> str | None:
     """Fetch the public unified diff for a GitHub/GitLab PR/MR URL by appending '.diff'.
     Returns the diff text, or None on any failure. No auth - public repos only. SSRF-guarded:
     https-only and the host (and every redirect hop) must resolve to public IPs; degrades to

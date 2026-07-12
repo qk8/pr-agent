@@ -1,7 +1,6 @@
 import difflib
 import json
 import re
-from typing import Optional
 from urllib.parse import urlparse
 
 import requests
@@ -26,7 +25,7 @@ def _gef_filename(diff):
 
 class BitbucketProvider(GitProvider):
     def __init__(
-        self, pr_url: Optional[str] = None, incremental: Optional[bool] = False
+        self, pr_url: str | None = None, incremental: bool | None = False
     ):
         s = requests.Session()
         s.headers["Content-Type"] = "application/json"
@@ -555,7 +554,7 @@ class BitbucketProvider(GitProvider):
             "Bitbucket provider does not support issue comments yet"
         )
 
-    def add_eyes_reaction(self, issue_comment_id: int, disable_eyes: bool = False) -> Optional[int]:
+    def add_eyes_reaction(self, issue_comment_id: int, disable_eyes: bool = False) -> int | None:
         return True
 
     def remove_reaction(self, issue_comment_id: int, reaction_id: int) -> bool:

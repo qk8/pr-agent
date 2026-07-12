@@ -1,6 +1,5 @@
 import os
 from collections import Counter
-from typing import Optional
 
 from unidiff.errors import UnidiffParseError
 
@@ -206,7 +205,7 @@ class PlainDiffGitProvider(GitProvider):
     def remove_comment(self, comment):
         pass
 
-    def add_eyes_reaction(self, issue_comment_id: int, disable_eyes: bool = False) -> Optional[int]:
+    def add_eyes_reaction(self, issue_comment_id: int, disable_eyes: bool = False) -> int | None:
         pass
 
     def remove_reaction(self, issue_comment_id: int, reaction_id: int) -> bool:
