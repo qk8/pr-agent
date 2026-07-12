@@ -80,7 +80,7 @@ def _get_azure_ad_token():
         raise
 
 
-def _process_litellm_extra_body(kwargs: dict) -> dict:
+def _process_litellm_extra_body(kwargs: dict[str, object]) -> dict[str, object]:
     """
     Process LITELLM.EXTRA_BODY configuration and update kwargs accordingly.
 

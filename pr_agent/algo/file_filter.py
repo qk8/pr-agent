@@ -80,7 +80,7 @@ def filter_ignored(files, platform = 'github'):
 
     return files
 
-def translate_globs_to_regexes(globs: list):
+def translate_globs_to_regexes(globs: list[str]) -> list[str]:
     regexes = []
     for pattern in globs:
         regexes.append(fnmatch.translate(pattern))

@@ -164,11 +164,11 @@ def get_pr_diff_multiple_patchs(git_provider: GitProvider, token_handler: TokenH
     return patches_compressed_list, total_tokens_list, deleted_files_list, remaining_files_list, file_dict, files_in_patches_list
 
 
-def pr_generate_extended_diff(pr_languages: list,
+def pr_generate_extended_diff(pr_languages: list[str],
                               token_handler: TokenHandler,
                               add_line_numbers_to_hunks: bool,
                               patch_extra_lines_before: int = 0,
-                              patch_extra_lines_after: int = 0) -> tuple[list, int, list]:
+                              patch_extra_lines_after: int = 0) -> tuple[list[dict[str, object]], int, list[dict[str, object]]]:
     total_tokens = token_handler.prompt_tokens  # initial tokens
     patches_extended = []
     patches_extended_tokens = []
@@ -207,9 +207,9 @@ def pr_generate_extended_diff(pr_languages: list,
     return patches_extended, total_tokens, patches_extended_tokens
 
 
-def pr_generate_compressed_diff(top_langs: list, token_handler: TokenHandler, model: str,
+def pr_generate_compressed_diff(top_langs: list[dict[str, object]], token_handler: TokenHandler, model: str,
                                 convert_hunks_to_line_numbers: bool,
-                                large_pr_handling: bool) -> tuple[list, list, list, list, dict, list]:
+                                large_pr_handling: bool) -> tuple[list[dict[str, object]], list[dict[str, object]], list[dict[str, object]], list[dict[str, object]], dict[str, object], list[dict[str, object]]]:
     deleted_files_list = []
 
     # sort each one of the languages in top_langs by the number of tokens in the diff
@@ -317,7 +317,7 @@ def generate_full_patch(convert_hunks_to_line_numbers, file_dict, max_tokens_mod
     return total_tokens, patches, remaining_files_list_new, files_in_patch_list
 
 
-async def retry_with_fallback_models(f: Callable, model_type: ModelType = ModelType.REGULAR):
+async def retry_with_fallback_models(f: Callable[..., object], model_type: ModelType = ModelType.REGULAR):
     all_models = _get_all_models(model_type)
     all_deployments = _get_all_deployments(all_models)
     # try each (model, deployment_id) pair until one is successful, otherwise raise exception

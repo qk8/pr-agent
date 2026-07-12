@@ -34,7 +34,7 @@ def is_valid_file(filename:str, bad_extensions=None) -> bool:
     return filename.split('.')[-1] not in bad_extensions
 
 
-def sort_files_by_main_languages(languages: dict, files: list):
+def sort_files_by_main_languages(languages: dict[str, int], files: list[str]) -> list[str]:
     """
     Sort files by their main language, put the files that are in the main language first and the rest files after
     """

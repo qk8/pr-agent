@@ -186,7 +186,7 @@ def discover_skills(paths: list[str]) -> list[Skill]:
     with a warning.
     """
     skills: list[Skill] = []
-    seen: set = set()
+    seen: set[str] = set()
 
     for raw_path in paths or []:
         if not isinstance(raw_path, str) or not raw_path.strip():

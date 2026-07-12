@@ -320,7 +320,7 @@ class LiteLLMAIHandler(BaseAiHandler):
             response_log['main_pr_language'] = 'unknown'
         return response_log
 
-    def _configure_claude_extended_thinking(self, model: str, kwargs: dict) -> dict:
+    def _configure_claude_extended_thinking(self, model: str, kwargs: dict[str, object]) -> dict[str, object]:
         """
         Configure Claude extended thinking parameters if applicable.
 
@@ -357,7 +357,7 @@ class LiteLLMAIHandler(BaseAiHandler):
 
         return kwargs
 
-    def add_litellm_callbacks(self, kwargs) -> dict:
+    def add_litellm_callbacks(self, kwargs: dict) -> dict[str, object]:
         captured_extra = []
 
         def capture_logs(message):

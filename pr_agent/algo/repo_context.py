@@ -59,11 +59,11 @@ def _get_markdown_fence(content: str) -> str:
     return fence
 
 
-def _get_repo_context_cache_key(context_files: list, max_lines: int) -> tuple[tuple[tuple[str, str], ...], int]:
+def _get_repo_context_cache_key(context_files: list[object], max_lines: int) -> tuple[tuple[tuple[str, str], ...], int]:
     return tuple((type(file_path).__name__, str(file_path)) for file_path in context_files), max_lines
 
 
-def _get_repo_context_process_cache_key(git_provider, context_files: list, max_lines: int) -> tuple | None:
+def _get_repo_context_process_cache_key(git_provider: object, context_files: list[object], max_lines: int) -> tuple | None:
     try:
         pr_url = git_provider.get_pr_url()
     except Exception:
@@ -75,7 +75,7 @@ def _get_repo_context_process_cache_key(git_provider, context_files: list, max_l
     return type(git_provider).__name__, pr_url, _get_repo_context_cache_key(context_files, max_lines)
 
 
-def _get_repo_context_config() -> tuple[list, int] | None:
+def _get_repo_context_config() -> tuple[list[str], int] | None:
     context_files = get_settings().config.get("repo_context_files", [])
     if not context_files:
         return None
@@ -125,7 +125,7 @@ def _get_provider_repo_context_cache(git_provider) -> _RepoContextCache:
     return repo_context_cache
 
 
-def _get_cached_repo_context(git_provider, context_files: list, max_lines: int):
+def _get_cached_repo_context(git_provider: object, context_files: list[str], max_lines: int):
     process_cache_key = _get_repo_context_process_cache_key(git_provider, context_files, max_lines)
     if process_cache_key is not None:
         cached_repo_context = _repo_context_process_cache.get(process_cache_key, _REPO_CONTEXT_CACHE_MISS)
@@ -140,7 +140,7 @@ def _get_cached_repo_context(git_provider, context_files: list, max_lines: int):
     return _REPO_CONTEXT_CACHE_MISS
 
 
-def _store_repo_context(git_provider, context_files: list, max_lines: int, repo_context: str) -> None:
+def _store_repo_context(git_provider: object, context_files: list[str], max_lines: int, repo_context: str) -> None:
     cache_key = _get_repo_context_cache_key(context_files, max_lines)
     _get_provider_repo_context_cache(git_provider)[cache_key] = repo_context
 
@@ -165,7 +165,7 @@ def _read_bool_setting(key: str, default: bool) -> bool:
     return default
 
 
-def _load_repo_context_files(git_provider, context_files: list) -> tuple[dict[str, str], bool]:
+def _load_repo_context_files(git_provider: object, context_files: list[str]) -> tuple[dict[str, str], bool]:
     from_default_branch = _read_bool_setting("repo_context_from_default_branch", default=True)
     files = {}
     had_fetch_error = False

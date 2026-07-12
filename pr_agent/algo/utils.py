@@ -125,7 +125,7 @@ def unique_strings(input_list: list[str]) -> list[str]:
     return unique_list
 
 
-def convert_to_markdown_v2(output_data: dict,
+def convert_to_markdown_v2(output_data: dict[str, object],
                            gfm_supported: bool = True,
                            incremental_review=None,
                            git_provider=None,
@@ -516,7 +516,7 @@ def process_can_be_split(emoji, value):
     return markdown_text
 
 
-def parse_code_suggestion(code_suggestion: dict, i: int = 0, gfm_supported: bool = True) -> str:
+def parse_code_suggestion(code_suggestion: dict[str, object], i: int = 0, gfm_supported: bool = True) -> str:
     """
     Convert a dictionary of data into markdown format.
 
@@ -749,7 +749,7 @@ def _fix_key_value(key: str, value: str):
     return key, value
 
 
-def load_yaml(response_text: str, keys_fix_yaml: list[str] = [], first_key="", last_key="") -> dict:
+def load_yaml(response_text: str, keys_fix_yaml: list[str] = [], first_key: str = "", last_key: str = "") -> dict[str, object]:
     response_text_original = copy.deepcopy(response_text)
     response_text = response_text.strip('\n').removeprefix('yaml').removeprefix('```yaml').rstrip().removesuffix('```')
     try:
@@ -772,7 +772,7 @@ def try_fix_yaml(response_text: str,
                  keys_fix_yaml: list[str] = [],
                  first_key="",
                  last_key="",
-                 response_text_original="") -> dict:
+                 response_text_original: str = "") -> dict[str, object]:
     response_text_lines = response_text.split('\n')
 
     keys_yaml = ['relevant line:', 'suggestion content:', 'relevant file:', 'existing code:',
@@ -1196,7 +1196,7 @@ def find_line_number_of_relevant_line_in_file(diff_files: list[FilePatchInfo],
                             break
     return position, absolute_position
 
-def get_rate_limit_status(github_token) -> dict:
+def get_rate_limit_status(github_token: str) -> dict[str, object]:
     GITHUB_API_URL = get_settings(use_context=False).get("GITHUB.BASE_URL", "https://api.github.com").rstrip("/")  # "https://api.github.com"
     # GITHUB_API_URL = "https://api.github.com"
     RATE_LIMIT_URL = f"{GITHUB_API_URL}/rate_limit"
@@ -1255,7 +1255,7 @@ def validate_and_await_rate_limit(github_token):
         return None
 
 
-def github_action_output(output_data: dict, key_name: str):
+def github_action_output(output_data: dict[str, object], key_name: str) -> None:
     try:
         enable_output = get_settings().get('github_action_config.enable_output', False)
         if isinstance(enable_output, str):
