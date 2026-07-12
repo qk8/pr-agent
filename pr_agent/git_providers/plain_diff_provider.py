@@ -1,6 +1,6 @@
 import os
 from collections import Counter
-from typing import List, Optional
+from typing import Optional
 
 from unidiff.errors import UnidiffParseError
 

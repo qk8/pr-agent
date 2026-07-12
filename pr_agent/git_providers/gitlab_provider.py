@@ -1,12 +1,10 @@
 import difflib
-import hashlib
 import re
 import urllib.parse
-from typing import Any, Optional, Union
-from urllib.parse import parse_qs, urlparse
+from typing import Optional
+from urllib.parse import urlparse
 
 import gitlab
-import requests
 from gitlab import (GitlabAuthenticationError, GitlabCreateError,
                     GitlabGetError, GitlabUpdateError)
 

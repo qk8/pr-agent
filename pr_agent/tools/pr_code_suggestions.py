@@ -6,7 +6,6 @@ import textwrap
 import traceback
 from datetime import datetime
 from functools import partial
-from typing import Dict
 
 from jinja2 import Environment, StrictUndefined
 
@@ -23,8 +22,7 @@ from pr_agent.algo.token_handler import TokenHandler
 from pr_agent.algo.utils import (ModelType, load_yaml, replace_code_tags,
                                  show_relevant_configurations, get_max_tokens, clip_tokens, get_model)
 from pr_agent.config_loader import get_settings
-from pr_agent.git_providers import (AzureDevopsProvider, GithubProvider,
-                                    GitLabProvider, get_git_provider,
+from pr_agent.git_providers import (GithubProvider,
                                     get_git_provider_with_context)
 from pr_agent.git_providers.git_provider import get_main_pr_language, GitProvider
 from pr_agent.log import get_logger
@@ -492,7 +490,7 @@ class PRCodeSuggestions:
                 suggestion['improved_code'] += f"\n{suggestion_truncation_message}"
         return suggestion
 
-    def _prepare_pr_code_suggestions(self, predictions: str) -> Dict:
+    def _prepare_pr_code_suggestions(self, predictions: str) -> dict:
         data = load_yaml(predictions.strip(),
                          keys_fix_yaml=["relevant_file", "suggestion_content", "existing_code", "improved_code"],
                          first_key="code_suggestions", last_key="label")

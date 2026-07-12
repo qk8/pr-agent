@@ -3,7 +3,6 @@ import copy
 import re
 import traceback
 from functools import partial
-from typing import List, Tuple
 
 import yaml
 from jinja2 import Environment, StrictUndefined
@@ -22,14 +21,12 @@ from pr_agent.algo.utils import (ModelType, PRDescriptionHeader, clip_tokens,
                                  set_custom_labels,
                                  show_relevant_configurations)
 from pr_agent.config_loader import get_settings
-from pr_agent.git_providers import (GithubProvider, get_git_provider,
+from pr_agent.git_providers import (GithubProvider,
                                     get_git_provider_with_context)
 from pr_agent.git_providers.git_provider import get_main_pr_language
 from pr_agent.log import get_logger
 from pr_agent.servers.help import HelpMessage
-from pr_agent.tools.ticket_pr_compliance_check import (
-    extract_and_cache_pr_tickets, extract_ticket_links_from_pr_description,
-    extract_tickets)
+from pr_agent.tools.ticket_pr_compliance_check import extract_and_cache_pr_tickets
 
 
 class PRDescription:

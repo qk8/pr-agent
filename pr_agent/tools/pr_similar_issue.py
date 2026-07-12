@@ -1,6 +1,5 @@
 import time
 from enum import Enum
-from typing import List
 
 import openai
 from pydantic import BaseModel, Field
@@ -37,7 +36,7 @@ class PRSimilarIssue:
             try:
                 import pandas as pd
                 import pinecone
-                from pinecone_datasets import Dataset, DatasetMetadata
+                from pinecone_datasets import DatasetMetadata
             except:
                 raise Exception("Please install 'pinecone' and 'pinecone_datasets' to use pinecone as vectordb")
             # assuming pinecone api key and environment are set in secrets file
@@ -180,7 +179,7 @@ class PRSimilarIssue:
                 import qdrant_client
                 from qdrant_client.models import (Distance, FieldCondition,
                                                   Filter, MatchValue,
-                                                  PointStruct, VectorParams)
+                                                  VectorParams)
             except Exception:
                 raise Exception("Please install qdrant-client to use qdrant as vectordb")
 

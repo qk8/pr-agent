@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-import ast
 import copy
 import difflib
 import hashlib

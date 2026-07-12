@@ -2,7 +2,6 @@ import ast
 import json
 import os
 import re
-from typing import List
 
 import uvicorn
 from fastapi import APIRouter, FastAPI

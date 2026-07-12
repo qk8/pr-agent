@@ -1,7 +1,7 @@
 import os
 import re
 from collections import Counter
-from typing import List, Optional
+from typing import Optional
 from urllib.parse import urlparse
 
 from pr_agent.algo.language_handler import is_valid_file

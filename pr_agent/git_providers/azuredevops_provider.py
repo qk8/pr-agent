@@ -9,7 +9,7 @@ from pr_agent.algo.types import EDIT_TYPE, FilePatchInfo
 
 from ..algo.file_filter import filter_ignored
 from ..algo.language_handler import is_valid_file
-from ..algo.utils import (PRDescriptionHeader, PRReviewHeader, clip_tokens,
+from ..algo.utils import (PRDescriptionHeader, PRReviewHeader,
                           find_line_number_of_relevant_line_in_file,
                           load_large_diff)
 from ..config_loader import get_settings

@@ -13,7 +13,6 @@ from pr_agent.config_loader import get_settings
 if TYPE_CHECKING:
     from loguru._logger import Logger
 
-    from pr_agent.config_loader import DynaconfSettings
 
 
 class LoggingFormat(str, Enum):

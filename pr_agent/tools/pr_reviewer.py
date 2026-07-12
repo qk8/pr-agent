@@ -1,9 +1,7 @@
 import copy
 import datetime
-import traceback
 from collections import OrderedDict
 from functools import partial
-from typing import List
 
 from jinja2 import Environment, StrictUndefined
 
@@ -26,7 +24,7 @@ from pr_agent.git_providers.git_provider import (IncrementalPR,
 from pr_agent.log import get_logger
 from pr_agent.servers.help import HelpMessage
 from pr_agent.tools.ticket_pr_compliance_check import (
-    extract_and_cache_pr_tickets, extract_tickets)
+    extract_and_cache_pr_tickets)
 
 
 class PRReviewer:
