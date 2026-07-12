@@ -3,7 +3,7 @@ import copy
 import os
 import re
 import uuid
-from typing import Any, Dict, Tuple
+from typing import Any
 
 import uvicorn
 from fastapi import APIRouter, FastAPI, HTTPException, Request, Response
@@ -77,12 +77,12 @@ async def get_body(request):
 _duplicate_push_triggers = DefaultDictWithTimeout(ttl=get_settings().github_app.push_trigger_pending_tasks_ttl)
 _pending_task_duplicate_push_conditions = DefaultDictWithTimeout(asyncio.locks.Condition, ttl=get_settings().github_app.push_trigger_pending_tasks_ttl)
 
-async def handle_comments_on_pr(body: Dict[str, Any],
+async def handle_comments_on_pr(body: dict[str, Any],
                                 event: str,
                                 sender: str,
                                 sender_id: str,
                                 action: str,
-                                log_context: Dict[str, Any],
+                                log_context: dict[str, Any],
                                 agent: PRAgent):
     if "comment" not in body:
         return {}
@@ -121,12 +121,12 @@ async def handle_comments_on_pr(body: Dict[str, Any],
         else:
             get_logger().info(f"User {sender=} is not eligible to process comment on PR {api_url=}")
 
-async def handle_new_pr_opened(body: Dict[str, Any],
+async def handle_new_pr_opened(body: dict[str, Any],
                                event: str,
                                sender: str,
                                sender_id: str,
                                action: str,
-                               log_context: Dict[str, Any],
+                               log_context: dict[str, Any],
                                agent: PRAgent):
     title = body.get("pull_request", {}).get("title", "")
 
@@ -142,12 +142,12 @@ async def handle_new_pr_opened(body: Dict[str, Any],
         else:
             get_logger().info(f"User {sender=} is not eligible to process PR {api_url=}")
 
-async def handle_push_trigger_for_new_commits(body: Dict[str, Any],
+async def handle_push_trigger_for_new_commits(body: dict[str, Any],
                         event: str,
                         sender: str,
                         sender_id: str,
                         action: str,
-                        log_context: Dict[str, Any],
+                        log_context: dict[str, Any],
                         agent: PRAgent):
     pull_request, api_url = _check_pull_request_event(action, body, log_context)
     if not (pull_request and api_url):
@@ -309,7 +309,7 @@ def should_process_pr_logic(body) -> bool:
     return True
 
 
-async def handle_request(body: Dict[str, Any], event: str):
+async def handle_request(body: dict[str, Any], event: str):
     """
     Handle incoming GitHub webhook requests.
 
@@ -358,7 +358,7 @@ async def handle_request(body: Dict[str, Any], event: str):
     return {}
 
 
-def handle_line_comments(body: Dict, comment_body: [str, Any]) -> str:
+def handle_line_comments(body: dict, comment_body: [str, Any]) -> str:
     if not comment_body:
         return ""
     start_line = body["comment"]["start_line"]
@@ -375,7 +375,7 @@ def handle_line_comments(body: Dict, comment_body: [str, Any]) -> str:
     return comment_body
 
 
-def _check_pull_request_event(action: str, body: dict, log_context: dict) -> Tuple[Dict[str, Any], str]:
+def _check_pull_request_event(action: str, body: dict, log_context: dict) -> tuple[dict[str, Any], str]:
     invalid_result = {}, ""
     pull_request = body.get("pull_request")
     if not pull_request:

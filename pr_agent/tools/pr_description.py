@@ -474,7 +474,7 @@ class PRDescription:
         if 'pr_files' in self.data:
             self.data['pr_files'] = self.data.pop('pr_files')
 
-    def _prepare_labels(self) -> List[str]:
+    def _prepare_labels(self) -> list[str]:
         pr_labels = []
 
         # If the 'PR Type' key is present in the dictionary, split its value by comma and assign it to 'pr_types'
@@ -501,7 +501,7 @@ class PRDescription:
             get_logger().error(f"Error converting labels to original case {self.pr_id}: {e}")
         return pr_labels
 
-    def _prepare_pr_answer_with_markers(self) -> Tuple[str, str, str, List[dict]]:
+    def _prepare_pr_answer_with_markers(self) -> tuple[str, str, str, list[dict]]:
         get_logger().info(f"Using description marker replacements {self.pr_id}")
 
         # Remove the 'PR Title' key from the dictionary
@@ -552,7 +552,7 @@ class PRDescription:
 
         return title, body, walkthrough_gfm, pr_file_changes
 
-    def _prepare_pr_answer(self) -> Tuple[str, str, str, List[dict]]:
+    def _prepare_pr_answer(self) -> tuple[str, str, str, list[dict]]:
         """
         Prepare the PR description based on the AI prediction data.
 

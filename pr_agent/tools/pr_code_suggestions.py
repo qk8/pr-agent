@@ -6,7 +6,7 @@ import textwrap
 import traceback
 from datetime import datetime
 from functools import partial
-from typing import Dict, List
+from typing import Dict
 
 from jinja2 import Environment, StrictUndefined
 
@@ -652,7 +652,7 @@ class PRCodeSuggestions:
 
         return suggestion
 
-    def remove_line_numbers(self, patches_diff_list: List[str]) -> List[str]:
+    def remove_line_numbers(self, patches_diff_list: list[str]) -> list[str]:
         # create a copy of the patches_diff_list, without line numbers for '__new hunk__' sections
         try:
             self.patches_diff_list_no_line_numbers = []
@@ -740,7 +740,7 @@ class PRCodeSuggestions:
             self.data = data = None
         return data
 
-    async def convert_to_decoupled_with_line_numbers(self, patches_diff_list_no_line_numbers, model) -> List[str]:
+    async def convert_to_decoupled_with_line_numbers(self, patches_diff_list_no_line_numbers, model) -> list[str]:
         with get_logger().contextualize(sub_feature='convert_to_decoupled_with_line_numbers'):
             try:
                 patches_diff_list = []
@@ -776,7 +776,7 @@ class PRCodeSuggestions:
                                        artifact={'patches_diff_list_no_line_numbers': patches_diff_list_no_line_numbers})
                 return []
 
-    def generate_summarized_suggestions(self, data: Dict) -> str:
+    def generate_summarized_suggestions(self, data: dict) -> str:
         try:
             pr_body = "## PR Code Suggestions ✨\n\n"
 
@@ -907,7 +907,7 @@ class PRCodeSuggestions:
             return "Low"
 
     async def self_reflect_on_suggestions(self,
-                                          suggestion_list: List,
+                                          suggestion_list: list,
                                           patches_diff: str,
                                           model: str,
                                           prev_suggestions_str: str = "",

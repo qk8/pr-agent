@@ -701,7 +701,7 @@ class Record(BaseModel):
 
 
 class Corpus(BaseModel):
-    documents: List[Record] = Field(default=[])
+    documents: list[Record] = Field(default=[])
 
     def append(self, r: Record):
         self.documents.append(r)

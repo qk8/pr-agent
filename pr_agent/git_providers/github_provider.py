@@ -8,7 +8,7 @@ import re
 import time
 import traceback
 from datetime import datetime
-from typing import Optional, Tuple
+from typing import Optional
 from urllib.parse import urlparse
 
 from github.Issue import Issue
@@ -128,7 +128,7 @@ class GithubProvider(GitProvider):
     # Given a git repo url, return prefix and suffix of the provider in order to view a given file belonging to that repo.
     # Example: https://github.com/the-pr-agent/pr-agent.git and branch: v0.8 -> prefix: "https://github.com/the-pr-agent/pr-agent/blob/v0.8", suffix: ""
     # In case git url is not provided, provider will use PR context (which includes branch) to determine the prefix and suffix.
-    def get_canonical_url_parts(self, repo_git_url:str, desired_branch:str) -> Tuple[str, str]:
+    def get_canonical_url_parts(self, repo_git_url:str, desired_branch:str) -> tuple[str, str]:
         owner = None
         repo = None
         scheme_and_netloc = None
@@ -963,7 +963,7 @@ class GithubProvider(GitProvider):
             get_logger().exception(f"Failed to remove eyes reaction, error: {e}")
             return False
 
-    def _parse_pr_url(self, pr_url: str) -> Tuple[str, int]:
+    def _parse_pr_url(self, pr_url: str) -> tuple[str, int]:
         parsed_url = urlparse(pr_url)
 
         if parsed_url.path.startswith('/api/v3'):
@@ -991,7 +991,7 @@ class GithubProvider(GitProvider):
 
         return repo_name, pr_number
 
-    def _parse_issue_url(self, issue_url: str) -> Tuple[str, int]:
+    def _parse_issue_url(self, issue_url: str) -> tuple[str, int]:
         parsed_url = urlparse(issue_url)
 
         if parsed_url.path.startswith('/api/v3'): #Check if came from github app

@@ -200,7 +200,7 @@ async def handle_webhook(background_tasks: BackgroundTasks, request: Request):
     )
 
 
-async def _run_commands_sequentially(commands: List[str], url: str, log_context: dict):
+async def _run_commands_sequentially(commands: list[str], url: str, log_context: dict):
     get_logger().info(f"Running commands sequentially: {commands}")
     if commands is None:
         return

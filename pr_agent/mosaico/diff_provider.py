@@ -18,7 +18,7 @@ from pr_agent.git_providers.git_provider import GitProvider
 class _PullRequestMimic:
     """Mimics the PullRequest object the tools touch (.title, .diff_files)."""
 
-    def __init__(self, title: str, diff_files: List[FilePatchInfo]):
+    def __init__(self, title: str, diff_files: list[FilePatchInfo]):
         self.title = title
         self.diff_files = diff_files
 
@@ -26,7 +26,7 @@ class _PullRequestMimic:
 _DIFF_GIT_RE = re.compile(r'^diff --git a/(?P<a>.+?) b/(?P<b>.+?)\s*$')
 
 
-def parse_unified_diff(diff_text: str) -> List[FilePatchInfo]:
+def parse_unified_diff(diff_text: str) -> list[FilePatchInfo]:
     """Parse a supplied unified diff (git format) into a list of FilePatchInfo.
 
     Splits on ``diff --git a/<f> b/<f>`` headers; per file: filename = the b/ path,
@@ -44,7 +44,7 @@ def parse_unified_diff(diff_text: str) -> List[FilePatchInfo]:
         return []
     starts.append(len(lines))
 
-    files: List[FilePatchInfo] = []
+    files: list[FilePatchInfo] = []
     for idx in range(len(starts) - 1):
         section = lines[starts[idx]:starts[idx + 1]]
         header = section[0].rstrip("\n")
@@ -71,8 +71,8 @@ def parse_unified_diff(diff_text: str) -> List[FilePatchInfo]:
             old_filename = a_path
 
         # Best-effort reconstruct head/base file content from hunk lines.
-        base_lines: List[str] = []
-        head_lines: List[str] = []
+        base_lines: list[str] = []
+        head_lines: list[str] = []
         in_hunk = False
         for ln in section:
             if ln.startswith("@@"):
@@ -112,7 +112,7 @@ class DiffInputProvider(GitProvider):
     def __init__(self, pr_url: Optional[str] = None):
         self.pr_url = pr_url
         mosaico_input = get_settings().get("MOSAICO.INPUT", {}) or {}
-        self.diff_files: List[FilePatchInfo] = list(mosaico_input.get("files", []) or [])
+        self.diff_files: list[FilePatchInfo] = list(mosaico_input.get("files", []) or [])
         self._languages = dict(mosaico_input.get("languages", {}) or {})
         self._title = mosaico_input.get("title", "") or ""
         self.pr = _PullRequestMimic(self._title, self.diff_files)
@@ -122,7 +122,7 @@ class DiffInputProvider(GitProvider):
         # Steer tools to the simplest render branches (no gfm table, no inline comments, no labels).
         return False
 
-    def get_diff_files(self) -> List[FilePatchInfo]:
+    def get_diff_files(self) -> list[FilePatchInfo]:
         return self.diff_files
 
     def get_files(self) -> list:

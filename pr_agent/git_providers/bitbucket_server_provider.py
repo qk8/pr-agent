@@ -2,7 +2,7 @@ import difflib
 import re
 
 from packaging.version import parse as parse_version
-from typing import Optional, Tuple
+from typing import Optional
 from urllib.parse import quote_plus, urlparse
 
 from atlassian.bitbucket import Bitbucket
@@ -79,7 +79,7 @@ class BitbucketServerProvider(GitProvider):
     # Given a git repo url, return prefix and suffix of the provider in order to view a given file belonging to that repo.
     # Example: https://bitbucket.dev.my_inc.com/scm/my_work/my_repo.git and branch: my_branch -> prefix: "https://bitbucket.dev.my_inc.com/projects/MY_WORK/repos/my_repo/browse/src", suffix: "?at=refs%2Fheads%2Fmy_branch"
     # In case git url is not provided, provider will use PR context (which includes branch) to determine the prefix and suffix.
-    def get_canonical_url_parts(self, repo_git_url:str=None, desired_branch:str=None) -> Tuple[str, str]:
+    def get_canonical_url_parts(self, repo_git_url:str=None, desired_branch:str=None) -> tuple[str, str]:
         workspace_name = None
         project_name = None
         if not repo_git_url:
@@ -464,7 +464,7 @@ class BitbucketServerProvider(GitProvider):
         return f"{parsed_url.scheme}://{parsed_url.netloc}"
 
     @staticmethod
-    def _parse_pr_url(pr_url: str) -> Tuple[str, str, int]:
+    def _parse_pr_url(pr_url: str) -> tuple[str, str, int]:
         # pr url format: f"{bitbucket_server}/projects/{project_name}/repos/{repository_name}/pull-requests/{pr_id}"
         parsed_url = urlparse(pr_url)
 

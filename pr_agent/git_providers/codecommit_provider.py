@@ -1,7 +1,7 @@
 import os
 import re
 from collections import Counter
-from typing import List, Optional, Tuple
+from typing import List, Optional
 from urllib.parse import urlparse
 
 from pr_agent.algo.language_handler import is_valid_file
@@ -19,7 +19,7 @@ class PullRequestCCMimic:
     This class mimics the PullRequest class from the PyGithub library for the CodeCommitProvider.
     """
 
-    def __init__(self, title: str, diff_files: List[FilePatchInfo]):
+    def __init__(self, title: str, diff_files: list[FilePatchInfo]):
         self.title = title
         self.diff_files = diff_files
         self.description = None
@@ -308,7 +308,7 @@ class CodeCommitProvider(GitProvider):
         return True
 
     @staticmethod
-    def _parse_pr_url(pr_url: str) -> Tuple[str, int]:
+    def _parse_pr_url(pr_url: str) -> tuple[str, int]:
         """
         Parse the CodeCommit PR URL and return the repository name and PR number.
 
@@ -316,7 +316,7 @@ class CodeCommitProvider(GitProvider):
         - pr_url: the full AWS CodeCommit pull request URL
 
         Returns:
-        - Tuple[str, int]: A tuple containing the repository name and PR number.
+        - tuple[str, int]: A tuple containing the repository name and PR number.
         """
         # Example PR URL:
         # https://us-east-1.console.aws.amazon.com/codesuite/codecommit/repositories/__MY_REPO__/pull-requests/123456"

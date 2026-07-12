@@ -1324,7 +1324,7 @@ def string_to_uniform_number(s: str) -> float:
     return uniform_number
 
 
-def process_description(description_full: str) -> tuple[str, List]:
+def process_description(description_full: str) -> tuple[str]:
     if not description_full:
         return "", []
 

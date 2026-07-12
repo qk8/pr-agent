@@ -12,7 +12,7 @@ from pr_agent.log import get_logger
 
 
 class PullRequestMimic:
-    def __init__(self, title: str, diff_files: List[FilePatchInfo]):
+    def __init__(self, title: str, diff_files: list[FilePatchInfo]):
         self.title = title
         self.diff_files = diff_files
 
@@ -40,7 +40,7 @@ class PlainDiffGitProvider(GitProvider):
         self.diff_files = None
         self.pr = PullRequestMimic(self.get_pr_title(), self.get_diff_files())
 
-    def get_diff_files(self) -> List[FilePatchInfo]:
+    def get_diff_files(self) -> list[FilePatchInfo]:
         if self.diff_files is not None:
             return self.diff_files
         try:
@@ -86,7 +86,7 @@ class PlainDiffGitProvider(GitProvider):
         self.diff_files = files
         return files
 
-    def get_files(self) -> List[str]:
+    def get_files(self) -> list[str]:
         return [f.filename for f in self.get_diff_files()]
 
     def get_incremental_commits(self, incremental):

@@ -137,7 +137,7 @@ class PRUpdateChangelog:
         response = response.strip("`")
         return response
 
-    def _prepare_changelog_update(self) -> Tuple[str, str]:
+    def _prepare_changelog_update(self) -> tuple[str, str]:
         answer = self.prediction.strip().strip("```").strip()  # noqa B005
         if hasattr(self, "changelog_file"):
             existing_content = self.changelog_file

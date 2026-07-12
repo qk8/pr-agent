@@ -1,7 +1,7 @@
 import difflib
 import json
 import re
-from typing import Optional, Tuple
+from typing import Optional
 from urllib.parse import urlparse
 
 import requests
@@ -140,7 +140,7 @@ class BitbucketProvider(GitProvider):
     # Given a git repo url, return prefix and suffix of the provider in order to view a given file belonging to that repo.
     # Example: git clone git clone https://bitbucket.org/pragent/pr-agent.git and branch: main -> prefix: "https://bitbucket.org/pragent/pr-agent/src/main", suffix: ""
     # In case git url is not provided, provider will use PR context (which includes branch) to determine the prefix and suffix.
-    def get_canonical_url_parts(self, repo_git_url:str=None, desired_branch:str=None) -> Tuple[str, str]:
+    def get_canonical_url_parts(self, repo_git_url:str=None, desired_branch:str=None) -> tuple[str, str]:
         scheme_and_netloc = None
         if repo_git_url:
             parsed_git_url = urlparse(repo_git_url)
@@ -562,7 +562,7 @@ class BitbucketProvider(GitProvider):
         return True
 
     @staticmethod
-    def _parse_pr_url(pr_url: str) -> Tuple[str, int, int]:
+    def _parse_pr_url(pr_url: str) -> tuple[str, int, int]:
         parsed_url = urlparse(pr_url)
 
         if "bitbucket.org" not in parsed_url.netloc:

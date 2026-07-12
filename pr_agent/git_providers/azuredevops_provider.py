@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import datetime as _dt
 import os
-from typing import Optional, Tuple
+from typing import Optional
 from urllib.parse import quote, unquote, urlparse
 
 from pr_agent.algo.types import EDIT_TYPE, FilePatchInfo
@@ -804,7 +804,7 @@ class AzureDevopsProvider(GitProvider):
             get_logger().exception(f"Failed to set thread status, error: {e}")
     
     @staticmethod
-    def _parse_pr_url(pr_url: str) -> Tuple[str, str, int]:
+    def _parse_pr_url(pr_url: str) -> tuple[str, str, int]:
         parsed_url = urlparse(pr_url)
         path_parts = parsed_url.path.strip("/").split("/")
         num_parts = len(path_parts)
@@ -827,7 +827,7 @@ class AzureDevopsProvider(GitProvider):
         return workspace_slug, repo_slug, pr_number
 
     @staticmethod
-    def _get_azure_devops_client() -> Tuple[GitClient, WorkItemTrackingClient]:
+    def _get_azure_devops_client() -> tuple[GitClient, WorkItemTrackingClient]:
         org = get_settings().azure_devops.get("org", None)
         pat = get_settings().azure_devops.get("pat", None)
 

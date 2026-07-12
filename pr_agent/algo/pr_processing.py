@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import traceback
-from typing import Callable, List, Tuple
+from typing import Callable
 
 from github import RateLimitExceededException
 
@@ -168,7 +168,7 @@ def pr_generate_extended_diff(pr_languages: list,
                               token_handler: TokenHandler,
                               add_line_numbers_to_hunks: bool,
                               patch_extra_lines_before: int = 0,
-                              patch_extra_lines_after: int = 0) -> Tuple[list, int, list]:
+                              patch_extra_lines_after: int = 0) -> tuple[list, int, list]:
     total_tokens = token_handler.prompt_tokens  # initial tokens
     patches_extended = []
     patches_extended_tokens = []
@@ -209,7 +209,7 @@ def pr_generate_extended_diff(pr_languages: list,
 
 def pr_generate_compressed_diff(top_langs: list, token_handler: TokenHandler, model: str,
                                 convert_hunks_to_line_numbers: bool,
-                                large_pr_handling: bool) -> Tuple[list, list, list, list, dict, list]:
+                                large_pr_handling: bool) -> tuple[list, list, list, list, dict, list]:
     deleted_files_list = []
 
     # sort each one of the languages in top_langs by the number of tokens in the diff
@@ -338,7 +338,7 @@ async def retry_with_fallback_models(f: Callable, model_type: ModelType = ModelT
                 raise Exception(f"Failed to generate prediction with any model of {all_models}") from e
 
 
-def _get_all_models(model_type: ModelType = ModelType.REGULAR) -> List[str]:
+def _get_all_models(model_type: ModelType = ModelType.REGULAR) -> list[str]:
     if model_type == ModelType.WEAK:
         model = get_model('model_weak')
     elif model_type == ModelType.REASONING:
@@ -354,7 +354,7 @@ def _get_all_models(model_type: ModelType = ModelType.REGULAR) -> List[str]:
     return all_models
 
 
-def _get_all_deployments(all_models: List[str]) -> List[str]:
+def _get_all_deployments(all_models: list[str]) -> list[str]:
     deployment_id = get_settings().get("openai.deployment_id", None)
     fallback_deployments = get_settings().get("openai.fallback_deployments", [])
     if not isinstance(fallback_deployments, list) and fallback_deployments:
@@ -373,7 +373,7 @@ def get_pr_multi_diffs(git_provider: GitProvider,
                        token_handler: TokenHandler,
                        model: str,
                        max_calls: int = 5,
-                       add_line_numbers: bool = True) -> List[str]:
+                       add_line_numbers: bool = True) -> list[str]:
     """
     Retrieves the diff files from a Git provider, sorts them by main language, and generates patches for each file.
     The patches are split into multiple groups based on the maximum number of tokens allowed for the given model.

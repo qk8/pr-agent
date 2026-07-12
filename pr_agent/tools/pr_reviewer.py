@@ -3,7 +3,7 @@ import datetime
 import traceback
 from collections import OrderedDict
 from functools import partial
-from typing import List, Tuple
+from typing import List
 
 from jinja2 import Environment, StrictUndefined
 
@@ -112,7 +112,7 @@ class PRReviewer:
             get_settings().pr_review_prompt.user
         )
 
-    def parse_incremental(self, args: List[str]):
+    def parse_incremental(self, args: list[str]):
         is_incremental = False
         if args and len(args) >= 1:
             arg = args[0]
@@ -289,7 +289,7 @@ class PRReviewer:
 
         return markdown_text
 
-    def _get_user_answers(self) -> Tuple[str, str]:
+    def _get_user_answers(self) -> tuple[str, str]:
         """
         Retrieves the question and answer strings from the discussion messages related to a pull request.
 

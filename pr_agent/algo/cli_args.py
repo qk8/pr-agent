@@ -4,7 +4,7 @@ from typing import Tuple
 
 class CliArgs:
     @staticmethod
-    def validate_user_args(args: list[str]) -> Tuple[bool, str]:
+    def validate_user_args(args: list[str]) -> tuple[bool, str]:
         try:
             if not args:
                 return True, ""

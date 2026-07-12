@@ -2,7 +2,7 @@ import difflib
 import hashlib
 import re
 import urllib.parse
-from typing import Any, Optional, Tuple, Union
+from typing import Any, Optional, Union
 from urllib.parse import parse_qs, urlparse
 
 import gitlab
@@ -318,7 +318,7 @@ class GitLabProvider(GitProvider):
     # Given a git repo url, return prefix and suffix of the provider in order to view a given file belonging to that repo.
     # Example: https://gitlab.com/pragent/pr-agent.git and branch: t1 -> prefix: "https://gitlab.com/pragent/pr-agent/-/blob/t1", suffix: "?ref_type=heads"
     # In case git url is not provided, provider will use PR context (which includes branch) to determine the prefix and suffix.
-    def get_canonical_url_parts(self, repo_git_url:str=None, desired_branch:str=None) -> Tuple[str, str]:
+    def get_canonical_url_parts(self, repo_git_url:str=None, desired_branch:str=None) -> tuple[str, str]:
         repo_path = ""
         if not repo_git_url and not self.pr_url:
             get_logger().error("Cannot get canonical URL parts: missing either context PR URL or a repo GIT URL")
@@ -902,7 +902,7 @@ class GitLabProvider(GitProvider):
             get_logger().warning(f"Failed to remove reaction, error: {e}")
             return False
 
-    def _parse_merge_request_url(self, merge_request_url: str) -> Tuple[str, int]:
+    def _parse_merge_request_url(self, merge_request_url: str) -> tuple[str, int]:
         parsed_url = urlparse(merge_request_url)
 
         path_parts = parsed_url.path.strip('/').split('/')
