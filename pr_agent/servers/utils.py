@@ -30,7 +30,7 @@ class RateLimitExceeded(Exception):
     pass
 
 
-class DefaultDictWithTimeout(defaultdict):
+class DefaultDictWithTimeout(defaultdict[str, object]):
     """A defaultdict with a time-to-live (TTL)."""
 
     def __init__(

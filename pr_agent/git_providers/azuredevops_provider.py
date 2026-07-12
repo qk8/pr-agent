@@ -83,7 +83,7 @@ class AzureDevopsProvider(GitProvider):
         if pr_url:
             self.set_pr(pr_url)
 
-    def publish_code_suggestions(self, code_suggestions: list) -> bool:
+    def publish_code_suggestions(self, code_suggestions: list[dict[str, object]]) -> bool:
         """
         Publishes code suggestions as comments on the PR.
         """
@@ -686,7 +686,7 @@ class AzureDevopsProvider(GitProvider):
         path = relevant_file.strip()
         return dict(body=body, path=path, position=position, absolute_position=absolute_position) if subject_type == "LINE" else {}
 
-    def publish_inline_comments(self, comments: list[dict], disable_fallback: bool = False):
+    def publish_inline_comments(self, comments: list[dict[str, object]], disable_fallback: bool = False):
             overall_success = True
             for comment in comments:
                 try:
@@ -880,7 +880,7 @@ class AzureDevopsProvider(GitProvider):
                 get_logger().info(f"Failed to get PR id, error: {e}")
             return ""
 
-    def publish_file_comments(self, file_comments: list) -> bool:
+    def publish_file_comments(self, file_comments: list[dict[str, object]]) -> bool:
         pass
 
     def get_line_link(self, relevant_file: str, relevant_line_start: int, relevant_line_end: int = None) -> str:
@@ -899,7 +899,7 @@ class AzureDevopsProvider(GitProvider):
         url = self.azure_devops_client.normalized_url + "/" + workspace + "/_git/" + repo + "/commit/" + last.commit_id
         return url
 
-    def get_linked_work_items(self) -> list:
+    def get_linked_work_items(self) -> list[object]:
         """
         Get linked work items from the PR.
         """
@@ -918,7 +918,7 @@ class AzureDevopsProvider(GitProvider):
             get_logger().exception(f"Failed to get linked work items, error: {e}")
             return []
 
-    def get_work_items(self, work_item_ids: list) -> list:
+    def get_work_items(self, work_item_ids: list[object]) -> list[object]:
         """
         Get work items by their IDs.
         """

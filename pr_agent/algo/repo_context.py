@@ -63,7 +63,7 @@ def _get_repo_context_cache_key(context_files: list[object], max_lines: int) -> 
     return tuple((type(file_path).__name__, str(file_path)) for file_path in context_files), max_lines
 
 
-def _get_repo_context_process_cache_key(git_provider: object, context_files: list[object], max_lines: int) -> tuple | None:
+def _get_repo_context_process_cache_key(git_provider: object, context_files: list[object], max_lines: int) -> tuple[object, ...] | None:
     try:
         pr_url = git_provider.get_pr_url()
     except Exception:

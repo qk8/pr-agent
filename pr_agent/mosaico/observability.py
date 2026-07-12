@@ -15,7 +15,7 @@ AGENT_NAME = "PR-Agent Solution Agent"
 _KEYS = ("mosaico-root-task-id", "mosaico-super-task-id", "mosaico-root-task-name")
 
 
-def parse_observability_metadata(raw) -> dict:
+def parse_observability_metadata(raw) -> dict[str, str]:
     """Tolerant partial-dict parse (mirrors docstring-agent/mosaico_utils.py).
 
     Returns a dict containing ONLY the present, string-valued keys among _KEYS.

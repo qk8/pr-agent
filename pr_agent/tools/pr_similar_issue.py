@@ -15,7 +15,7 @@ MODEL = "text-embedding-ada-002"
 
 
 class PRSimilarIssue:
-    def __init__(self, issue_url: str, ai_handler, args: list = None):
+    def __init__(self, issue_url: str, ai_handler, args: list[str] | None = None):
         self.issue_url = issue_url
         self.supported = get_settings().config.git_provider == "github"
         if not self.supported:

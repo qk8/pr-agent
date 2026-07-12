@@ -16,7 +16,7 @@ from pr_agent.log import get_logger
 
 MAX_FILES_ALLOWED_FULL = 50
 
-_GLOBAL_SETTINGS_CACHE: dict = {}
+_GLOBAL_SETTINGS_CACHE: dict[str, object] = {}
 _GLOBAL_SETTINGS_CACHE_TTL_SECONDS = 15 * 60
 _GLOBAL_SETTINGS_CACHE_MAX_SIZE = 256
 # Only cache reasonably-sized settings blobs; a valid .pr_agent.toml is tiny. This bounds the
@@ -250,7 +250,7 @@ class GitProvider(ABC):
     def reply_to_comment_from_comment_id(self, comment_id: int, body: str):
         pass
 
-    def get_pr_description(self, full: bool = True, split_changes_walkthrough=False) -> str | tuple:
+    def get_pr_description(self, full: bool = True, split_changes_walkthrough=False) -> str | tuple[str, list[str]]:
         from pr_agent.algo.utils import clip_tokens
         from pr_agent.config_loader import get_settings
         max_tokens_description = get_settings().get("CONFIG.MAX_DESCRIPTION_TOKENS", None)
@@ -405,7 +405,7 @@ class GitProvider(ABC):
     def get_comment_url(self, comment) -> str:
         return ""
 
-    def get_review_thread_comments(self, comment_id: int) -> list[dict]:
+    def get_review_thread_comments(self, comment_id: int) -> list[dict[str, object]]:
         pass
 
     #### labels operations ####
@@ -444,7 +444,7 @@ class GitProvider(ABC):
     def auto_approve(self) -> bool:
         return False
 
-    def calc_pr_statistics(self, pull_request_data: dict):
+    def calc_pr_statistics(self, pull_request_data: dict[str, object]) -> dict[str, object]:
         return {}
 
     def get_num_of_files(self):

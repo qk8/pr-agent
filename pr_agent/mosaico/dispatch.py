@@ -249,7 +249,7 @@ async def _run_ask(target: str, question: str) -> "RouteResult":
     return RouteResult(answer, ok=True) if answer else RouteResult(_empty_fallback("ask"), ok=True)
 
 
-def _simple_languages(files) -> dict:
+def _simple_languages(files) -> dict[str, int]:
     """Best-effort language map (extension -> count) for get_main_pr_language; tolerant
     of empties (downstream handles an empty dict)."""
     langs = {}

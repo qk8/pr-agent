@@ -1,7 +1,6 @@
 import copy
 import textwrap
 from functools import partial
-from typing import Dict
 
 from jinja2 import Environment, StrictUndefined
 
@@ -17,7 +16,7 @@ from pr_agent.log import get_logger
 
 
 class PRAddDocs:
-    def __init__(self, pr_url: str, cli_mode=False, args: list = None,
+    def __init__(self, pr_url: str, cli_mode=False, args: list[str] | None = None,
                  ai_handler: partial[BaseAiHandler,] = LiteLLMAIHandler):
 
         self.git_provider = get_git_provider()(pr_url)
@@ -94,7 +93,7 @@ class PRAddDocs:
 
         return response
 
-    def _prepare_pr_code_docs(self) -> Dict:
+    def _prepare_pr_code_docs(self) -> dict[str, object]:
         docs = self.prediction.strip()
         data = load_yaml(docs)
         if isinstance(data, list):

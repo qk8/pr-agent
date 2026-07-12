@@ -30,7 +30,7 @@ from pr_agent.tools.ticket_pr_compliance_check import extract_and_cache_pr_ticke
 
 
 class PRDescription:
-    def __init__(self, pr_url: str, args: list = None,
+    def __init__(self, pr_url: str, args: list[str] | None = None,
                  ai_handler: partial[BaseAiHandler,] = LiteLLMAIHandler):
         """
         Initialize the PRDescription object with the necessary attributes and objects for generating a PR description
@@ -490,7 +490,7 @@ class PRDescription:
         # convert lowercase labels to original case
         try:
             if "labels_minimal_to_labels_dict" in self.variables:
-                d: dict = self.variables["labels_minimal_to_labels_dict"]
+                d: dict[str, object] = self.variables["labels_minimal_to_labels_dict"]
                 for i, label_i in enumerate(pr_labels):
                     if label_i in d:
                         pr_labels[i] = d[label_i]
@@ -498,7 +498,7 @@ class PRDescription:
             get_logger().error(f"Error converting labels to original case {self.pr_id}: {e}")
         return pr_labels
 
-    def _prepare_pr_answer_with_markers(self) -> tuple[str, str, str, list[dict]]:
+    def _prepare_pr_answer_with_markers(self) -> tuple[str, str, str, list[dict[str, object]]]:
         get_logger().info(f"Using description marker replacements {self.pr_id}")
 
         # Remove the 'PR Title' key from the dictionary
@@ -549,7 +549,7 @@ class PRDescription:
 
         return title, body, walkthrough_gfm, pr_file_changes
 
-    def _prepare_pr_answer(self) -> tuple[str, str, str, list[dict]]:
+    def _prepare_pr_answer(self) -> tuple[str, str, str, list[dict[str, object]]]:
         """
         Prepare the PR description based on the AI prediction data.
 

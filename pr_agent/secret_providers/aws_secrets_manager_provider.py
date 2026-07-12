@@ -35,7 +35,7 @@ class AWSSecretsManagerProvider(SecretProvider):
             get_logger().warning(f"Failed to get secret {secret_name} from AWS Secrets Manager: {e}")
             return ""
 
-    def get_all_secrets(self) -> dict:
+    def get_all_secrets(self) -> dict[str, str]:
         """
         Retrieve all secrets for configuration override
         """

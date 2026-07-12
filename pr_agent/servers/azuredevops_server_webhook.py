@@ -35,7 +35,7 @@ azure_devops_server = get_settings().get("azure_devops_server")
 WEBHOOK_USERNAME = azure_devops_server.get("webhook_username", None)
 WEBHOOK_PASSWORD = azure_devops_server.get("webhook_password", None)
 
-async def handle_request_comment(url: str, body: str, thread_id: int, comment_id: int, log_context: dict):
+async def handle_request_comment(url: str, body: str, thread_id: int, comment_id: int, log_context: dict[str, object]):
     log_context["action"] = body
     log_context["api_url"] = url
     try:
@@ -91,7 +91,7 @@ def authorize(credentials: HTTPBasicCredentials = Depends(security)):
         )
 
 
-async def _perform_commands_azure(commands_conf: str, agent: PRAgent, api_url: str, log_context: dict):
+async def _perform_commands_azure(commands_conf: str, agent: PRAgent, api_url: str, log_context: dict[str, object]):
     apply_repo_settings(api_url)
     if commands_conf == "pr_commands" and get_settings().config.disable_auto_feedback:  # auto commands for PR, and auto feedback is disabled
         get_logger().info(f"Auto feedback is disabled, skipping auto commands for PR {api_url=}", **log_context)

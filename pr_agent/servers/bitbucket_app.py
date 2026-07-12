@@ -83,7 +83,7 @@ def _get_username(data):
     return ""
 
 
-async def _validate_time_from_last_commit_to_pr_update(data: dict) -> bool:
+async def _validate_time_from_last_commit_to_pr_update(data: dict[str, object]) -> bool:
     is_valid_push = False
     try:
         data_inner = data.get('data', {})
@@ -136,7 +136,7 @@ async def _validate_time_from_last_commit_to_pr_update(data: dict) -> bool:
                                artifact={'error': e, 'data': data})
     return is_valid_push
 
-async def _perform_commands_bitbucket(commands_conf: str, agent: PRAgent, api_url: str, log_context: dict, data: dict):
+async def _perform_commands_bitbucket(commands_conf: str, agent: PRAgent, api_url: str, log_context: dict[str, object], data: dict[str, object]):
     apply_repo_settings(api_url)
     if commands_conf == "pr_commands" and get_settings().config.disable_auto_feedback:  # auto commands for PR, and auto feedback is disabled
         get_logger().info(f"Auto feedback is disabled, skipping auto commands for PR {api_url=}")

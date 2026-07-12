@@ -357,7 +357,7 @@ class LiteLLMAIHandler(BaseAiHandler):
 
         return kwargs
 
-    def add_litellm_callbacks(self, kwargs: dict) -> dict[str, object]:
+    def add_litellm_callbacks(self, kwargs: dict[str, object]) -> dict[str, object]:
         captured_extra = []
 
         def capture_logs(message):

@@ -125,7 +125,7 @@ class DiffInputProvider(GitProvider):
     def get_diff_files(self) -> list[FilePatchInfo]:
         return self.diff_files
 
-    def get_files(self) -> list:
+    def get_files(self) -> list[str]:
         return [f.filename for f in self.diff_files]
 
     def get_languages(self):
@@ -150,7 +150,7 @@ class DiffInputProvider(GitProvider):
     def publish_description(self, pr_title: str, pr_body: str):
         pass
 
-    def publish_code_suggestions(self, code_suggestions: list) -> bool:
+    def publish_code_suggestions(self, code_suggestions: list[dict[str, object]]) -> bool:
         return True
 
     def publish_comment(self, pr_comment: str, is_temporary: bool = False):
@@ -159,7 +159,7 @@ class DiffInputProvider(GitProvider):
     def publish_inline_comment(self, body: str, relevant_file: str, relevant_line_in_file: str, original_suggestion=None):
         pass
 
-    def publish_inline_comments(self, comments: list):
+    def publish_inline_comments(self, comments: list[dict[str, object]]):
         pass
 
     def remove_initial_comment(self):

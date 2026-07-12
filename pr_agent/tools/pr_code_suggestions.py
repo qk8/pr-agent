@@ -32,7 +32,7 @@ from pr_agent.tools.progress_comment import build_progress_comment
 
 
 class PRCodeSuggestions:
-    def __init__(self, pr_url: str, cli_mode=False, args: list = None,
+    def __init__(self, pr_url: str, cli_mode=False, args: list[str] | None = None,
                  ai_handler: partial[BaseAiHandler,] = LiteLLMAIHandler):
 
         self.git_provider = get_git_provider_with_context(pr_url)
@@ -369,7 +369,7 @@ class PRCodeSuggestions:
             up_to_commit_txt = f" up to commit {match.group(0)[4:-3].strip()}"
         return up_to_commit_txt
 
-    async def _prepare_prediction(self, model: str) -> dict:
+    async def _prepare_prediction(self, model: str) -> dict[str, object]:
         self.patches_diff = get_pr_diff(self.git_provider,
                                         self.token_handler,
                                         model,
@@ -388,7 +388,7 @@ class PRCodeSuggestions:
         data = self.prediction
         return data
 
-    async def _get_prediction(self, model: str, patches_diff: str, patches_diff_no_line_number: str) -> dict:
+    async def _get_prediction(self, model: str, patches_diff: str, patches_diff_no_line_number: str) -> dict[str, object]:
         variables = copy.deepcopy(self.vars)
         variables["diff"] = patches_diff  # update diff
         variables["diff_no_line_numbers"] = patches_diff_no_line_number  # update diff
@@ -490,7 +490,7 @@ class PRCodeSuggestions:
                 suggestion['improved_code'] += f"\n{suggestion_truncation_message}"
         return suggestion
 
-    def _prepare_pr_code_suggestions(self, predictions: str) -> dict:
+    def _prepare_pr_code_suggestions(self, predictions: str) -> dict[str, object]:
         data = load_yaml(predictions.strip(),
                          keys_fix_yaml=["relevant_file", "suggestion_content", "existing_code", "improved_code"],
                          first_key="code_suggestions", last_key="label")
@@ -672,7 +672,7 @@ class PRCodeSuggestions:
             get_logger().error(f"Error removing line numbers from patches_diff_list, error: {e}")
             return patches_diff_list
 
-    async def prepare_prediction_main(self, model: str) -> dict:
+    async def prepare_prediction_main(self, model: str) -> dict[str, object]:
         # get PR diff
         if get_settings().pr_code_suggestions.decouple_hunks:
             self.patches_diff_list = get_pr_multi_diffs(self.git_provider,
@@ -774,7 +774,7 @@ class PRCodeSuggestions:
                                        artifact={'patches_diff_list_no_line_numbers': patches_diff_list_no_line_numbers})
                 return []
 
-    def generate_summarized_suggestions(self, data: dict) -> str:
+    def generate_summarized_suggestions(self, data: dict[str, object]) -> str:
         try:
             pr_body = "## PR Code Suggestions ✨\n\n"
 
@@ -905,7 +905,7 @@ class PRCodeSuggestions:
             return "Low"
 
     async def self_reflect_on_suggestions(self,
-                                          suggestion_list: list,
+                                          suggestion_list: list[dict[str, object]],
                                           patches_diff: str,
                                           model: str,
                                           prev_suggestions_str: str = "",

@@ -15,7 +15,7 @@ from pr_agent.log import get_logger
 
 
 class PRGenerateLabels:
-    def __init__(self, pr_url: str, args: list = None,
+    def __init__(self, pr_url: str, args: list[str] | None = None,
                  ai_handler: partial[BaseAiHandler,] = LiteLLMAIHandler):
         """
         Initialize the PRGenerateLabels object with the necessary attributes and objects for generating labels
@@ -168,7 +168,7 @@ class PRGenerateLabels:
         # convert lowercase labels to original case
         try:
             if "labels_minimal_to_labels_dict" in self.variables:
-                d: dict = self.variables["labels_minimal_to_labels_dict"]
+                d: dict[str, object] = self.variables["labels_minimal_to_labels_dict"]
                 for i, label_i in enumerate(pr_types):
                     if label_i in d:
                         pr_types[i] = d[label_i]

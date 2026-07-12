@@ -127,7 +127,7 @@ async def handle_comment_event(body: dict[str, Any], event: str, action: str, ag
 
     await agent.handle_request(pr_url, comment_body)
 
-async def _perform_commands_gitea(commands_conf: str, agent: PRAgent, body: dict, api_url: str):
+async def _perform_commands_gitea(commands_conf: str, agent: PRAgent, body: dict[str, object], api_url: str):
     apply_repo_settings(api_url)
     if commands_conf == "pr_commands" and get_settings().config.disable_auto_feedback:  # auto commands for PR, and auto feedback is disabled
         get_logger().info(f"Auto feedback is disabled, skipping auto commands for PR {api_url=}")

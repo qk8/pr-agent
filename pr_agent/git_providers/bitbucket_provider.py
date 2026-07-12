@@ -159,7 +159,7 @@ class BitbucketProvider(GitProvider):
         return (prefix, suffix)
 
 
-    def publish_code_suggestions(self, code_suggestions: list) -> bool:
+    def publish_code_suggestions(self, code_suggestions: list[dict[str, object]]) -> bool:
         """
         Publishes code suggestions as comments on the PR.
         """
@@ -224,7 +224,7 @@ class BitbucketProvider(GitProvider):
             get_logger().error(f"Bitbucket failed to publish code suggestion, error: {e}")
             return False
 
-    def publish_file_comments(self, file_comments: list) -> bool:
+    def publish_file_comments(self, file_comments: list[dict[str, object]]) -> bool:
         pass
 
     def is_supported(self, capability: str) -> bool:
@@ -508,7 +508,7 @@ class BitbucketProvider(GitProvider):
 
         return ""
 
-    def publish_inline_comments(self, comments: list[dict]):
+    def publish_inline_comments(self, comments: list[dict[str, object]]):
         for comment in comments:
             if 'position' in comment:
                 self.publish_inline_comment(comment['body'], comment['position'], comment['path'])
@@ -656,7 +656,7 @@ class BitbucketProvider(GitProvider):
         return response
 
     # bitbucket does not support labels
-    def publish_labels(self, pr_types: list):
+    def publish_labels(self, pr_types: list[str]):
         pass
 
     # bitbucket does not support labels

@@ -169,7 +169,7 @@ class PlainDiffGitProvider(GitProvider):
         location = f"{relevant_file}:{relevant_lines_start}-{relevant_lines_end}"
         self._write_output(f"### {location}\n\n{body}")
 
-    def publish_code_suggestions(self, code_suggestions: list) -> bool:
+    def publish_code_suggestions(self, code_suggestions: list[dict[str, object]]) -> bool:
         # The 'improve' tool calls this unconditionally; render the suggestions
         # as a single markdown document to stdout/--output instead of pushing
         # them to a (non-existent) hosting platform.
@@ -193,7 +193,7 @@ class PlainDiffGitProvider(GitProvider):
                                relevant_line_in_file: str, original_suggestion=None):
         raise NotImplementedError("Inline comments are not supported by the plain-diff provider")
 
-    def publish_inline_comments(self, comments: list):
+    def publish_inline_comments(self, comments: list[dict[str, object]]):
         raise NotImplementedError("Inline comments are not supported by the plain-diff provider")
 
     def publish_labels(self, labels):

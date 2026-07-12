@@ -26,7 +26,7 @@ router = APIRouter()
 
 
 def handle_request(
-    background_tasks: BackgroundTasks, url: str, body: str, log_context: dict
+    background_tasks: BackgroundTasks, url: str, body: str, log_context: dict[str, object]
 ):
     log_context["action"] = body
     log_context["api_url"] = url
@@ -199,7 +199,7 @@ async def handle_webhook(background_tasks: BackgroundTasks, request: Request):
     )
 
 
-async def _run_commands_sequentially(commands: list[str], url: str, log_context: dict):
+async def _run_commands_sequentially(commands: list[str], url: str, log_context: dict[str, object]):
     get_logger().info(f"Running commands sequentially: {commands}")
     if commands is None:
         return
@@ -229,7 +229,7 @@ def _process_command(command: str, url) -> str:
     return new_command
 
 
-def _to_list(command_string: str) -> list:
+def _to_list(command_string: str) -> list[str]:
     try:
         # Use ast.literal_eval to safely parse the string into a list
         commands = ast.literal_eval(command_string)
@@ -242,7 +242,7 @@ def _to_list(command_string: str) -> list:
         raise ValueError(f"Invalid command string: {e}")
 
 
-def _get_commands_list_from_settings(setting_key: str) -> list:
+def _get_commands_list_from_settings(setting_key: str) -> list[str]:
     try:
         return get_settings().get(setting_key, [])
     except ValueError as e:

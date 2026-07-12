@@ -68,7 +68,7 @@ class GitLabProvider(GitProvider):
         self.diff_files = None
         self.git_files = None
         self.temp_comments = []
-        self._submodule_cache: dict[tuple[str, str, str], list[dict]] = {}
+        self._submodule_cache: dict[tuple[str, str, str], list[dict[str, object]]] = {}
         self.pr_url = merge_request_url
         self._set_merge_request(merge_request_url)
         self.RE_HUNK_HEADER = re.compile(
@@ -204,7 +204,7 @@ class GitLabProvider(GitProvider):
 
         return None
 
-    def _compare_submodule(self, proj_path: str, old_sha: str, new_sha: str) -> list[dict]:
+    def _compare_submodule(self, proj_path: str, old_sha: str, new_sha: str) -> list[dict[str, object]]:
         """
         Call repository_compare on submodule project; return list of diffs.
         """
@@ -229,7 +229,7 @@ class GitLabProvider(GitProvider):
             self._submodule_cache[key] = []
             return []
 
-    def _expand_submodule_changes(self, changes: list[dict]) -> list[dict]:
+    def _expand_submodule_changes(self, changes: list[dict[str, object]]) -> list[dict[str, object]]:
         """
         If enabled, expand 'Subproject commit' bumps into real file diffs from the submodule.
         Soft-fail on any issue.
@@ -476,7 +476,7 @@ class GitLabProvider(GitProvider):
         self.diff_files = diff_files
         return diff_files
 
-    def get_files(self) -> list:
+    def get_files(self) -> list[str]:
         if not self.git_files:
             raw_changes = self.mr.changes().get('changes', [])
             raw_changes = self._expand_submodule_changes(raw_changes)
@@ -546,7 +546,7 @@ class GitLabProvider(GitProvider):
     def create_inline_comment(self, body: str, relevant_file: str, relevant_line_in_file: str, absolute_position: int = None):
         raise NotImplementedError("Gitlab provider does not support creating inline comments yet")
 
-    def create_inline_comments(self, comments: list[dict]):
+    def create_inline_comments(self, comments: list[dict[str, object]]):
         raise NotImplementedError("Gitlab provider does not support publishing inline comments yet")
 
     def get_comment_body_from_comment_id(self, comment_id: int):
@@ -636,7 +636,7 @@ class GitLabProvider(GitProvider):
                 except Exception as e:
                     get_logger().exception(f"Failed to create comment in MR {self.id_mr}")
 
-    def get_relevant_diff(self, relevant_file: str, relevant_line_in_file: str) -> dict | None:
+    def get_relevant_diff(self, relevant_file: str, relevant_line_in_file: str) -> dict[str, object] | None:
         _changes = self.mr.changes()  # dict
         _changes['changes'] = self._expand_submodule_changes(_changes.get('changes', []))
         changes = _changes
@@ -655,7 +655,7 @@ class GitLabProvider(GitProvider):
                 f'No relevant diff found for {relevant_file} {relevant_line_in_file}. Falling back to last diff.')
         return self.last_diff  # fallback to last_diff if no relevant diff is found
 
-    def publish_code_suggestions(self, code_suggestions: list) -> bool:
+    def publish_code_suggestions(self, code_suggestions: list[dict[str, object]]) -> bool:
         for suggestion in code_suggestions:
             try:
                 if suggestion and 'original_suggestion' in suggestion:
@@ -697,7 +697,7 @@ class GitLabProvider(GitProvider):
         # note that we publish suggestions one-by-one. so, if one fails, the rest will still be published
         return True
 
-    def publish_file_comments(self, file_comments: list) -> bool:
+    def publish_file_comments(self, file_comments: list[dict[str, object]]) -> bool:
         pass
 
     def search_line(self, relevant_file, relevant_line_in_file):
@@ -938,7 +938,7 @@ class GitLabProvider(GitProvider):
         except Exception as e:
             get_logger().warning(f"Failed to publish labels, error: {e}")
 
-    def publish_inline_comments(self, comments: list[dict]):
+    def publish_inline_comments(self, comments: list[dict[str, object]]):
         pass
 
     def get_pr_labels(self, update=False):

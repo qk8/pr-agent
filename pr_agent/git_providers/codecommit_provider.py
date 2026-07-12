@@ -184,7 +184,7 @@ class CodeCommitProvider(GitProvider):
         except Exception as e:
             raise ValueError(f"CodeCommit Cannot publish comment for PR: {self.pr_num}") from e
 
-    def publish_code_suggestions(self, code_suggestions: list) -> bool:
+    def publish_code_suggestions(self, code_suggestions: list[dict[str, object]]) -> bool:
         counter = 1
         for suggestion in code_suggestions:
             # Verify that each suggestion has the required keys
@@ -230,7 +230,7 @@ class CodeCommitProvider(GitProvider):
         # https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/codecommit/client/post_comment_for_compared_commit.html
         raise NotImplementedError("CodeCommit provider does not support publishing inline comments yet")
 
-    def publish_inline_comments(self, comments: list[dict]):
+    def publish_inline_comments(self, comments: list[dict[str, object]]):
         raise NotImplementedError("CodeCommit provider does not support publishing inline comments yet")
 
     def get_title(self):

@@ -8,7 +8,7 @@ class CodeCommitDifferencesResponse:
     It maps the JSON response to member variables of this class.
     """
 
-    def __init__(self, json: dict):
+    def __init__(self, json: dict[str, object]):
         before_blob = json.get("beforeBlob", {})
         after_blob = json.get("afterBlob", {})
 
@@ -25,7 +25,7 @@ class CodeCommitPullRequestResponse:
     It maps the JSON response to member variables of this class.
     """
 
-    def __init__(self, json: dict):
+    def __init__(self, json: dict[str, object]):
         self.title = json.get("title", "")
         self.description = json.get("description", "")
 
@@ -39,7 +39,7 @@ class CodeCommitPullRequestResponse:
         holds details about an individual target commit.
         """
 
-        def __init__(self, json: dict):
+        def __init__(self, json: dict[str, object]):
             self.source_commit = json.get("sourceCommit", "")
             self.source_branch = json.get("sourceReference", "")
             self.destination_commit = json.get("destinationCommit", "")

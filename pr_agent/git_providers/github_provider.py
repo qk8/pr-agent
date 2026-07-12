@@ -29,7 +29,7 @@ from .git_provider import (MAX_FILES_ALLOWED_FULL, FilePatchInfo, GitProvider,
                            IncrementalPR, get_cached_global_settings)
 
 
-def _next_page_url(headers: dict) -> str:
+def _next_page_url(headers: dict[str, object]) -> str:
     link = headers.get("Link", "")
     if not link:
         return ""
@@ -59,7 +59,7 @@ class GithubProvider(GitProvider):
         self.diff_files = None
         self.git_files = None
         self.incremental = IncrementalPR(False)
-        self._check_run_ids: dict = {}
+        self._check_run_ids: dict[str, object] = {}
         if pr_url and 'pull' in pr_url:
             self.set_pr(pr_url)
             self.pr_commits = list(self.pr.get_commits())
@@ -510,7 +510,7 @@ class GithubProvider(GitProvider):
         path = relevant_file.strip()
         return dict(body=body, path=path, position=position) if subject_type == "LINE" else {}
 
-    def publish_inline_comments(self, comments: list[dict], disable_fallback: bool = False):
+    def publish_inline_comments(self, comments: list[dict[str, object]], disable_fallback: bool = False):
         try:
             # publish all comments in a single message
             self.pr.create_review(commit=self.last_commit_id, comments=comments)
@@ -528,7 +528,7 @@ class GithubProvider(GitProvider):
                 get_logger().error(f"Failed to publish inline code comments fallback, error: {e}")
                 raise e    
     
-    def get_review_thread_comments(self, comment_id: int) -> list[dict]:
+    def get_review_thread_comments(self, comment_id: int) -> list[dict[str, object]]:
         """
         Retrieves all comments in the same thread as the given comment.
         
@@ -562,7 +562,7 @@ class GithubProvider(GitProvider):
             get_logger().exception(f"Failed to get review comments for an inline ask command", artifact={"comment_id": comment_id, "error": e})
             return []
 
-    def _publish_inline_comments_fallback_with_verification(self, comments: list[dict]):
+    def _publish_inline_comments_fallback_with_verification(self, comments: list[dict[str, object]]):
         """
         Check each inline comment separately against the GitHub API and discard of invalid comments,
         then publish all the remaining valid comments in a single review.
@@ -588,7 +588,7 @@ class GithubProvider(GitProvider):
                 except:
                     get_logger().error(f"Failed to publish invalid comment as a single line comment: {comment}")
 
-    def _verify_code_comment(self, comment: dict):
+    def _verify_code_comment(self, comment: dict[str, object]):
         is_verified = False
         e = None
         try:
@@ -609,7 +609,7 @@ class GithubProvider(GitProvider):
                 pass
         return is_verified, e
 
-    def _verify_code_comments(self, comments: list[dict]) -> tuple[list[dict], list[tuple[dict, Exception]]]:
+    def _verify_code_comments(self, comments: list[dict[str, object]]) -> tuple[list[dict[str, object]], list[tuple[dict[str, object], Exception]]]:
         """Very each comment against the GitHub API and return 2 lists: 1 of verified and 1 of invalid comments"""
         verified_comments = []
         invalid_comments = []
@@ -622,7 +622,7 @@ class GithubProvider(GitProvider):
                 invalid_comments.append((comment, e))
         return verified_comments, invalid_comments
 
-    def _try_fix_invalid_inline_comments(self, invalid_comments: list[dict]) -> list[dict]:
+    def _try_fix_invalid_inline_comments(self, invalid_comments: list[dict[str, object]]) -> list[dict[str, object]]:
         """
         Try fixing invalid comments by removing the suggestion part and setting the comment just on the first line.
         Return only comments that have been modified in some way.
@@ -647,7 +647,7 @@ class GithubProvider(GitProvider):
                 get_logger().error(f"Failed to fix inline comment, error: {e}")
         return fixed_comments
 
-    def publish_code_suggestions(self, code_suggestions: list) -> bool:
+    def publish_code_suggestions(self, code_suggestions: list[dict[str, object]]) -> bool:
         """
         Publishes code suggestions as comments on the PR.
         """
@@ -742,7 +742,7 @@ class GithubProvider(GitProvider):
             get_logger().exception(f"Failed to edit comment, error: {e}")
             return None
 
-    def publish_file_comments(self, file_comments: list) -> bool:
+    def publish_file_comments(self, file_comments: list[dict[str, object]]) -> bool:
         try:
             headers, existing_comments = self.pr._requester.requestJsonAndCheck(
                 "GET", f"{self.pr.url}/comments"
@@ -1295,7 +1295,7 @@ class GithubProvider(GitProvider):
             get_logger().exception(f"Failed to auto-approve, error: {e}")
             return False
 
-    def calc_pr_statistics(self, pull_request_data: dict):
+    def calc_pr_statistics(self, pull_request_data: dict[str, object]) -> dict[str, object]:
             return {}
 
     def validate_comments_inside_hunks(self, code_suggestions):

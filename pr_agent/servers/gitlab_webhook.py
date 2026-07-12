@@ -27,7 +27,7 @@ router = APIRouter()
 secret_provider = get_secret_provider() if get_settings().get("CONFIG.SECRET_PROVIDER") else None
 
 
-async def handle_request(api_url: str, body: str, log_context: dict, sender_id: str, notify=None):
+async def handle_request(api_url: str, body: str, log_context: dict[str, object], sender_id: str, notify=None):
     log_context["action"] = body
     log_context["event"] = "pull_request" if body == "/review" else "comment"
     log_context["api_url"] = api_url
@@ -37,7 +37,7 @@ async def handle_request(api_url: str, body: str, log_context: dict, sender_id: 
         await PRAgent().handle_request(api_url, body, notify)
 
 async def _perform_commands_gitlab(commands_conf: str, agent: PRAgent, api_url: str,
-                                   log_context: dict, data: dict):
+                                   log_context: dict[str, object], data: dict[str, object]):
     apply_repo_settings(api_url)
     if commands_conf == "pr_commands" and get_settings().config.disable_auto_feedback:  # auto commands for PR, and auto feedback is disabled
         get_logger().info(f"Auto feedback is disabled, skipping auto commands for PR {api_url=}", **log_context)
@@ -173,7 +173,7 @@ async def gitlab_webhook(background_tasks: BackgroundTasks, request: Request):
     request_json = await request.json()
     context["settings"] = copy.deepcopy(global_settings)
 
-    async def inner(data: dict):
+    async def inner(data: dict[str, object]):
         log_context = {"server_type": "gitlab_app"}
         get_logger().debug("Received a GitLab webhook")
         if request.headers.get("X-Gitlab-Token") and secret_provider:

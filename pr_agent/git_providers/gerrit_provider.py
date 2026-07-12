@@ -340,7 +340,7 @@ class GerritProvider(GitProvider):
             '\n'.join(context) + '\n' if context else ''
         )
 
-    def publish_code_suggestions(self, code_suggestions: list):
+    def publish_code_suggestions(self, code_suggestions: list[dict[str, object]]):
         msg = []
         for suggestion in code_suggestions:
             description, code = self.split_suggestion(suggestion['body'])
@@ -371,7 +371,7 @@ class GerritProvider(GitProvider):
         text = msg if pr_title is None else pr_title + '\n' + msg
         add_comment(self.parsed_url, self.refspec, text)
 
-    def publish_inline_comments(self, comments: list[dict]):
+    def publish_inline_comments(self, comments: list[dict[str, object]]):
         raise NotImplementedError(
             'Publishing inline comments is not implemented for the gerrit '
             'provider')

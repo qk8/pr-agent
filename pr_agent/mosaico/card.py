@@ -26,7 +26,7 @@ def _jsonrpc_interface() -> AgentInterface:
     )
 
 
-def _build_skills() -> list:
+def _build_skills() -> list[object]:
     return [
         AgentSkill(
             id="review",
