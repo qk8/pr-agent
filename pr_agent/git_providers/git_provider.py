@@ -4,9 +4,12 @@ import os
 import shutil
 import subprocess
 import time
-from typing import Optional, Tuple
+from typing import TYPE_CHECKING, Any, Optional, Tuple
 
 from pr_agent.algo.types import FilePatchInfo
+
+if TYPE_CHECKING:
+    from pr_agent.git_providers.git_provider import GitProvider
 from pr_agent.algo.utils import Range, process_description
 from pr_agent.config_loader import get_settings
 from pr_agent.log import get_logger
@@ -117,7 +120,7 @@ def get_git_ssl_env() -> dict[str, str]:
 class GitProvider(ABC):
     @abstractmethod
     def is_supported(self, capability: str) -> bool:
-        pass
+        ...
 
     #Given a url (issues or PR/MR) - get the .git repo url to which they belong. Needs to be implemented by the provider.
     def get_git_repo_url(self, issues_or_pr_url: str) -> str:
@@ -127,7 +130,7 @@ class GitProvider(ABC):
     # Given a git repo url, return prefix and suffix of the provider in order to view a given file belonging to that repo. Needs to be implemented by the provider.
     # For example: For a git: https://git_provider.com/MY_PROJECT/MY_REPO.git and desired branch: <MY_BRANCH> then it should return ('https://git_provider.com/projects/MY_PROJECT/repos/MY_REPO/.../<MY_BRANCH>', '?=<SOME HEADER>')
     # so that to properly view the file: docs/readme.md -> <PREFIX>/docs/readme.md<SUFFIX> -> https://git_provider.com/projects/MY_PROJECT/repos/MY_REPO/<MY_BRANCH>/docs/readme.md?=<SOME HEADER>)
-    def get_canonical_url_parts(self, repo_git_url:str, desired_branch:str) -> Tuple[str, str]:
+    def get_canonical_url_parts(self, repo_git_url: str, desired_branch: str) -> Tuple[str, str]:
         get_logger().warning("Not implemented! Returning empty prefix and suffix")
         return ("", "")
 
@@ -154,7 +157,7 @@ class GitProvider(ABC):
 
     # Does a shallow clone, using a forked process to support a timeout guard.
     # In case operation has failed, it is expected to throw an exception as this method does not return a value.
-    def _clone_inner(self, repo_url: str, dest_folder: str, operation_timeout_in_seconds: int=None) -> None:
+    def _clone_inner(self, repo_url: str, dest_folder: str, operation_timeout_in_seconds: int | None = None) -> None:
         #The following ought to be equivalent to:
         # #Repo.clone_from(repo_url, dest_folder)
         # , but with throwing an exception upon timeout.
@@ -198,37 +201,37 @@ class GitProvider(ABC):
             return returned_obj
 
     @abstractmethod
-    def get_files(self) -> list:
+    def get_files(self) -> list[str]:
         pass
 
     @abstractmethod
     def get_diff_files(self) -> list[FilePatchInfo]:
         pass
 
-    def get_incremental_commits(self, is_incremental):
+    def get_incremental_commits(self, is_incremental: bool) -> None:
         pass
 
     @abstractmethod
-    def publish_description(self, pr_title: str, pr_body: str):
+    def publish_description(self, pr_title: str, pr_body: str) -> None:
         # pr_title may be None, which means "leave the existing title unchanged"
         # and update only the description. Implementations must not write the
         # title in that case.
         pass
 
     @abstractmethod
-    def publish_code_suggestions(self, code_suggestions: list) -> bool:
+    def publish_code_suggestions(self, code_suggestions: list[dict[str, Any]]) -> bool:
         pass
 
     @abstractmethod
-    def get_languages(self):
+    def get_languages(self) -> dict[str, int]:
         pass
 
     @abstractmethod
-    def get_pr_branch(self):
+    def get_pr_branch(self) -> str:
         pass
 
     @abstractmethod
-    def get_user_id(self):
+    def get_user_id(self) -> str:
         pass
 
     @abstractmethod
@@ -317,7 +320,7 @@ class GitProvider(ABC):
         return any(description_lowercase.startswith(header) for header in possible_headers)
 
     @abstractmethod
-    def get_repo_settings(self):
+    def get_repo_settings(self) -> list[dict[str, Any]]:
         pass
 
     def get_repo_file_content(self, file_path: str, from_default_branch: bool = False):
@@ -337,14 +340,14 @@ class GitProvider(ABC):
 
     #### comments operations ####
     @abstractmethod
-    def publish_comment(self, pr_comment: str, is_temporary: bool = False):
+    def publish_comment(self, pr_comment: str, is_temporary: bool = False) -> None:
         pass
 
     def publish_persistent_comment(self, pr_comment: str,
                                    initial_header: str,
                                    update_header: bool = True,
-                                   name='review',
-                                   final_update_message=True):
+                                   name: str = 'review',
+                                   final_update_message: bool = True) -> Any:
         return self.publish_comment(pr_comment)
 
     def publish_persistent_comment_full(self, pr_comment: str,
@@ -376,27 +379,27 @@ class GitProvider(ABC):
         return self.publish_comment(pr_comment)
 
     @abstractmethod
-    def publish_inline_comment(self, body: str, relevant_file: str, relevant_line_in_file: str, original_suggestion=None):
+    def publish_inline_comment(self, body: str, relevant_file: str, relevant_line_in_file: str, original_suggestion: Any = None) -> None:
         pass
 
     def create_inline_comment(self, body: str, relevant_file: str, relevant_line_in_file: str,
-                              absolute_position: int = None):
+                              absolute_position: int | None = None) -> None:
         raise NotImplementedError("This git provider does not support creating inline comments yet")
 
     @abstractmethod
-    def publish_inline_comments(self, comments: list[dict]):
+    def publish_inline_comments(self, comments: list[dict[str, Any]]) -> None:
         pass
 
     @abstractmethod
-    def remove_initial_comment(self):
+    def remove_initial_comment(self) -> None:
         pass
 
     @abstractmethod
-    def remove_comment(self, comment):
+    def remove_comment(self, comment: Any) -> None:
         pass
 
     @abstractmethod
-    def get_issue_comments(self):
+    def get_issue_comments(self) -> list[Any]:
         pass
 
     def get_comment_url(self, comment) -> str:
@@ -407,15 +410,15 @@ class GitProvider(ABC):
 
     #### labels operations ####
     @abstractmethod
-    def publish_labels(self, labels):
+    def publish_labels(self, labels: list[str]) -> None:
         pass
 
     @abstractmethod
-    def get_pr_labels(self, update=False):
+    def get_pr_labels(self, update: bool = False) -> list[str]:
         pass
 
-    def get_repo_labels(self):
-        pass
+    def get_repo_labels(self) -> list[str]:
+        return []
 
     @abstractmethod
     def add_eyes_reaction(self, issue_comment_id: int, disable_eyes: bool = False) -> Optional[int]:
@@ -427,7 +430,7 @@ class GitProvider(ABC):
 
     #### commits operations ####
     @abstractmethod
-    def get_commit_messages(self):
+    def get_commit_messages(self) -> list[str]:
         pass
 
     def get_pr_url(self) -> str:
@@ -454,7 +457,7 @@ class GitProvider(ABC):
         return output[:max_chars] + '...' if len(output) > max_chars else output
 
 
-def get_main_pr_language(languages, files) -> str:
+def get_main_pr_language(languages: dict[str, int] | None, files: list[Any] | None) -> str:
     """
     Get the main language of the commit. Return an empty string if cannot determine.
     """
