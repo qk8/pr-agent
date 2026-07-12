@@ -1,4 +1,6 @@
-MAX_TOKENS = {
+from __future__ import annotations
+
+MAX_TOKENS: dict[str, int] = {
     'text-embedding-ada-002': 8000,
     'gpt-3.5-turbo': 16000,
     'gpt-3.5-turbo-0125': 16000,
@@ -302,14 +304,14 @@ MAX_TOKENS = {
     "codestral/codestral-2405": 8191,
 }
 
-USER_MESSAGE_ONLY_MODELS = [
+USER_MESSAGE_ONLY_MODELS: list[str] = [
     "deepseek/deepseek-reasoner",
     "o1-mini",
     "o1-mini-2024-09-12",
     "o1-preview"
 ]
 
-NO_SUPPORT_TEMPERATURE_MODELS = [
+NO_SUPPORT_TEMPERATURE_MODELS: list[str] = [
     "deepseek/deepseek-reasoner",
     "o1-mini",
     "o1-mini-2024-09-12",
@@ -357,7 +359,7 @@ NO_SUPPORT_TEMPERATURE_MODELS = [
     "bedrock/global.anthropic.claude-opus-4-7",
 ]
 
-SUPPORT_REASONING_EFFORT_MODELS = [
+SUPPORT_REASONING_EFFORT_MODELS: list[str] = [
     "o3-mini",
     "o3-mini-2025-01-31",
     "o3",
@@ -374,7 +376,7 @@ SUPPORT_REASONING_EFFORT_MODELS = [
 # without also adding an adaptive-thinking code path. This list is the built-in
 # default; it can be replaced via the `claude_extended_thinking_models_override`
 # configuration option.
-CLAUDE_EXTENDED_THINKING_MODELS = [
+CLAUDE_EXTENDED_THINKING_MODELS: list[str] = [
     "anthropic/claude-3-7-sonnet-20250219",
     "claude-3-7-sonnet-20250219",
     "anthropic/claude-sonnet-4-6",
@@ -425,6 +427,6 @@ CLAUDE_EXTENDED_THINKING_MODELS = [
 ]
 
 # Models that require streaming mode
-STREAMING_REQUIRED_MODELS = [
+STREAMING_REQUIRED_MODELS: list[str] = [
     "openai/qwq-plus"
 ]

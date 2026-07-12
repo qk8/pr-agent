@@ -19,8 +19,8 @@ class FilePatchInfo:
     filename: str
     tokens: int = -1
     edit_type: EDIT_TYPE = EDIT_TYPE.UNKNOWN
-    old_filename: str = None
+    old_filename: str | None = None
     num_plus_lines: int = -1
     num_minus_lines: int = -1
-    language: Optional[str] = None
-    ai_file_summary: str = None
+    language: str | None = None
+    ai_file_summary: str | None = None

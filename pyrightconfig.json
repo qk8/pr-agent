@@ -1,0 +1,35 @@
+{
+  "include": [
+    "pr_agent",
+    "tests"
+  ],
+  "exclude": [
+    "tests/e2e_tests",
+    "tests/health_test"
+  ],
+  "typeCheckingMode": "strict",
+  "pythonVersion": "3.12",
+  "pythonPlatform": "Linux",
+  "reportMissingTypeStubs": false,
+  "reportImplicitStringConcatenation": "warning",
+  "reportInvalidTypeReexport": "warning",
+  "reportMatchNotExhaustive": "warning",
+  "reportNullType": "warning",
+  "reportPrivateUsage": "warning",
+  "reportUnknownArgumentType": "warning",
+  "reportUnknownLambdaType": "warning",
+  "reportUnknownMemberType": "warning",
+  "reportUnknownParameterType": "warning",
+  "reportUnknownVariableType": "warning",
+  "strictListInference": true,
+  "strictDictionaryInference": true,
+  "strictSetInference": true,
+  "strictBooleanExpressions": true,
+  "deprecateTypingAliases": true,
+  "disableBytesTypePromotions": true,
+  "venv": "default",
+  "venvPath": ".",
+  "extraPaths": [
+    "."
+  ]
+}

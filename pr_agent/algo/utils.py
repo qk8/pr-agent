@@ -15,7 +15,7 @@ import traceback
 from datetime import datetime
 from enum import Enum
 from importlib.metadata import PackageNotFoundError, version
-from typing import Any, List, Tuple, TypedDict
+from typing import Any, TypedDict
 
 import html2text
 import requests
@@ -54,7 +54,7 @@ class ModelType(str, Enum):
 
 class TodoItem(TypedDict):
     relevant_file: str
-    line_range: Tuple[int, int]
+    line_range: tuple[int, int]
     content: str
 
 
@@ -113,7 +113,7 @@ def emphasize_header(text: str, only_markdown=False, reference_link=None) -> str
         return text
 
 
-def unique_strings(input_list: List[str]) -> List[str]:
+def unique_strings(input_list: list[str]) -> list[str]:
     if not input_list or not isinstance(input_list, list):
         return input_list
     seen = set()
@@ -703,7 +703,7 @@ def load_large_diff(filename, new_file_content_str: str, original_file_content_s
         return ""
 
 
-def update_settings_from_args(args: List[str]) -> List[str]:
+def update_settings_from_args(args: list[str]) -> list[str]:
     """
     Update the settings of the Dynaconf object based on the arguments passed to the function.
 
@@ -749,7 +749,7 @@ def _fix_key_value(key: str, value: str):
     return key, value
 
 
-def load_yaml(response_text: str, keys_fix_yaml: List[str] = [], first_key="", last_key="") -> dict:
+def load_yaml(response_text: str, keys_fix_yaml: list[str] = [], first_key="", last_key="") -> dict:
     response_text_original = copy.deepcopy(response_text)
     response_text = response_text.strip('\n').removeprefix('yaml').removeprefix('```yaml').rstrip().removesuffix('```')
     try:
@@ -769,7 +769,7 @@ def load_yaml(response_text: str, keys_fix_yaml: List[str] = [], first_key="", l
 
 
 def try_fix_yaml(response_text: str,
-                 keys_fix_yaml: List[str] = [],
+                 keys_fix_yaml: list[str] = [],
                  first_key="",
                  last_key="",
                  response_text_original="") -> dict:
@@ -964,7 +964,7 @@ def set_custom_labels(variables, git_provider=None):
         counter += 1
     variables["labels_minimal_to_labels_dict"] = labels_minimal_to_labels_dict
 
-def get_user_labels(current_labels: List[str] = None):
+def get_user_labels(current_labels: list[str] = None):
     """
     Only keep labels that has been added by the user
     """
@@ -1122,10 +1122,10 @@ def replace_code_tags(text):
     return ''.join(parts)
 
 
-def find_line_number_of_relevant_line_in_file(diff_files: List[FilePatchInfo],
+def find_line_number_of_relevant_line_in_file(diff_files: list[FilePatchInfo],
                                               relevant_file: str,
                                               relevant_line_in_file: str,
-                                              absolute_position: int = None) -> Tuple[int, int]:
+                                              absolute_position: int = None) -> tuple[int, int]:
     position = -1
     if absolute_position is None:
         absolute_position = -1
@@ -1324,7 +1324,7 @@ def string_to_uniform_number(s: str) -> float:
     return uniform_number
 
 
-def process_description(description_full: str) -> Tuple[str, List]:
+def process_description(description_full: str) -> tuple[str, List]:
     if not description_full:
         return "", []
 
@@ -1443,7 +1443,7 @@ def get_version() -> str:
         return "unknown"
 
 
-def set_file_languages(diff_files) -> List[FilePatchInfo]:
+def set_file_languages(diff_files) -> list[FilePatchInfo]:
     try:
         # if the language is already set, do not change it
         if hasattr(diff_files[0], 'language') and diff_files[0].language:

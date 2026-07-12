@@ -1,15 +1,20 @@
+from __future__ import annotations
+
 from pathlib import Path
-import tomllib #tomllib should be used instead of Py toml for Python 3.11+
+from typing import TYPE_CHECKING
+
+import tomllib  # tomllib should be used instead of Py toml for Python 3.11+
 
 from jinja2.exceptions import SecurityError
 
-from pr_agent.log import get_logger
+if TYPE_CHECKING:
+    from dynaconf.utils.boxing import DynaBox
 
 # Prevent out-of-memory exceptions by limiting settings files to 100 MB (sufficient for up to ~1M lines).
 MAX_TOML_SIZE_IN_BYTES = 100 * 1024 * 1024
 
 
-def load(obj, env=None, silent=True, key=None, filename=None):
+def load(obj: "DynaBox", env: str | None = None, silent: bool = True, key: str | None = None, filename: str | None = None) -> None:
     """
     Load and merge TOML configuration files into a Dynaconf settings object using a secure, in-house loader.
     This loader:
@@ -26,11 +31,12 @@ def load(obj, env=None, silent=True, key=None, filename=None):
     Returns:
         None
     """
+    from pr_agent.log import get_logger
 
     # Get the list of files to load
     # TODO: hasattr(obj, 'settings_files') for some reason returns False. Need to use 'settings_file'
     settings_files = obj.settings_files if hasattr(obj, 'settings_files') else (
-        obj.settings_file) if hasattr(obj, 'settings_file') else []
+        obj.settings_file) if hasattr(obj, 'settings_file') else []  # type: ignore[attr-defined]
     if not settings_files or not isinstance(settings_files, list):
         get_logger().warning("No settings files specified, or missing keys "
                              "(tried looking for 'settings_files' or 'settings_file'), or not a list. Skipping loading.",
@@ -38,15 +44,15 @@ def load(obj, env=None, silent=True, key=None, filename=None):
         return
 
     # Storage for all loaded data
-    accumulated_data = {}
+    accumulated_data: dict[str, dict[str, object]] = {}
 
     # Security: Check for forbidden configuration options
-    if hasattr(obj, 'includes') and obj.includes:
+    if hasattr(obj, 'includes') and obj.includes:  # type: ignore[attr-defined]
         if not silent:
             raise SecurityError("Configuration includes forbidden option: 'includes'. Skipping loading.")
         get_logger().error("Configuration includes forbidden option: 'includes'. Skipping loading.")
         return
-    if hasattr(obj, 'preload') and obj.preload:
+    if hasattr(obj, 'preload') and obj.preload:  # type: ignore[attr-defined]
         if not silent:
             raise SecurityError("Configuration includes forbidden option: 'preload'. Skipping loading.")
         get_logger().error("Configuration includes forbidden option: 'preload'. Skipping loading.")
@@ -70,7 +76,7 @@ def load(obj, env=None, silent=True, key=None, filename=None):
                 continue
 
             with open(file_path, 'rb') as f:
-                file_data = tomllib.load(f)
+                file_data: dict[str, dict[str, object]] = tomllib.load(f)
 
             # Handle sections (like [config], [default], etc.)
             if not isinstance(file_data, dict):
@@ -98,9 +104,10 @@ def load(obj, env=None, silent=True, key=None, filename=None):
     for k, v in accumulated_data.items():
         # For fresh_vars support: key parameter is uppercase, but accumulated_data keys are lowercase
         if key is None or key.upper() == k.upper():
-            obj.set(k, v)
+            obj.set(k, v)  # type: ignore[attr-defined]
 
-def validate_file_security(file_data, filename):
+
+def validate_file_security(file_data: dict[str, object], filename: str) -> None:
     """
     Validate that the config file does not contain security-sensitive directives.
 
@@ -113,9 +120,8 @@ def validate_file_security(file_data, filename):
     """
     MAX_DEPTH = 50
 
-    # Check for forbidden keys
     # Comprehensive list of forbidden keys with explanations
-    forbidden_keys_to_reasons = {
+    forbidden_keys_to_reasons: dict[str, str] = {
         # Include mechanisms - allow loading arbitrary files
         'dynaconf_include': 'allows including other config files dynamically',
         'dynaconf_includes': 'allows including other config files dynamically',
@@ -148,7 +154,7 @@ def validate_file_security(file_data, filename):
     }
 
     # Check at the top level and in all sections
-    def check_dict(data, path="", max_depth=MAX_DEPTH):
+    def check_dict(data: dict[str, object], path: str = "", max_depth: int = MAX_DEPTH) -> None:
         if max_depth <= 0:
             raise SecurityError(
                 f"Maximum nesting depth exceeded at {path}. "

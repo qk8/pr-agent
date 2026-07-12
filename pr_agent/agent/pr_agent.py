@@ -1,13 +1,21 @@
+from __future__ import annotations
+
 import shlex
 from functools import partial
+from typing import TYPE_CHECKING
 
-from pr_agent.algo.ai_handlers.base_ai_handler import BaseAiHandler
-from pr_agent.algo.ai_handlers.litellm_ai_handler import LiteLLMAIHandler
+if TYPE_CHECKING:
+    from typing import Any
+
+    from pr_agent.algo.ai_handlers.base_ai_handler import BaseAiHandler
+
 from pr_agent.algo.cli_args import CliArgs
 from pr_agent.algo.utils import update_settings_from_args
 from pr_agent.config_loader import get_settings
 from pr_agent.git_providers.utils import apply_repo_settings
 from pr_agent.log import get_logger
+
+# Import tool classes at runtime to avoid circular imports
 from pr_agent.tools.pr_add_docs import PRAddDocs
 from pr_agent.tools.pr_code_suggestions import PRCodeSuggestions
 from pr_agent.tools.pr_config import PRConfig
@@ -20,7 +28,7 @@ from pr_agent.tools.pr_reviewer import PRReviewer
 from pr_agent.tools.pr_similar_issue import PRSimilarIssue
 from pr_agent.tools.pr_update_changelog import PRUpdateChangelog
 
-command2class = {
+command2class: dict[str, type] = {
     "auto_review": PRReviewer,
     "answer": PRReviewer,
     "review": PRReviewer,
@@ -44,15 +52,14 @@ command2class = {
     # and its import once the hardening PR is merged.
 }
 
-commands = list(command2class.keys())
-
+commands: list[str] = list(command2class.keys())
 
 
 class PRAgent:
-    def __init__(self, ai_handler: partial[BaseAiHandler,] = LiteLLMAIHandler):
-        self.ai_handler = ai_handler  # will be initialized in run_action
+    def __init__(self, ai_handler: type["BaseAiHandler"] | partial = partial):  # type: ignore[type-arg]
+        self.ai_handler: type["BaseAiHandler"] | partial = ai_handler  # type: ignore[type-arg]
 
-    async def _handle_request(self, pr_url, request, notify=None) -> bool:
+    async def _handle_request(self, pr_url: str, request: str | list[str], notify: Any = None) -> bool:
         # First, apply repo specific settings if exists
         apply_repo_settings(pr_url)
 
@@ -61,9 +68,15 @@ class PRAgent:
             request = request.replace("'", "\\'")
             lexer = shlex.shlex(request, posix=True)
             lexer.whitespace_split = True
-            action, *args = list(lexer)
+            action: str = ""
+            args: list[str] = []
+            parsed = list(lexer)
+            if parsed:
+                action = parsed[0]
+                args = parsed[1:]
         else:
-            action, *args = request
+            action = request[0] if request else ""
+            args = request[1:] if len(request) > 1 else []
 
         # validate args
         is_valid, arg = CliArgs.validate_user_args(args)
@@ -77,24 +90,24 @@ class PRAgent:
         args = update_settings_from_args(args)
 
         # Append the response language in the extra instructions
-        response_language = get_settings().config.get('response_language', 'en-us')
+        response_language = get_settings().config.get('response_language', 'en-us')  # type: ignore[union-attr]
         if response_language.lower() != 'en-us':
             get_logger().info(f'User has set the response language to: {response_language}')
-            for key in get_settings():
-                setting = get_settings().get(key)
+            for key in get_settings():  # type: ignore[union-attr]
+                setting = get_settings().get(key)  # type: ignore[union-attr]
                 if str(type(setting)) == "<class 'dynaconf.utils.boxing.DynaBox'>":
                     if hasattr(setting, 'extra_instructions'):
                         current_extra_instructions = setting.extra_instructions
-                        
+
                         # Define the language-specific instruction and the separator
                         lang_instruction_text = f"Your response MUST be written in the language corresponding to locale code: '{response_language}'. This is crucial."
                         separator_text = "\n======\n\nIn addition, "
 
                         # Check if the specific language instruction is already present to avoid duplication
                         if lang_instruction_text not in str(current_extra_instructions):
-                            if current_extra_instructions: # If there's existing text
+                            if current_extra_instructions:  # If there's existing text
                                 setting.extra_instructions = str(current_extra_instructions) + separator_text + lang_instruction_text
-                            else: # If extra_instructions was None or empty
+                            else:  # If extra_instructions was None or empty
                                 setting.extra_instructions = lang_instruction_text
                         # If lang_instruction_text is already present, do nothing.
 
@@ -107,21 +120,21 @@ class PRAgent:
             if action == "answer":
                 if notify:
                     notify()
-                await PRReviewer(pr_url, is_answer=True, args=args, ai_handler=self.ai_handler).run()
+                await PRReviewer(pr_url, is_answer=True, args=args, ai_handler=self.ai_handler).run()  # type: ignore[arg-type]
             elif action == "auto_review":
-                await PRReviewer(pr_url, is_auto=True, args=args, ai_handler=self.ai_handler).run()
+                await PRReviewer(pr_url, is_auto=True, args=args, ai_handler=self.ai_handler).run()  # type: ignore[arg-type]
             elif action in command2class:
                 if notify:
                     notify()
 
-                await command2class[action](pr_url, ai_handler=self.ai_handler, args=args).run()
+                await command2class[action](pr_url, ai_handler=self.ai_handler, args=args).run()  # type: ignore[arg-type]
             else:
                 return False
             return True
 
-    async def handle_request(self, pr_url, request, notify=None) -> bool:
+    async def handle_request(self, pr_url: str, request: str | list[str], notify: Any = None) -> bool:
         try:
             return await self._handle_request(pr_url, request, notify)
-        except:
+        except Exception:
             get_logger().exception("Failed to process the command.")
             return False

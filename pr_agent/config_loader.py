@@ -1,20 +1,25 @@
+from __future__ import annotations
+
 from os.path import abspath, dirname, join
 from pathlib import Path
-from typing import Optional
+from typing import TYPE_CHECKING
 
 from dynaconf import Dynaconf
 from starlette_context import context
+
+if TYPE_CHECKING:
+    from dynaconf.utils.boxing import DynaBox
 
 PR_AGENT_TOML_KEY = 'pr-agent'
 
 current_dir = dirname(abspath(__file__))
 
-dynconf_kwargs = {'core_loaders': [], # DISABLE default loaders, otherwise will load toml files more than once.
+dynconf_kwargs: dict[str, object] = {'core_loaders': [], # DISABLE default loaders, otherwise will load toml files more than once.
                            'loaders': ['pr_agent.custom_merge_loader', 'dynaconf.loaders.env_loader'], # Use a custom loader to merge sections, but overwrite their overlapping values. Also support ENV variables to take precedence.
                            'root_path': join(current_dir, "settings"), #Used for Dynaconf.find_file() - So that root path points to settings folder, since we disabled all core loaders.
                            'merge_enabled': True  # In case more than one file is sent, merge them. Must be set to True, otherwise, a .toml file with section [XYZ] overwrites the entire section of a previous .toml file's [XYZ] and we want it to only overwrite the overlapping fields under such section
                            }
-global_settings = Dynaconf(
+global_settings: Dynaconf = Dynaconf(
     envvar_prefix=False,
     load_dotenv=False,  # Security: Don't load .env files
     settings_files=[join(current_dir, f) for f in [
@@ -44,7 +49,7 @@ global_settings = Dynaconf(
 )
 
 
-def get_settings(use_context=False):
+def get_settings(use_context: bool = False) -> "DynaBox":
     """
     Retrieves the current settings.
 
@@ -55,13 +60,13 @@ def get_settings(use_context=False):
         Dynaconf: The current settings object, either from the context or the global default.
     """
     try:
-        return context["settings"]
+        return context["settings"]  # type: ignore[index]
     except Exception:
-        return global_settings
+        return global_settings  # type: ignore[return-value]
 
 
 # Add local configuration from pyproject.toml of the project being reviewed
-def _find_repository_root() -> Optional[Path]:
+def _find_repository_root() -> Path | None:
     """
     Identify project root directory by recursively searching for the .git directory in the parent directories.
     """
@@ -75,7 +80,7 @@ def _find_repository_root() -> Optional[Path]:
     return None
 
 
-def _find_pyproject() -> Optional[Path]:
+def _find_pyproject() -> Path | None:
     """
     Search for file pyproject.toml in the repository root.
     """
@@ -86,14 +91,14 @@ def _find_pyproject() -> Optional[Path]:
     return None
 
 
-pyproject_path = _find_pyproject()
+pyproject_path: Path | None = _find_pyproject()
 if pyproject_path is not None:
     get_settings().load_file(pyproject_path, env=f'tool.{PR_AGENT_TOML_KEY}')
 
 
-def apply_secrets_manager_config():
+def apply_secrets_manager_config() -> None:
     """
-    Retrieve configuration from AWS Secrets Manager and override existing settings
+    Retrieve configuration from AWS Secrets Manager and override existing configuration
     """
     try:
         # Dynamic imports to avoid circular dependency (secret_providers imports config_loader)
@@ -105,7 +110,7 @@ def apply_secrets_manager_config():
             return
 
         if (hasattr(secret_provider, 'get_all_secrets') and
-            get_settings().get("CONFIG.SECRET_PROVIDER") == 'aws_secrets_manager'):
+            get_settings().get("CONFIG.SECRET_PROVIDER") == 'aws_secrets_manager'):  # type: ignore[union-attr]
             try:
                 secrets = secret_provider.get_all_secrets()
                 if secrets:
@@ -117,23 +122,24 @@ def apply_secrets_manager_config():
         try:
             from pr_agent.log import get_logger
             get_logger().debug(f"Secret provider not configured: {e}")
-        except:
+        except Exception:
             # Fail completely silently if log module is not available
             pass
 
 
-def apply_secrets_to_config(secrets: dict):
+def apply_secrets_to_config(secrets: dict[str, str]) -> None:
     """
     Apply secret dictionary to configuration
     """
     try:
         # Dynamic import to avoid potential circular dependency
         from pr_agent.log import get_logger
-    except:
-        def get_logger():
+    except Exception:
+        def get_logger() -> object:
             class DummyLogger:
-                def debug(self, msg): pass
-            return DummyLogger()
+                def debug(self, msg: str) -> None:
+                    pass
+            return DummyLogger()  # type: ignore[return-value]
 
     for key, value in secrets.items():
         if '.' in key:  # nested key like "openai.key"
@@ -144,7 +150,7 @@ def apply_secrets_to_config(secrets: dict):
                 setting_upper = setting.upper()
 
                 # Set only when no existing value (prioritize environment variables)
-                current_value = get_settings().get(f"{section_upper}.{setting_upper}")
+                current_value = get_settings().get(f"{section_upper}.{setting_upper}")  # type: ignore[union-attr]
                 if current_value is None or current_value == "":
-                    get_settings().set(f"{section_upper}.{setting_upper}", value)
+                    get_settings().set(f"{section_upper}.{setting_upper}", value)  # type: ignore[union-attr]
                     get_logger().debug(f"Set {section}.{setting} from AWS Secrets Manager")
