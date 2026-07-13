@@ -8,8 +8,6 @@ The diff is parsed by parse_unified_diff(); per-request the parsed files/languag
 are read from MOSAICO.INPUT on the (context) settings.
 """
 import re
-from typing import List
-
 from pr_agent.algo.types import EDIT_TYPE, FilePatchInfo
 from pr_agent.config_loader import get_settings
 from pr_agent.git_providers.git_provider import GitProvider

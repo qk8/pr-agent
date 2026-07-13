@@ -1,8 +1,6 @@
 import asyncio
 import json
 import os
-from typing import Union
-
 from pr_agent.agent.pr_agent import PRAgent
 from pr_agent.config_loader import get_settings
 from pr_agent.git_providers import get_git_provider
@@ -14,7 +12,7 @@ from pr_agent.tools.pr_description import PRDescription
 from pr_agent.tools.pr_reviewer import PRReviewer
 
 
-def is_true(value: Union[str, bool]) -> bool:
+def is_true(value: str | bool) -> bool:
     if isinstance(value, bool):
         return value
     if isinstance(value, str):
@@ -22,7 +20,7 @@ def is_true(value: Union[str, bool]) -> bool:
     return False
 
 
-def get_setting_or_env(key: str, default: Union[str, bool] = None) -> Union[str, bool]:
+def get_setting_or_env(key: str, default: str | bool = None) -> str | bool:
     try:
         value = get_settings().get(key, default)
     except AttributeError:  # TBD still need to debug why this happens on GitHub Actions
