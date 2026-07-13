@@ -16,7 +16,7 @@ from pr_agent.servers.help import HelpMessage
 
 
 class PRQuestions:
-    def __init__(self, pr_url: str, args=None, ai_handler: partial[BaseAiHandler,] = LiteLLMAIHandler):
+    def __init__(self, pr_url: str, args=None, ai_handler: partial | type[BaseAiHandler] = LiteLLMAIHandler):
         question_str = self.parse_args(args)
         self.pr_url = pr_url
         self.git_provider = get_git_provider()(pr_url)

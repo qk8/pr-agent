@@ -283,7 +283,7 @@ class PredictionPreparator:
 
 
 class PRHelpDocs(object):
-    def __init__(self, ctx_url, ai_handler:partial[BaseAiHandler,] = LiteLLMAIHandler, args: tuple[str]=None, return_as_string: bool=False):
+    def __init__(self, ctx_url, ai_handler: partial | type[BaseAiHandler] = LiteLLMAIHandler, args: tuple[str]=None, return_as_string: bool=False):
         try:
             self.ctx_url = ctx_url
             self.question = args[0] if args else None

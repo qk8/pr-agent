@@ -18,7 +18,7 @@ CHANGELOG_LINES = 50
 
 
 class PRUpdateChangelog:
-    def __init__(self, pr_url: str, cli_mode=False, args=None, ai_handler: partial[BaseAiHandler,] = LiteLLMAIHandler):
+    def __init__(self, pr_url: str, cli_mode=False, args=None, ai_handler: partial | type[BaseAiHandler] = LiteLLMAIHandler):
 
         self.git_provider = get_git_provider()(pr_url)
 

@@ -18,7 +18,7 @@ from pr_agent.log import get_logger
 from pr_agent.servers.help import HelpMessage
 
 class PR_LineQuestions:
-    def __init__(self, pr_url: str, args=None, ai_handler: partial[BaseAiHandler,] = LiteLLMAIHandler):
+    def __init__(self, pr_url: str, args=None, ai_handler: partial | type[BaseAiHandler] = LiteLLMAIHandler):
         self.question_str = self.parse_args(args)
         self.git_provider = get_git_provider()(pr_url)
         self.main_pr_language = get_main_pr_language(

@@ -56,8 +56,8 @@ commands: list[str] = list(command2class.keys())
 
 
 class PRAgent:
-    def __init__(self, ai_handler: type["BaseAiHandler"] | partial = partial):  # type: ignore[type-arg]
-        self.ai_handler: type["BaseAiHandler"] | partial = ai_handler  # type: ignore[type-arg]
+    def __init__(self, ai_handler: type["BaseAiHandler"] | partial = partial):
+        self.ai_handler: type["BaseAiHandler"] | partial = ai_handler
 
     async def _handle_request(self, pr_url: str, request: str | list[str], notify: Any = None) -> bool:
         # First, apply repo specific settings if exists

@@ -33,7 +33,7 @@ from pr_agent.tools.progress_comment import build_progress_comment
 
 class PRCodeSuggestions:
     def __init__(self, pr_url: str, cli_mode=False, args: list[str] | None = None,
-                 ai_handler: partial[BaseAiHandler,] = LiteLLMAIHandler):
+                 ai_handler: partial | type[BaseAiHandler] = LiteLLMAIHandler):
 
         self.git_provider = get_git_provider_with_context(pr_url)
         self.main_language = get_main_pr_language(

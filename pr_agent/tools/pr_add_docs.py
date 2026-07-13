@@ -17,7 +17,7 @@ from pr_agent.log import get_logger
 
 class PRAddDocs:
     def __init__(self, pr_url: str, cli_mode=False, args: list[str] | None = None,
-                 ai_handler: partial[BaseAiHandler,] = LiteLLMAIHandler):
+                 ai_handler: partial | type[BaseAiHandler] = LiteLLMAIHandler):
 
         self.git_provider = get_git_provider()(pr_url)
         self.main_language = get_main_pr_language(

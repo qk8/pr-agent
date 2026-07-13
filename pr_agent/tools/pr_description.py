@@ -31,7 +31,7 @@ from pr_agent.tools.ticket_pr_compliance_check import extract_and_cache_pr_ticke
 
 class PRDescription:
     def __init__(self, pr_url: str, args: list[str] | None = None,
-                 ai_handler: partial[BaseAiHandler,] = LiteLLMAIHandler):
+                 ai_handler: partial | type[BaseAiHandler] = LiteLLMAIHandler):
         """
         Initialize the PRDescription object with the necessary attributes and objects for generating a PR description
         using an AI model.

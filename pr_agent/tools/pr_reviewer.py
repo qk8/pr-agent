@@ -33,7 +33,7 @@ class PRReviewer:
     """
 
     def __init__(self, pr_url: str, is_answer: bool = False, is_auto: bool = False, args: list[str] | None = None,
-                 ai_handler: partial[BaseAiHandler,] = LiteLLMAIHandler):
+                 ai_handler: partial | type[BaseAiHandler] = LiteLLMAIHandler):
         """
         Initialize the PRReviewer object with the necessary attributes and objects to review a pull request.
 

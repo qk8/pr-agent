@@ -16,7 +16,7 @@ from pr_agent.log import get_logger
 
 class PRGenerateLabels:
     def __init__(self, pr_url: str, args: list[str] | None = None,
-                 ai_handler: partial[BaseAiHandler,] = LiteLLMAIHandler):
+                 ai_handler: partial | type[BaseAiHandler] = LiteLLMAIHandler):
         """
         Initialize the PRGenerateLabels object with the necessary attributes and objects for generating labels
         corresponding to the PR using an AI model.
