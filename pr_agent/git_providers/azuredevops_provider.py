@@ -1,4 +1,5 @@
 from __future__ import annotations
+from typing import Any
 
 import datetime as _dt
 import os
@@ -873,7 +874,7 @@ class AzureDevopsProvider(GitProvider):
     def get_commit_messages(self):
         return ""  # not implemented yet
 
-    def get_pr_id(self):
+    def get_pr_id(self) -> Any:
         try:
             pr_id = f"{self.workspace_slug}/{self.repo_slug}/{self.pr_num}"
             return pr_id

@@ -1,4 +1,5 @@
 from __future__ import annotations
+from typing import Any
 import difflib
 import re
 import urllib.parse
@@ -965,7 +966,7 @@ class GitLabProvider(GitProvider):
             commit_messages_str = clip_tokens(commit_messages_str, max_tokens)
         return commit_messages_str
 
-    def get_pr_id(self):
+    def get_pr_id(self) -> Any:
         try:
             pr_id = self.mr.web_url
             return pr_id

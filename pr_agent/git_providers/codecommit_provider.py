@@ -1,4 +1,5 @@
 from __future__ import annotations
+from typing import Any
 import os
 import re
 from collections import Counter
@@ -472,7 +473,7 @@ class CodeCommitProvider(GitProvider):
         return extensions
 
     @staticmethod
-    def _get_language_percentages(extensions):  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]
+    def _get_language_percentages(extensions) -> Any:  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]
         """
         Return a dictionary containing the programming language name (as the key),
         and the percentage that language is used (as the value),

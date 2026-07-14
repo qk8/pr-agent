@@ -1,4 +1,5 @@
 from __future__ import annotations
+from typing import Any
 import boto3
 import botocore
 
@@ -217,7 +218,7 @@ class CodeCommitClient:
         except Exception as e:
             raise ValueError(f"Error calling publish_description") from e
 
-    def publish_comment(self, repo_name: str, pr_number: int, destination_commit: str, source_commit: str, comment: str, annotation_file: str = None, annotation_line: int = None):  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]
+    def publish_comment(self, repo_name: str, pr_number: int, destination_commit: str, source_commit: str, comment: str, annotation_file: str = None, annotation_line: int = None) -> Any:  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]
         """
         Publish a comment to a pull request
 

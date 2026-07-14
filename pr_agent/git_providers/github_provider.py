@@ -1,4 +1,5 @@
 from __future__ import annotations
+from typing import Any
 import copy
 import difflib
 import hashlib
@@ -1299,7 +1300,7 @@ class GithubProvider(GitProvider):
     def calc_pr_statistics(self, pull_request_data: dict[str, object]) -> dict[str, object]:
             return {}
 
-    def validate_comments_inside_hunks(self, code_suggestions):  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]
+    def validate_comments_inside_hunks(self, code_suggestions) -> Any:  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]
         """
         validate that all committable comments are inside PR hunks - this is a must for committable comments in GitHub
         """

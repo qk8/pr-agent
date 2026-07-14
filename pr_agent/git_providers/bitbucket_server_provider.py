@@ -1,4 +1,5 @@
 from __future__ import annotations
+from typing import Any
 import difflib
 import re
 
@@ -571,7 +572,7 @@ class BitbucketServerProvider(GitProvider):
 
     #Overriding the shell command, since for some reason usage of x-token-auth doesn't work, as mentioned here:
     # https://stackoverflow.com/questions/56760396/cloning-bitbucket-server-repo-with-access-tokens
-    def _clone_inner(self, repo_url: str, dest_folder: str, operation_timeout_in_seconds: int=None):  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]
+    def _clone_inner(self, repo_url: str, dest_folder: str, operation_timeout_in_seconds: int=None) -> Any:  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]
         bearer_token = self.bearer_token
         if not bearer_token:
             #Shouldn't happen since this is checked in _prepare_clone, therefore - throwing an exception.

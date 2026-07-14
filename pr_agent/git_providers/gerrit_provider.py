@@ -1,4 +1,5 @@
 from __future__ import annotations
+from typing import Any
 import json
 import os
 import pathlib
@@ -397,5 +398,5 @@ class GerritProvider(GitProvider):
     def remove_comment(self, comment):  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]
         pass
 
-    def get_pr_branch(self):
+    def get_pr_branch(self) -> Any:
         return self.repo.head

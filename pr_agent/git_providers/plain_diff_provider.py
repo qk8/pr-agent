@@ -1,4 +1,5 @@
 from __future__ import annotations
+from typing import Any
 import os
 from collections import Counter
 
@@ -226,5 +227,5 @@ class PlainDiffGitProvider(GitProvider):
         # traceback in the log.
         return []
 
-    def get_pr_labels(self, update=False):  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]
+    def get_pr_labels(self, update=False) -> Any:  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]
         return []

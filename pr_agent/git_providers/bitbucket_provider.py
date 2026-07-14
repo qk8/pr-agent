@@ -1,4 +1,5 @@
 from __future__ import annotations
+from typing import Any
 import difflib
 import json
 import re
@@ -34,7 +35,7 @@ class BitbucketProvider(GitProvider):
         self.auth_type = get_settings().get("BITBUCKET.AUTH_TYPE", "bearer")
 
         try:
-            def get_token(token_name, auth_type_name):  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]
+            def get_token(token_name, auth_type_name) -> Any:  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]
                 token = get_settings().get(f"BITBUCKET.{token_name.upper()}", None)
                 if not token:
                     raise ValueError(f"{auth_type_name} auth requires a token")

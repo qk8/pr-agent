@@ -147,7 +147,7 @@ class GitProvider(ABC):
         def __init__(self, dest_folder):  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]
             self.path = dest_folder
 
-        def __del__(self):
+        def __del__(self) -> Any:
             if self.path and os.path.exists(self.path):
                 shutil.rmtree(self.path, ignore_errors=True)
 

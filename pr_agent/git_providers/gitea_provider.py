@@ -1066,7 +1066,7 @@ class RepoApi(giteapy.RepositoryApi):
             body=body
         )
 
-    def get_pr_commits(self, owner: str, repo: str, pr_number: int):
+    def get_pr_commits(self, owner: str, repo: str, pr_number: int) -> Any:
         """Get all commits in a pull request"""
         try:
             url = f'/repos/{owner}/{repo}/pulls/{pr_number}/commits'

@@ -1,4 +1,5 @@
 from __future__ import annotations
+from typing import Any
 from collections import Counter
 from pathlib import Path
 
@@ -173,7 +174,7 @@ class LocalGitProvider(GitProvider):
             for ext in extensions:
                 ext_to_lang.setdefault(ext.lower().lstrip("*"), language)
 
-        def _match_language(name: str):
+        def _match_language(name: str) -> Any:
             # Full-filename rules (Dockerfile, Makefile) carry no extension.
             language = ext_to_lang.get(name.lower())
             if language:
