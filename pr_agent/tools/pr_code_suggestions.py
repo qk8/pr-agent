@@ -768,7 +768,7 @@ class PRCodeSuggestions:
                         patch_final = clip_tokens(patch_final, max_tokens_full - delta_output)
                     patches_diff_list.append(patch_final)
                 return patches_diff_list
-            except Exception as e:
+            except Exception as _:
                 get_logger().exception(f"Error converting to decoupled with line numbers",
                                        artifact={'patches_diff_list_no_line_numbers': patches_diff_list_no_line_numbers})
                 return []

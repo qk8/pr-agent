@@ -653,7 +653,7 @@ class PRDescription:
                 if label not in file_label_dict:
                     file_label_dict[label] = []
                 file_label_dict[label].append((filename, changes_title, changes_summary))
-            except Exception as e:
+            except Exception as _:
                 get_logger().exception(f"Error preparing file label dict {self.pr_id}")
                 pass
         return file_label_dict

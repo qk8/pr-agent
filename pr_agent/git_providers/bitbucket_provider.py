@@ -134,7 +134,7 @@ class BitbucketProvider(GitProvider):
         try:
             parsed_url = urlparse(self.pr_url)
             return f"{parsed_url.scheme}://{parsed_url.netloc}/{self.workspace_slug}/{self.repo_slug}.git"
-        except Exception as e:
+        except Exception as _:
             get_logger().exception(f"url is not a valid merge requests url: {self.pr_url}")
             return ""
 
@@ -271,7 +271,7 @@ class BitbucketProvider(GitProvider):
                     'names_filtered': names_filtered
 
                 })
-            except Exception as e:
+            except Exception as _:
                 pass
 
         # get the pr patches

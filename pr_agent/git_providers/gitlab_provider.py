@@ -326,7 +326,7 @@ class GitLabProvider(GitProvider):
             repo_path = self._get_project_path_from_pr_or_issue_url(self.pr_url)  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
             try:
                 desired_branch = self.gl.projects.get(self.id_project).default_branch  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
-            except Exception as e:
+            except Exception as _:
                 get_logger().exception(f"Cannot get PR: {self.pr_url} default branch. Tried project ID: {self.id_project}")
                 return ("", "")
         else: #Use repo git url
@@ -419,7 +419,7 @@ class GitLabProvider(GitProvider):
                     'original_files': names_original,
                     'filtered_files': names_filtered
                 })
-            except Exception as e:
+            except Exception as _:
                 pass
 
         diff_files = []
@@ -578,7 +578,7 @@ class GitLabProvider(GitProvider):
             get_logger().debug(f"Creating comment in MR {self.id_mr} with body {body} and position {pos_obj}")
             try:
                 self.mr.discussions.create({'body': body, 'position': pos_obj})
-            except Exception as e:
+            except Exception as _:
                 try:
                     # fallback - create a general note on the file in the MR
                     if 'suggestion_orig_location' in original_suggestion:  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
@@ -632,7 +632,7 @@ class GitLabProvider(GitProvider):
 
                     # get_logger().debug(
                     #     f"Failed to create comment in MR {self.id_mr} with position {pos_obj} (probably not a '+' line)")
-                except Exception as e:
+                except Exception as _:
                     get_logger().exception(f"Failed to create comment in MR {self.id_mr}")
 
     def get_relevant_diff(self, relevant_file: str, relevant_line_in_file: str) -> dict[str, object] | None:

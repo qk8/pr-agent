@@ -708,7 +708,7 @@ def load_large_diff(filename, new_file_content_str: str, original_file_content_s
             get_logger().info(f"File was modified, but no patch was found. Manually creating patch: {filename}.")
         patch = ''.join(diff)
         return patch
-    except Exception as e:
+    except Exception as _:
         get_logger().exception(f"Failed to generate patch for file: {filename}")
         return ""
 

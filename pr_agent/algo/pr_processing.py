@@ -59,7 +59,7 @@ def get_pr_diff(git_provider: GitProvider, token_handler: TokenHandler,
     if pr_languages:
         try:
             get_logger().info(f"PR main language: {pr_languages[0]['language']}")  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
-        except Exception as e:
+        except Exception as _:
             pass
 
     # generate a standard diff string, with patch extension
@@ -151,7 +151,7 @@ def get_pr_diff_multiple_patchs(git_provider: GitProvider, token_handler: TokenH
     if pr_languages:
         try:
             get_logger().info(f"PR main language: {pr_languages[0]['language']}")  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
-        except Exception as e:
+        except Exception as _:
             pass
 
     patches_compressed_list, total_tokens_list, deleted_files_list, remaining_files_list, file_dict, files_in_patches_list = \
