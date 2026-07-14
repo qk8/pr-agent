@@ -380,7 +380,7 @@ code_suggestions:
 
     data = tool._prepare_pr_code_suggestions(prediction)
 
-    summaries = [s["one_sentence_summary"] for s in data["code_suggestions"]]
+    summaries = [s["one_sentence_summary"] for s in data["code_suggestions"]]  # pyright: ignore[reportGeneralTypeIssues]
     assert summaries == ["Keep this one"]
 
 

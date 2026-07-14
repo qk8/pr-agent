@@ -170,7 +170,7 @@ class TestPrepareLabels:
 # _prepare_pr_answer_with_markers
 # ---------------------------------------------------------------------------
 class TestPrepareAnswerWithMarkers:
-    def _obj_with_user_description(self, user_description: str, data: dict) -> PRDescription:
+    def _obj_with_user_description(self, user_description: str, data: dict[str, object]) -> PRDescription:
         obj = _make_instance()
         obj.vars = {"title": "Original title"}
         obj.user_description = user_description
@@ -263,7 +263,7 @@ class TestPrepareAnswerWithMarkers:
 # _prepare_pr_answer (non-marker rendering path)
 # ---------------------------------------------------------------------------
 class TestPrepareAnswer:
-    def _obj(self, data: dict, *, gfm: bool = True) -> PRDescription:
+    def _obj(self, data: dict[str, object], *, gfm: bool = True) -> PRDescription:
         obj = _make_instance()
         obj.vars = {"title": "Original title"}
         obj.data = data
@@ -416,7 +416,7 @@ class TestRoundTripWithProcessDescription:
             f"{table}\n\n</details>\n\n___\n\nFooter"
         )
 
-        base, files = process_description(full_description)
+        base, files = process_description(full_description)  # pyright: ignore[reportAssignmentType]
 
         assert base.startswith("Some intro text.")
         # At least one structured file entry was recovered.
@@ -431,7 +431,7 @@ class TestRoundTripWithProcessDescription:
 
     def test_process_description_without_walkthrough_returns_full_text(self):
         text = "Just a description without any walkthrough section."
-        base, files = process_description(text)
+        base, files = process_description(text)  # pyright: ignore[reportAssignmentType]
         assert base == text
         assert files == []
 

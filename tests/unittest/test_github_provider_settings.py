@@ -9,7 +9,7 @@ from pr_agent.git_providers.github_provider import GithubProvider
 
 
 @pytest.fixture(autouse=True)
-def _clear_global_settings_cache():
+def _clear_global_settings_cache():  # pyright: ignore[reportUnusedFunction]
     # The org global-settings cache is process-level; clear it between tests to avoid pollution.
     _gp._GLOBAL_SETTINGS_CACHE.clear()
     yield

@@ -38,6 +38,7 @@ class SettingsProtocol(Protocol):
         value: Any,
         loader_identifier: str | None = None,
         tomlfy: bool = False,
+        merge: bool = False,
     ) -> None: ...
 
     def load_file(
@@ -48,6 +49,7 @@ class SettingsProtocol(Protocol):
         key: str | None = None,
     ) -> None: ...
 
+    def __contains__(self, name: str) -> bool: ...
     def __getattr__(self, name: str) -> Any: ...  # dynamic attrs: .config, .ignore, .openai, …
 
 PR_AGENT_TOML_KEY = 'pr-agent'

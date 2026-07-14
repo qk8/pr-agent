@@ -138,7 +138,7 @@ class TestBitbucketServerProvider:
             '548f8ba15abc30875a082156314426806c3f4d97': 'file\nwith\nsome\nlines\nto\nemulate\na\nreal\nfile',
             '0e898cb355a5170d8c8771b25d43fcaa1d2d9489': 'file\nwith\nmultiple\nlines\nto\nemulate\na\nreal\nfile'
         }
-        return content_map.get(at, '')
+        return content_map.get(at, '')  # pyright: ignore
 
     def mock_get_from_bitbucket_60(self, url):
         response_map = {
@@ -403,7 +403,7 @@ class TestBitbucketServerProvider:
 
 
 @pytest.fixture(autouse=True)
-def _clear_global_settings_cache():
+def _clear_global_settings_cache():  # pyright: ignore[reportUnusedFunction]
     from pr_agent.git_providers import git_provider as _gp
     _gp._GLOBAL_SETTINGS_CACHE.clear()
     yield

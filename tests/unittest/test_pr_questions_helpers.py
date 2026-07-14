@@ -18,7 +18,7 @@ from pr_agent.tools.pr_questions import PRQuestions
 from tests.unittest._settings_helpers import SENTINEL, restore_settings, snapshot_settings
 
 
-def _render_jinja_template(template: str, variables: dict) -> str:
+def _render_jinja_template(template: str, variables: dict[str, object]) -> str:
     from jinja2 import Environment, StrictUndefined
 
     environment = Environment(undefined=StrictUndefined, autoescape=True)

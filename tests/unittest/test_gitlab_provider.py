@@ -305,7 +305,7 @@ class TestGitLabProvider:
 
 
 @pytest.fixture(autouse=True)
-def _clear_global_settings_cache():
+def _clear_global_settings_cache():  # pyright: ignore[reportUnusedFunction]
     # The group global-settings cache is process-level; clear it between tests.
     from pr_agent.git_providers import git_provider as _gp
     _gp._GLOBAL_SETTINGS_CACHE.clear()

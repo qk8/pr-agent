@@ -46,7 +46,7 @@ def _make_settings(overrides):
 
 
 @pytest.fixture(autouse=True)
-def _isolate_env(monkeypatch):
+def _isolate_env(monkeypatch):  # pyright: ignore[reportUnusedFunction]
     for var in _ISOLATED_ENV:
         monkeypatch.delenv(var, raising=False)
     # LiteLLMAIHandler.__init__ mutates the global litellm.api_key (sets the dummy

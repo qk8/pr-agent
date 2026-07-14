@@ -355,7 +355,7 @@ class TestCheckPullRequestEvent:
 # ---------------------------------------------------------------------------
 
 
-def _run(coro):
+def _run(coro):  # pyright: ignore[reportUnusedFunction]
     return asyncio.run(coro)
 
 

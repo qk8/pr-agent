@@ -199,4 +199,4 @@ async def test_get_completion_uses_streaming_for_required_models():
     assert mock_call.call_args.kwargs["stream"] is True
     assert resp == "streamed text"
     assert finish_reason == "stop"
-    assert response_obj.dict()["choices"][0]["message"]["content"] == "streamed text"
+    assert response_obj.dict()["choices"][0]["message"]["content"] == "streamed text"  # pyright: ignore[reportDeprecated]

@@ -215,7 +215,7 @@ def test_publish_inline_comments_422_triggers_fallback(monkeypatch):
     called = {"n": 0, "args": None}
 
     def fake_fallback(comments):
-        called["n"] += 1
+        called["n"] += 1  # pyright: ignore[reportOperatorIssue]
         called["args"] = comments
 
     provider._publish_inline_comments_fallback_with_verification = fake_fallback

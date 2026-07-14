@@ -72,7 +72,7 @@ review:
 _A2A_HEADERS = {"A2A-Version": "1.0"}
 
 
-def _message_send_body(text: str) -> dict:
+def _message_send_body(text: str) -> dict[str, object]:
     """Build a genuine A2A 1.0 JSON-RPC message/send body from the SDK's own types.
 
     Using MessageToDict(SendMessageRequest(...)) ensures the payload shape is identical
@@ -91,7 +91,7 @@ def _message_send_body(text: str) -> dict:
     }
 
 
-def _extract_artifact_text(result: dict) -> str:
+def _extract_artifact_text(result: dict[str, object]) -> str:
     """Extract the agent's review text from A2A 1.0 task artifacts.
 
     A2A 1.0 result shape: {"task": {"artifacts": [{"parts": [{"text": "..."}]}]}}
@@ -106,7 +106,7 @@ def _extract_artifact_text(result: dict) -> str:
     return "\n".join(texts)
 
 
-def _get_task_state(result: dict) -> str:
+def _get_task_state(result: dict[str, object]) -> str:
     """Extract the task state from an A2A 1.0 result dict."""
     task = result.get("task", result) if isinstance(result, dict) else {}
     return task.get("status", {}).get("state", "")

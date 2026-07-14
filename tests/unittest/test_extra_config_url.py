@@ -36,7 +36,7 @@ class _CapturingHandler(BaseHTTPRequestHandler):
             self.end_headers()
             return
         if self.require_header:
-            name, value = self.require_header
+            name, value = self.require_header  # pyright: ignore
             if self.headers.get(name) != value:
                 self.send_response(401)
                 self.end_headers()
@@ -812,7 +812,7 @@ def test_apply_settings_file_loads_when_dynaconf_lacks_security_flags(
             self._real = real_dynaconf(*args, **kwargs)
 
         def as_dict(self):
-            return self._real.as_dict()
+            return self._real.as_dict()  # pyright: ignore
 
     monkeypatch.setattr(utils_mod, "Dynaconf", _FakeDynaconf)
 
@@ -899,7 +899,7 @@ def test_apply_settings_file_security_check_runs_on_fallback_path(
             self._real = real_dynaconf(*args, **kwargs)
 
         def as_dict(self):
-            return self._real.as_dict()
+            return self._real.as_dict()  # pyright: ignore
 
     monkeypatch.setattr(utils_mod, "Dynaconf", _FakeDynaconf)
 

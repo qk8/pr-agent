@@ -46,7 +46,7 @@ review:
 """
 
 
-def _send_message_payload(text: str) -> dict:
+def _send_message_payload(text: str) -> dict[str, object]:
     """Build a valid A2A 1.0 message/send JSON-RPC body from SDK types."""
     msg = Message(
         message_id=str(uuid.uuid4()),
@@ -66,7 +66,7 @@ def _send_message_payload(text: str) -> dict:
 _A2A_HEADERS = {"A2A-Version": "1.0"}
 
 
-def _extract_text(result: dict) -> str:
+def _extract_text(result: dict[str, object]) -> str:
     """Pull all text parts out of a message/send JSON-RPC result.
 
     In A2A 1.0 the result is wrapped: {"task": {...}} with artifacts.
