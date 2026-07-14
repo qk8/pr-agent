@@ -20,7 +20,7 @@ class PRConfig:
         """
         self.git_provider = get_git_provider()(pr_url)
 
-    async def run(self):
+    async def run(self) -> str | None:
         get_logger().info('Getting configuration settings...')
         get_logger().info('Preparing configs...')
         pr_comment = self._prepare_pr_configs()

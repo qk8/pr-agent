@@ -1,4 +1,5 @@
 from __future__ import annotations
+from typing import Any
 import asyncio
 import copy
 import re
@@ -660,7 +661,7 @@ class PRDescription:
                 pass
         return file_label_dict
 
-    def process_pr_files_prediction(self, pr_body, value):  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]
+    def process_pr_files_prediction(self, pr_body, value) -> Any:  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]
         pr_comments = []
         # logic for using collapsible file list
         use_collapsible_file_list = get_settings().pr_description.collapsible_file_list

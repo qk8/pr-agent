@@ -149,7 +149,7 @@ class PRGenerateLabels:
 
         return response
 
-    def _prepare_data(self):
+    def _prepare_data(self) -> None:
         # Load the AI prediction data into a dictionary
         self.data = load_yaml(self.prediction.strip())
 

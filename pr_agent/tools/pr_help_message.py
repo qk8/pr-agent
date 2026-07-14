@@ -1,4 +1,5 @@
 from __future__ import annotations
+from typing import Any
 import copy
 import re
 from functools import partial
@@ -270,7 +271,7 @@ class PRHelpMessage:
             get_logger().exception(f"Error while running PRHelpMessage: {e}")
         return ""
 
-    async def prepare_relevant_snippets(self, sim_results):  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]
+    async def prepare_relevant_snippets(self, sim_results) -> Any:  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]
         # Get relevant snippets
         relevant_snippets_full = []
         relevant_pages_full = []

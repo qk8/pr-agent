@@ -149,7 +149,7 @@ class PR_LineQuestions:
             get_logger().error(f"Error processing conversation history, error: {e}")
             return ""
 
-    async def _get_prediction(self, model: str):
+    async def _get_prediction(self, model: str) -> str:
         variables = copy.deepcopy(self.vars)
         variables["full_hunk"] = self.patch_with_lines  # update diff
         variables["selected_lines"] = self.selected_lines

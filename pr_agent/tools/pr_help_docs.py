@@ -327,7 +327,7 @@ class PRHelpDocs(object):
             get_logger().exception(f"Caught exception during init. Setting self.question to None to prevent run() to do anything.")
             self.question = None
 
-    async def run(self):
+    async def run(self) -> str | None:
         if not self.question:
             get_logger().warning('No question provided. Will do nothing.')
             return None

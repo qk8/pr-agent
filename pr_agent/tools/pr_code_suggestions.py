@@ -256,7 +256,7 @@ class PRCodeSuggestions:
             if git_provider._publish_check_run(pr_comment, name):
                 return
 
-        def _extract_link(comment_text: str):
+        def _extract_link(comment_text: str) -> str:
             r = re.compile(r"<!--.*?-->")
             match = r.search(comment_text)
 

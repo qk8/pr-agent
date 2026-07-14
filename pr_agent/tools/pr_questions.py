@@ -102,7 +102,7 @@ class PRQuestions:
             get_logger().error(f"Error getting PR diff")
             self.prediction = ""
 
-    async def _get_prediction(self, model: str):
+    async def _get_prediction(self, model: str) -> str:
         variables = copy.deepcopy(self.vars)
         variables["diff"] = self.patches_diff  # update diff
         environment = Environment(undefined=StrictUndefined)

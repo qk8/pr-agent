@@ -1,4 +1,5 @@
 from __future__ import annotations
+from typing import Any
 import copy
 import datetime
 from collections import OrderedDict
@@ -431,7 +432,7 @@ class PRReviewer:
             except Exception as e:
                 get_logger().error(f"Failed to set review labels, error: {e}")
 
-    def auto_approve_logic(self):
+    def auto_approve_logic(self) -> Any:
         """
         Auto-approve a pull request if it meets the conditions for auto-approval.
         """

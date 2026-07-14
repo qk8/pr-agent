@@ -1,4 +1,5 @@
 from __future__ import annotations
+from typing import Any
 import time
 from enum import Enum
 
@@ -703,5 +704,5 @@ class Record(BaseModel):
 class Corpus(BaseModel):
     documents: list[Record] = Field(default=[])
 
-    def append(self, r: Record):
+    def append(self, r: Record) -> Any:
         self.documents.append(r)

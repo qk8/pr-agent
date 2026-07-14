@@ -47,7 +47,7 @@ class PRAddDocs:
                                           get_settings().pr_add_docs_prompt.system,
                                           get_settings().pr_add_docs_prompt.user)
 
-    async def run(self):
+    async def run(self) -> None:
         try:
             get_logger().info('Generating code Docs for PR...')
             if get_settings().config.publish_output:
@@ -68,7 +68,7 @@ class PRAddDocs:
         except Exception as e:
             get_logger().error(f"Failed to generate code documentation for PR, error: {e}")
 
-    async def _prepare_prediction(self, model: str):
+    async def _prepare_prediction(self, model: str) -> None:
         get_logger().info('Getting PR diff...')
 
         self.patches_diff = get_pr_diff(self.git_provider,
@@ -103,7 +103,7 @@ class PRAddDocs:
             data = {'Code Documentation': []}
         return data  # type: ignore[return-value]
 
-    def push_inline_docs(self, data):  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]
+    def push_inline_docs(self, data) -> object:  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]
         docs = []
 
         if not data['Code Documentation']:

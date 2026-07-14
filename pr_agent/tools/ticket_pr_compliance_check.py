@@ -45,7 +45,7 @@ def extract_ticket_links_from_pr_description(pr_description, repo_path, base_url
     seen = set()
     github_tickets = []
 
-    def _add(url):  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]
+    def _add(url) -> None:  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]
         if url not in seen:
             seen.add(url)
             github_tickets.append(url)
