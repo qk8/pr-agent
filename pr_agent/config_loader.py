@@ -2,13 +2,53 @@ from __future__ import annotations
 
 from os.path import abspath, dirname, join
 from pathlib import Path
-from typing import TYPE_CHECKING
+from typing import Any, Protocol
 
 from dynaconf import Dynaconf
 from starlette_context import context
 
-if TYPE_CHECKING:
-    from dynaconf.utils.boxing import DynaBox
+
+
+class SettingsProtocol(Protocol):
+    """Typed interface for pr_agent settings (DynaBox/Dynaconf wrapper).
+
+    Dynaconf uses dynamic attribute access (settings.config.model) and
+    method calls (settings.get("KEY"), settings.set("KEY", val)) that
+    pyright cannot statically verify.  This protocol captures the
+    essential interface so that ``get_settings()`` can return a type that
+    pyright accepts in strict mode.
+
+    The ``__getattr__`` stub tells pyright that any attribute not
+    explicitly defined (like ``.config``, ``.ignore``, ``.openai``) is
+    dynamically resolved and returns ``Any``, preventing
+    ``reportAttributeAccessIssue`` errors for nested settings sections.
+    """
+
+    def get(
+        self,
+        key: str,
+        default: Any = None,
+        cast: Any = None,
+        fresh: bool = False,
+    ) -> Any: ...
+
+    def set(
+        self,
+        key: str,
+        value: Any,
+        loader_identifier: str | None = None,
+        tomlfy: bool = False,
+    ) -> None: ...
+
+    def load_file(
+        self,
+        path: str | Path | None = None,
+        env: str | None = None,
+        silent: bool = True,
+        key: str | None = None,
+    ) -> None: ...
+
+    def __getattr__(self, name: str) -> Any: ...  # dynamic attrs: .config, .ignore, .openai, …
 
 PR_AGENT_TOML_KEY = 'pr-agent'
 
@@ -49,7 +89,7 @@ global_settings: Dynaconf = Dynaconf(
 )
 
 
-def get_settings(use_context: bool = False) -> "DynaBox":
+def get_settings(use_context: bool = False) -> SettingsProtocol:
     """
     Retrieves the current settings.
 
@@ -57,10 +97,10 @@ def get_settings(use_context: bool = False) -> "DynaBox":
     it defaults to the global settings defined outside of this function.
 
     Returns:
-        Dynaconf: The current settings object, either from the context or the global default.
+        SettingsProtocol: The current settings object, either from the context or the global default.
     """
     try:
-        return context["settings"]  # type: ignore[index]
+        return context["settings"]  # type: ignore[return-value,union-attr]
     except Exception:
         return global_settings  # type: ignore[return-value]
 
@@ -112,7 +152,7 @@ def apply_secrets_manager_config() -> None:
         if (hasattr(secret_provider, 'get_all_secrets') and
             get_settings().get("CONFIG.SECRET_PROVIDER") == 'aws_secrets_manager'):  # type: ignore[union-attr]
             try:
-                secrets = secret_provider.get_all_secrets()
+                secrets = secret_provider.get_all_secrets()  # type: ignore[union-attr]
                 if secrets:
                     apply_secrets_to_config(secrets)
                     get_logger().info("Applied AWS Secrets Manager configuration")
@@ -153,4 +193,4 @@ def apply_secrets_to_config(secrets: dict[str, str]) -> None:
                 current_value = get_settings().get(f"{section_upper}.{setting_upper}")  # type: ignore[union-attr]
                 if current_value is None or current_value == "":
                     get_settings().set(f"{section_upper}.{setting_upper}", value)  # type: ignore[union-attr]
-                    get_logger().debug(f"Set {section}.{setting} from AWS Secrets Manager")
+                    get_logger().debug(f"Set {section}.{setting} from AWS Secrets Manager")  # type: ignore[union-attr]

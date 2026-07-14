@@ -14,7 +14,7 @@ import traceback
 from datetime import datetime
 from enum import Enum
 from importlib.metadata import PackageNotFoundError, version
-from typing import Any, TypedDict
+from typing import Any, TypedDict, cast
 
 import html2text
 import requests
@@ -26,7 +26,7 @@ from pr_agent.algo import MAX_TOKENS
 from pr_agent.algo.git_patch_processing import extract_hunk_lines_from_patch
 from pr_agent.algo.token_handler import TokenEncoder
 from pr_agent.algo.types import FilePatchInfo
-from pr_agent.config_loader import get_settings, global_settings
+from pr_agent.config_loader import SettingsProtocol, get_settings, global_settings
 from pr_agent.log import get_logger
 
 
@@ -79,12 +79,15 @@ class PRDescriptionHeader(str, Enum):
 def get_setting(key: str) -> Any:
     try:
         key = key.upper()
-        return context.get("settings", global_settings).get(key, global_settings.get(key, None))
+        # starlette_context has no type stubs; .get() returns the value for a key
+        # or the provided default.  Cast to SettingsProtocol for type safety.
+        settings = context.get("settings", global_settings)  # type: ignore[union-attr]
+        return cast(SettingsProtocol, settings).get(key, global_settings.get(key, None))  # type: ignore[union-attr]
     except Exception:
-        return global_settings.get(key, None)
+        return global_settings.get(key, None)  # type: ignore[union-attr]
 
 
-def emphasize_header(text: str, only_markdown=False, reference_link=None) -> str:
+def emphasize_header(text: str, only_markdown: bool = False, reference_link: str | None = None) -> str:
     try:
         # Finding the position of the first occurrence of ": "
         colon_position = text.find(": ")
@@ -113,7 +116,7 @@ def emphasize_header(text: str, only_markdown=False, reference_link=None) -> str
 
 
 def unique_strings(input_list: list[str]) -> list[str]:
-    if not input_list or not isinstance(input_list, list):
+    if not input_list:
         return input_list
     seen = set()
     unique_list = []
@@ -126,9 +129,11 @@ def unique_strings(input_list: list[str]) -> list[str]:
 
 def convert_to_markdown_v2(output_data: dict[str, object],
                            gfm_supported: bool = True,
-                           incremental_review=None,
-                           git_provider=None,
-                           files=None) -> str:
+                           incremental_review: str | None = None,
+                           git_provider: object = None,
+                           files: list[FilePatchInfo] | None = None) -> str:
+    # output_data is known to have 'review': dict[str, object] at runtime
+    review_data: dict[str, object] = cast(dict[str, object], output_data.get('review', {}))
     """
     Convert a dictionary of data into markdown format.
     Args:
@@ -168,8 +173,8 @@ def convert_to_markdown_v2(output_data: dict[str, object],
     if gfm_supported:
         markdown_text += "<table>\n"
 
-    todo_summary = output_data['review'].pop('todo_summary', '')
-    for key, value in output_data['review'].items():
+    review_data.pop('todo_summary', '')
+    for key, value in review_data.items():
         if value is None or value == '' or value == {} or value == []:
             if key.lower() not in ['can_be_split', 'key_issues_to_review']:
                 continue
@@ -211,13 +216,15 @@ def convert_to_markdown_v2(output_data: dict[str, object],
         elif 'ticket compliance check' in key_nice.lower():
             markdown_text = ticket_markdown_logic(emoji, markdown_text, value, gfm_supported)
         elif 'contribution time cost estimate' in key_nice.lower():
+            # value is known to be dict[str, str] at runtime (from AI output)
+            contribution: dict[str, str] = cast("dict[str, str]", value)  # type: ignore[assignment]
             if gfm_supported:
                 markdown_text += f"<tr><td>{emoji}&nbsp;<strong>Contribution time estimate</strong> (best, average, worst case): "
-                markdown_text += f"{value['best_case'].replace('m', ' minutes')} | {value['average_case'].replace('m', ' minutes')} | {value['worst_case'].replace('m', ' minutes')}"
+                markdown_text += f"{contribution['best_case'].replace('m', ' minutes')} | {contribution['average_case'].replace('m', ' minutes')} | {contribution['worst_case'].replace('m', ' minutes')}"
                 markdown_text += f"</td></tr>\n"
             else:
                 markdown_text += f"### {emoji} Contribution time estimate (best, average, worst case): "
-                markdown_text += f"{value['best_case'].replace('m', ' minutes')} | {value['average_case'].replace('m', ' minutes')} | {value['worst_case'].replace('m', ' minutes')}\n\n"
+                markdown_text += f"{contribution['best_case'].replace('m', ' minutes')} | {contribution['average_case'].replace('m', ' minutes')} | {contribution['worst_case'].replace('m', ' minutes')}\n\n"
         elif 'security concerns' in key_nice.lower():
             if gfm_supported:
                 markdown_text += f"<tr><td>"
@@ -225,23 +232,26 @@ def convert_to_markdown_v2(output_data: dict[str, object],
                     markdown_text += f"{emoji}&nbsp;<strong>No security concerns identified</strong>"
                 else:
                     markdown_text += f"{emoji}&nbsp;<strong>Security concerns</strong><br><br>\n\n"
-                    value = emphasize_header(value.strip())
-                    markdown_text += f"{value}"
+                    # value is str at runtime
+                    sec_value: str = cast(str, value)  # type: ignore[assignment]
+                    markdown_text += f"{emphasize_header(sec_value.strip())}"
                 markdown_text += f"</td></tr>\n"
             else:
                 if is_value_no(value):
                     markdown_text += f'### {emoji} No security concerns identified\n\n'
                 else:
                     markdown_text += f"### {emoji} Security concerns\n\n"
-                    value = emphasize_header(value.strip(), only_markdown=True)
-                    markdown_text += f"{value}\n\n"
+                    sec_value2: str = cast(str, value)  # type: ignore[assignment]
+                    markdown_text += f"{emphasize_header(sec_value2.strip(), only_markdown=True)}\n\n"
         elif 'todo sections' in key_nice.lower():
             if gfm_supported:
                 markdown_text += "<tr><td>"
                 if is_value_no(value):
                     markdown_text += f"✅&nbsp;<strong>No TODO sections</strong>"
                 else:
-                    markdown_todo_items = format_todo_items(value, git_provider, gfm_supported)
+                    # value is list[TodoItem] | TodoItem at runtime
+                    todo_val: list[TodoItem] | TodoItem = cast(list[TodoItem] | TodoItem, value)  # type: ignore[assignment]
+                    markdown_todo_items = format_todo_items(todo_val, git_provider, gfm_supported)
                     markdown_text += f"{emoji}&nbsp;<strong>TODO sections</strong>\n<br><br>\n"
                     markdown_text += markdown_todo_items
                 markdown_text += "</td></tr>\n"
@@ -249,7 +259,8 @@ def convert_to_markdown_v2(output_data: dict[str, object],
                 if is_value_no(value):
                     markdown_text += f"### ✅ No TODO sections\n\n"
                 else:
-                    markdown_todo_items = format_todo_items(value, git_provider, gfm_supported)
+                    todo_val2: list[TodoItem] | TodoItem = cast(list[TodoItem] | TodoItem, value)  # type: ignore[assignment]
+                    markdown_todo_items = format_todo_items(todo_val2, git_provider, gfm_supported)
                     markdown_text += f"### {emoji} TODO sections\n\n"
                     markdown_text += markdown_todo_items
         elif 'can be split' in key_nice.lower():
@@ -267,14 +278,14 @@ def convert_to_markdown_v2(output_data: dict[str, object],
                 else:
                     markdown_text += f"### {emoji} No major issues detected\n\n"
             else:
-                issues = value
+                issues: list[object] = cast(list[object], value)  # type: ignore[assignment]
                 if gfm_supported:
                     markdown_text += f"<tr><td>"
                     # markdown_text += f"{emoji}&nbsp;<strong>{key_nice}</strong><br><br>\n\n"
                     markdown_text += f"{emoji}&nbsp;<strong>Recommended focus areas for review</strong><br><br>\n\n"
                 else:
                     markdown_text += f"### {emoji} Recommended focus areas for review\n\n#### \n"
-                for i, issue in enumerate(issues):
+                for _i, issue in enumerate(issues):
                     try:
                         if not issue or not isinstance(issue, dict):
                             continue
@@ -288,7 +299,7 @@ def convert_to_markdown_v2(output_data: dict[str, object],
 
                         relevant_lines_str = extract_relevant_lines_str(end_line, files, relevant_file, start_line, dedent=True)
                         if git_provider:
-                            reference_link = git_provider.get_line_link(relevant_file, start_line, end_line)
+                            reference_link = git_provider.get_line_link(relevant_file, start_line, end_line)  # type: ignore[union-attr]
                         else:
                             reference_link = None
 
