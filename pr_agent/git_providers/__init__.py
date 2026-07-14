@@ -29,7 +29,7 @@ _GIT_PROVIDERS = {
 }
 
 
-def get_git_provider() -> Any:
+def get_git_provider() -> type[GitProvider]:
     try:
         provider_id = get_settings().config.git_provider
     except AttributeError as e:

@@ -2,7 +2,8 @@ from __future__ import annotations
 
 import shlex
 from functools import partial
-from typing import TYPE_CHECKING, Any
+from collections.abc import Callable
+from typing import TYPE_CHECKING
 
 from pr_agent.algo.ai_handlers.litellm_ai_handler import LiteLLMAIHandler
 
@@ -56,10 +57,10 @@ commands: list[str] = list(command2class.keys())
 
 
 class PRAgent:
-    def __init__(self, ai_handler: type["BaseAiHandler"] | partial[Any] = LiteLLMAIHandler):
-        self.ai_handler: type["BaseAiHandler"] | partial[Any] = ai_handler
+    def __init__(self, ai_handler: type[BaseAiHandler] | partial[BaseAiHandler] = LiteLLMAIHandler):
+        self.ai_handler: type[BaseAiHandler] | partial[BaseAiHandler] = ai_handler
 
-    async def _handle_request(self, pr_url: str, request: str | list[str], notify: Any = None) -> bool:
+    async def _handle_request(self, pr_url: str, request: str | list[str], notify: Callable[[], None] | None = None) -> bool:
         # First, apply repo specific settings if exists
         apply_repo_settings(pr_url)
 
@@ -132,7 +133,7 @@ class PRAgent:
                 return False
             return True
 
-    async def handle_request(self, pr_url: str, request: str | list[str], notify: Any = None) -> bool:
+    async def handle_request(self, pr_url: str, request: str | list[str], notify: Callable[[], None] | None = None) -> bool:
         try:
             return await self._handle_request(pr_url, request, notify)
         except Exception:

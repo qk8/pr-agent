@@ -348,7 +348,7 @@ class GitProvider(ABC):
                                    initial_header: str,
                                    update_header: bool = True,
                                    name: str = 'review',
-                                   final_update_message: bool = True) -> Any:
+                                   final_update_message: bool = True) -> None:
         return self.publish_comment(pr_comment)
 
     def publish_persistent_comment_full(self, pr_comment: str,

@@ -437,7 +437,7 @@ def handle_configurations_errors(config_errors, git_provider):  # pyright: ignor
         get_logger().exception("Failed to handle configurations errors", e)
 
 
-def set_claude_model() -> Any:
+def set_claude_model() -> None:
     """
     set the claude-sonnet-3.5 model easily (even by users), just by stating: --config.model='claude-3-5-sonnet'
     """
