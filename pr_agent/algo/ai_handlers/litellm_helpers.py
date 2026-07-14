@@ -1,4 +1,5 @@
 from __future__ import annotations
+from typing import Any
 import json
 
 import openai
@@ -7,7 +8,7 @@ from pr_agent.config_loader import get_settings
 from pr_agent.log import get_logger
 
 
-async def _handle_streaming_response(response):  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]
+async def _handle_streaming_response(response) -> tuple[str, str | None]:  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]
     """
     Handle streaming response from acompletion and collect the full response.
 
@@ -46,7 +47,7 @@ async def _handle_streaming_response(response):  # pyright: ignore[reportUnknown
 class MockResponse:
     """Mock response object for streaming models to enable consistent logging."""
 
-    def __init__(self, resp, finish_reason):  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]
+    def __init__(self, resp, finish_reason) -> None:  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]
         self._data = {
             "choices": [
                 {
@@ -56,11 +57,11 @@ class MockResponse:
             ]
         }
 
-    def dict(self):
+    def dict(self) -> Any:
         return self._data
 
 
-def _get_azure_ad_token():  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]
+def _get_azure_ad_token() -> str:  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]
     """
     Generates an access token using Azure AD credentials from settings.
     Returns:

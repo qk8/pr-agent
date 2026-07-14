@@ -4,7 +4,7 @@ from math import ceil
 import re
 
 from jinja2 import Environment, StrictUndefined
-from tiktoken import encoding_for_model, get_encoding
+from tiktoken import Encoding, encoding_for_model, get_encoding
 
 from pr_agent.config_loader import get_settings
 from pr_agent.log import get_logger
@@ -26,7 +26,7 @@ class TokenEncoder:
     _lock = Lock()  # Create a lock object
 
     @classmethod
-    def get_token_encoder(cls):
+    def get_token_encoder(cls) -> Encoding:
         model = get_settings().config.model
         if cls._encoder_instance is None or model != cls._model:  # Check without acquiring the lock for performance
             with cls._lock:  # Lock acquisition to ensure thread safety
@@ -57,7 +57,7 @@ class TokenHandler:
     CLAUDE_MODEL = "claude-3-7-sonnet-20250219"
     CLAUDE_MAX_CONTENT_SIZE = 9_000_000 # Maximum allowed content size (9MB) for Claude API
 
-    def __init__(self, pr: object = None, vars: dict[str, object] | None = None, system: str = "", user: str = ""):
+    def __init__(self, pr: object = None, vars: dict[str, object] | None = None, system: str = "", user: str = "") -> None:
         """
         Initializes the TokenHandler object.
 
@@ -74,7 +74,7 @@ class TokenHandler:
         if pr is not None:
             self.prompt_tokens = self._get_system_user_tokens(pr, self.encoder, vars, system, user)
 
-    def _get_system_user_tokens(self, pr: object, encoder: object, vars: dict[str, object], system: str, user: str):
+    def _get_system_user_tokens(self, pr: object, encoder: object, vars: dict[str, object], system: str, user: str) -> int:
         """
         Calculates the number of tokens in the system and user strings.
 

@@ -21,17 +21,17 @@ _unsupported_repo_context_provider_classes = set()
 
 
 class _RepoContextCache:
-    def __init__(self, max_size: int = REPO_CONTEXT_CACHE_MAX_SIZE, ttl_seconds: int = REPO_CONTEXT_CACHE_TTL_SECONDS):
+    def __init__(self, max_size: int = REPO_CONTEXT_CACHE_MAX_SIZE, ttl_seconds: int = REPO_CONTEXT_CACHE_TTL_SECONDS) -> None:
         self._max_size = max(1, int(max_size))
         self._ttl_seconds = max(0, int(ttl_seconds))
         self._entries = OrderedDict()
 
-    def copy(self):
+    def copy(self) -> _RepoContextCache:
         cache = type(self)(max_size=self._max_size, ttl_seconds=self._ttl_seconds)
         cache._entries = self._entries.copy()
         return cache
 
-    def get(self, key, default=None):  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]
+    def get(self, key, default=None) -> object | None:  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]
         entry = self._entries.get(key)
         if entry is None:
             return default
@@ -44,7 +44,7 @@ class _RepoContextCache:
         self._entries.move_to_end(key)
         return value
 
-    def __setitem__(self, key, value):  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]
+    def __setitem__(self, key, value) -> None:  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]
         self._entries[key] = (value, time.monotonic() + self._ttl_seconds)
         self._entries.move_to_end(key)
         while len(self._entries) > self._max_size:
@@ -119,7 +119,7 @@ def _provider_supports_repo_context(git_provider) -> bool:  # pyright: ignore[re
     return False
 
 
-def _get_provider_repo_context_cache(git_provider) -> _RepoContextCache:  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]
+def _get_provider_repo_context_cache(git_provider: object) -> _RepoContextCache:  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]
     repo_context_cache = getattr(git_provider, REPO_CONTEXT_CACHE_ATTRIBUTE, None)
     if repo_context_cache is None or not isinstance(repo_context_cache, _RepoContextCache):
         repo_context_cache = _RepoContextCache()
@@ -127,7 +127,7 @@ def _get_provider_repo_context_cache(git_provider) -> _RepoContextCache:  # pyri
     return repo_context_cache
 
 
-def _get_cached_repo_context(git_provider: object, context_files: list[str], max_lines: int):
+def _get_cached_repo_context(git_provider: object, context_files: list[str], max_lines: int) -> str | object:
     process_cache_key = _get_repo_context_process_cache_key(git_provider, context_files, max_lines)  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
     if process_cache_key is not None:
         cached_repo_context = _repo_context_process_cache.get(process_cache_key, _REPO_CONTEXT_CACHE_MISS)

@@ -21,7 +21,7 @@ OPENAI_RETRIES = 5
 
 
 class LangChainOpenAIHandler(BaseAiHandler):
-    def __init__(self):
+    def __init__(self) -> None:
         if not _LANGCHAIN_INSTALLED:
             error_msg = "LangChain is not installed. Please install it with `pip install langchain`."
             get_logger().error(error_msg)
@@ -31,13 +31,13 @@ class LangChainOpenAIHandler(BaseAiHandler):
         self.azure = get_settings().get("OPENAI.API_TYPE", "").lower() == "azure"
 
     @property
-    def deployment_id(self):
+    def deployment_id(self) -> object:
         """
         Returns the deployment ID for the OpenAI API.
         """
         return get_settings().get("OPENAI.DEPLOYMENT_ID", None)
 
-    async def _create_chat_async(self, deployment_id=None):  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]
+    async def _create_chat_async(self, deployment_id=None) -> AzureChatOpenAI | ChatOpenAI:  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]
         try:
             if self.azure:
                 # Using Azure OpenAI service
@@ -67,7 +67,7 @@ class LangChainOpenAIHandler(BaseAiHandler):
         retry=retry_if_exception_type(openai.APIError) & retry_if_not_exception_type(openai.RateLimitError),
         stop=stop_after_attempt(OPENAI_RETRIES),
     )
-    async def chat_completion(self, model: str, system: str, user: str, temperature: float = 0.2, img_path: str = None):  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]
+    async def chat_completion(self, model: str, system: str, user: str, temperature: float = 0.2, img_path: str = None) -> tuple[str, str]:  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]
         if img_path:
             get_logger().warning(f"Image path is not supported for LangChainOpenAIHandler. Ignoring image path: {img_path}")
         try:

@@ -1,4 +1,5 @@
 from __future__ import annotations
+from typing import Any
 from os import environ
 from pr_agent.algo.ai_handlers.base_ai_handler import BaseAiHandler
 import openai
@@ -13,7 +14,7 @@ OPENAI_RETRIES = 5
 
 
 class OpenAIHandler(BaseAiHandler):
-    def __init__(self):
+    def __init__(self) -> None:
         # Initialize OpenAIHandler specific attributes here
         try:
             super().__init__()
@@ -33,7 +34,7 @@ class OpenAIHandler(BaseAiHandler):
             raise ValueError("OpenAI key is required") from e
 
     @property
-    def deployment_id(self):
+    def deployment_id(self) -> object:
         """
         Returns the deployment ID for the OpenAI API.
         """
@@ -43,7 +44,7 @@ class OpenAIHandler(BaseAiHandler):
         retry=retry_if_exception_type(openai.APIError) & retry_if_not_exception_type(openai.RateLimitError),
         stop=stop_after_attempt(OPENAI_RETRIES),
     )
-    async def chat_completion(self, model: str, system: str, user: str, temperature: float = 0.2, img_path: str = None):  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]
+    async def chat_completion(self, model: str, system: str, user: str, temperature: float = 0.2, img_path: str = None) -> tuple[str | None, Any]:  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]
         try:
             if img_path:
                 get_logger().warning(f"Image path is not supported for OpenAIHandler. Ignoring image path: {img_path}")

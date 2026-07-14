@@ -1,4 +1,5 @@
 from __future__ import annotations
+from typing import Any
 from abc import ABC, abstractmethod
 
 
@@ -8,16 +9,16 @@ class BaseAiHandler(ABC):
     """
 
     @abstractmethod
-    def __init__(self):
+    def __init__(self) -> None:
         pass
 
     @property
     @abstractmethod
-    def deployment_id(self):
+    def deployment_id(self) -> object:
         pass
 
     @abstractmethod
-    async def chat_completion(self, model: str, system: str, user: str, temperature: float = 0.2, img_path: str = None):  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]
+    async def chat_completion(self, model: str, system: str, user: str, temperature: float = 0.2, img_path: str = None) -> tuple[str, Any]:  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]
         """
         This method should be implemented to return a chat completion from the AI model.
         Args:

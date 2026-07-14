@@ -3,9 +3,10 @@ from typing import Any
 # Language Selection, source: https://github.com/bigcode-project/bigcode-dataset/blob/main/language_selection/programming-languages-to-file-extensions.json  # noqa E501
 
 from pr_agent.config_loader import get_settings
+from pr_agent.algo.types import FilePatchInfo
 
 
-def filter_bad_extensions(files):  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]
+def filter_bad_extensions(files) -> list[FilePatchInfo]:  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]
     # Bad Extensions, source: https://github.com/EleutherAI/github-downloader/blob/345e7c4cbb9e0dc8a0615fd995a08bf9d73b3fe6/download_repo_text.py  # noqa: E501
     bad_extensions = get_settings().bad_extensions.default
     if get_settings().config.use_extra_bad_extensions:

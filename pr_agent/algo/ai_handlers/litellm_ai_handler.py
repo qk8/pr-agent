@@ -1,4 +1,5 @@
 from __future__ import annotations
+from typing import Any
 import asyncio
 import contextlib
 import json
@@ -35,7 +36,7 @@ class LiteLLMAIHandler(BaseAiHandler):
     and provides a method for performing chat completions using the OpenAI ChatCompletion API.
     """
 
-    def __init__(self):
+    def __init__(self) -> None:
         """
         Initializes the OpenAI API key and other settings from a configuration file.
         Raises a ValueError if the OpenAI key is missing.
@@ -297,7 +298,7 @@ class LiteLLMAIHandler(BaseAiHandler):
             get_logger().exception("IMDS credential refresh failed")
             return False
 
-    def _activate_static_aws_fallback(self):
+    def _activate_static_aws_fallback(self) -> None:
         """Swap process env to static credentials for Bedrock fallback after IMDS failure."""
         os.environ["AWS_ACCESS_KEY_ID"] = self._aws_static_creds["AWS_ACCESS_KEY_ID"]
         os.environ["AWS_SECRET_ACCESS_KEY"] = self._aws_static_creds["AWS_SECRET_ACCESS_KEY"]
@@ -309,7 +310,7 @@ class LiteLLMAIHandler(BaseAiHandler):
         self._aws_imds_fell_back = True
         get_logger().warning("Bedrock call failed with ambient (IMDS) credentials; retrying with static credentials")
 
-    def prepare_logs(self, response, system, user, resp, finish_reason):  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]
+    def prepare_logs(self, response, system, user, resp, finish_reason) -> dict[str, Any]:  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]
         response_log = response.dict().copy()
         response_log['system'] = system
         response_log['user'] = user
@@ -413,7 +414,7 @@ class LiteLLMAIHandler(BaseAiHandler):
         return kwargs
 
     @property
-    def deployment_id(self):
+    def deployment_id(self) -> object:
         """
         Returns the deployment ID for the OpenAI API.
         """
@@ -423,7 +424,7 @@ class LiteLLMAIHandler(BaseAiHandler):
         retry=retry_if_exception_type(openai.APIError) & retry_if_not_exception_type(openai.RateLimitError),
         stop=stop_after_attempt(MODEL_RETRIES),
     )
-    async def chat_completion(self, model: str, system: str, user: str, temperature: float = 0.2, img_path: str = None):  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]
+    async def chat_completion(self, model: str, system: str, user: str, temperature: float = 0.2, img_path: str = None) -> tuple[str, Any]:  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]
         # Serialize env-var mutation + Bedrock call for IMDS mode to prevent concurrent
         # requests from interleaving os.environ credentials during asyncio.gather usage.
         _bedrock_imds = self._aws_imds_mode and 'bedrock/' in model

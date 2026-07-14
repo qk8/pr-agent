@@ -36,7 +36,7 @@ def extend_patch(original_file_str, patch_str, patch_extra_lines_before=0,  # py
     return extended_patch_str
 
 
-def decode_if_bytes(original_file_str):  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]
+def decode_if_bytes(original_file_str) -> str:  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]
     if isinstance(original_file_str, (bytes, bytearray)):
         try:
             return original_file_str.decode('utf-8')
@@ -51,14 +51,14 @@ def decode_if_bytes(original_file_str):  # pyright: ignore[reportUnknownParamete
     return original_file_str
 
 
-def should_skip_patch(filename):  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]
+def should_skip_patch(filename) -> bool:  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]
     patch_extension_skip_types = get_settings().config.patch_extension_skip_types
     if patch_extension_skip_types and filename:
         return any(filename.endswith(skip_type) for skip_type in patch_extension_skip_types)
     return False
 
 
-def process_patch_lines(patch_str, original_file_str, patch_extra_lines_before, patch_extra_lines_after, new_file_str=""):  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]
+def process_patch_lines(patch_str, original_file_str, patch_extra_lines_before, patch_extra_lines_after, new_file_str="") -> str:  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]
     allow_dynamic_context = get_settings().config.allow_dynamic_context
     patch_extra_lines_before_dynamic = get_settings().config.max_extra_lines_before_dynamic_context
 
@@ -187,7 +187,7 @@ def process_patch_lines(patch_str, original_file_str, patch_extra_lines_before, 
     extended_patch_str = '\n'.join(extended_patch_lines)
     return extended_patch_str
 
-def check_if_hunk_lines_matches_to_file(i, original_lines, patch_lines, start1):  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]
+def check_if_hunk_lines_matches_to_file(i, original_lines, patch_lines, start1) -> bool:  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]
     """
     Check if the hunk lines match the original file content. We saw cases where the hunk header line doesn't match the original file content, and then
     extending the hunk with extra lines before the hunk header can cause the hunk to be invalid.
@@ -214,7 +214,7 @@ def check_if_hunk_lines_matches_to_file(i, original_lines, patch_lines, start1):
     return is_valid_hunk
 
 
-def extract_hunk_headers(match):  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]
+def extract_hunk_headers(match) -> tuple[str | None, int, int, int, int]:  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]
     res = list(match.groups())
     for i in range(len(res)):
         if res[i] is None:
