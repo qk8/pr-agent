@@ -85,7 +85,6 @@ def load(obj: "DynaBox", env: str | None = None, silent: bool = True, key: str |
 
             # Security: Check file contents for forbidden directives
             validate_file_security(file_data, settings_file)  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
-
             for section_name, section_data in file_data.items():
                 if not isinstance(section_data, dict):
                     get_logger().warning(f"Section '{section_name}' in '{settings_file}' is not a table. Skipping.")

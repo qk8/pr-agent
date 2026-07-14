@@ -671,7 +671,6 @@ class AzureDevopsProvider(GitProvider):
 
     def publish_inline_comment(self, body: str, relevant_file: str, relevant_line_in_file: str, original_suggestion=None):  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]
         self.publish_inline_comments([self.create_inline_comment(body, relevant_file, relevant_line_in_file)])  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
-
     def create_inline_comment(self, body: str, relevant_file: str, relevant_line_in_file: str,
                               absolute_position: int = None):  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
         position, absolute_position = find_line_number_of_relevant_line_in_file(self.get_diff_files(),

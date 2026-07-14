@@ -495,8 +495,6 @@ class GithubProvider(GitProvider):
     def publish_inline_comment(self, body: str, relevant_file: str, relevant_line_in_file: str, original_suggestion=None):  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]
         body = self.limit_output_characters(body, self.max_comment_chars)
         self.publish_inline_comments([self.create_inline_comment(body, relevant_file, relevant_line_in_file)])  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
-
-
     def create_inline_comment(self, body: str, relevant_file: str, relevant_line_in_file: str,
                               absolute_position: int = None):  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
         body = self.limit_output_characters(body, self.max_comment_chars)
@@ -752,7 +750,6 @@ class GithubProvider(GitProvider):
             for comment in file_comments:
                 comment['commit_id'] = self.last_commit_id.sha
                 comment['body'] = self.limit_output_characters(comment['body'], self.max_comment_chars)  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
-
                 found = False
                 for existing_comment in existing_comments:
                     comment['commit_id'] = self.last_commit_id.sha
@@ -1059,7 +1056,6 @@ class GithubProvider(GitProvider):
 
     def _get_pr(self):
         return self._get_repo().get_pull(self.pr_num)  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
-
     def get_pr_file_content(self, file_path: str, branch: str) -> str:
         try:
             file_content_str = str(
@@ -1150,7 +1146,6 @@ class GithubProvider(GitProvider):
 
             position, absolute_position = find_line_number_of_relevant_line_in_file \
                 (self.diff_files, relevant_file, relevant_line_str)  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
-
             if absolute_position != -1:
                 # # link to right file only
                 # link = f"https://github.com/{self.repo}/blob/{self.pr.head.sha}/{relevant_file}" \

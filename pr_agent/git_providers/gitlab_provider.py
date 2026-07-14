@@ -366,7 +366,6 @@ class GitLabProvider(GitProvider):
         """Create or update a file in the GitLab repository."""
         try:
             project = self.gl.projects.get(self.id_project)  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
-
             if not message:
                 action = "Update" if contents else "Create"
                 message = f"{action} {file_path}"
@@ -484,7 +483,6 @@ class GitLabProvider(GitProvider):
             raw_changes = self._expand_submodule_changes(raw_changes)
             self.git_files = [str(c.get('new_path', '')) for c in raw_changes if c.get('new_path')]
         return self.git_files  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
-
     def publish_description(self, pr_title: str, pr_body: str):
         try:
             if pr_title is not None:
@@ -544,7 +542,6 @@ class GitLabProvider(GitProvider):
                                                                                          relevant_line_in_file)
         self.send_inline_comment(body, edit_type, found, relevant_file, relevant_line_in_file, source_line_no,
                                  target_file, target_line_no, original_suggestion)  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
-
     def create_inline_comment(self, body: str, relevant_file: str, relevant_line_in_file: str, absolute_position: int = None):  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]
         raise NotImplementedError("Gitlab provider does not support creating inline comments yet")
 
@@ -682,7 +679,6 @@ class GitLabProvider(GitProvider):
                 body = body.replace('```suggestion', f'```suggestion:-0+{range}')
                 lines = target_file.head_file.splitlines()
                 relevant_line_in_file = lines[relevant_lines_start - 1]  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
-
                 # edit_type, found, source_line_no, target_file, target_line_no = self.find_in_file(target_file,
                 #                                                                            relevant_line_in_file)
                 # for code suggestions, we want to edit the new code
@@ -948,7 +944,6 @@ class GitLabProvider(GitProvider):
 
     def get_repo_labels(self):
         return self.gl.projects.get(self.id_project).labels.list()  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
-
     def get_commit_messages(self):
         """
         Retrieves the commit messages of a pull request.
@@ -992,7 +987,6 @@ class GitLabProvider(GitProvider):
 
             position, absolute_position = find_line_number_of_relevant_line_in_file \
                 (self.diff_files, relevant_file, relevant_line_str)  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
-
             if absolute_position != -1:
                 # link to right file only
                 link = f"{self.gl.url}/{self.id_project}/-/blob/{self.mr.source_branch}/{relevant_file}?ref_type=heads#L{absolute_position}"

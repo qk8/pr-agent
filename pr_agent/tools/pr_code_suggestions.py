@@ -35,7 +35,6 @@ from pr_agent.tools.progress_comment import build_progress_comment
 class PRCodeSuggestions:
     def __init__(self, pr_url: str, cli_mode=False, args: list[str] | None = None,  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]
                  ai_handler: partial | type[BaseAiHandler] = LiteLLMAIHandler):  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType,reportMissingTypeArgument]
-
         self.git_provider = get_git_provider_with_context(pr_url)
         self.main_language = get_main_pr_language(
             self.git_provider.get_languages(), self.git_provider.get_files()
@@ -378,7 +377,6 @@ class PRCodeSuggestions:
                                         disable_extra_lines=False)
         self.patches_diff_list = [self.patches_diff]
         self.patches_diff_no_line_number = self.remove_line_numbers([self.patches_diff])[0]  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
-
         if self.patches_diff:
             get_logger().debug(f"PR diff", artifact=self.patches_diff)
             self.prediction = await self._get_prediction(model, self.patches_diff, self.patches_diff_no_line_number)  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
@@ -540,7 +538,6 @@ class PRCodeSuggestions:
             except Exception as e:
                 get_logger().error(f"Error processing suggestion {i + 1}: {suggestion}, error: {e}")
         data['code_suggestions'] = suggestion_list  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
-
         return data  # type: ignore[return-value]
 
     async def push_inline_code_suggestions(self, data):  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]

@@ -221,7 +221,6 @@ async def run_action():
                 auto_improve = get_setting_or_env("GITHUB_ACTION.AUTO_IMPROVE", None)  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
                 if auto_improve is None:
                     auto_improve = get_setting_or_env("GITHUB_ACTION_CONFIG.AUTO_IMPROVE", None)  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
-
                 # Set the configuration for auto actions
                 get_settings().config.is_auto_command = True  # Set the flag to indicate that the command is auto
                 get_settings().pr_description.final_update_message = False  # No final update message when auto_describe is enabled
@@ -322,7 +321,6 @@ async def run_action():
         auto_improve = get_setting_or_env("GITHUB_ACTION.AUTO_IMPROVE", None)  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
         if auto_improve is None:
             auto_improve = get_setting_or_env("GITHUB_ACTION_CONFIG.AUTO_IMPROVE", None)  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
-
         get_settings().config.is_auto_command = True
         get_settings().pr_description.final_update_message = False
         get_logger().info(

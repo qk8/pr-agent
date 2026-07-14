@@ -584,7 +584,6 @@ class BitbucketProvider(GitProvider):
             raise ValueError("Unable to convert PR number to integer") from e
 
         return workspace_slug, repo_slug, pr_number  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
-
     def _get_repo(self):
         if self.repo is None:
             self.repo = self.bitbucket_client.workspaces.get(

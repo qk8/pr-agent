@@ -559,10 +559,8 @@ class LiteLLMAIHandler(BaseAiHandler):
                 # https://docs.anthropic.com/en/docs/build-with-claude/extended-thinking
                 if (model in self.claude_extended_thinking_models) and get_settings().config.get("enable_claude_extended_thinking", False):
                     kwargs = self._configure_claude_extended_thinking(model, kwargs)  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
-
                 if get_settings().litellm.get("enable_callbacks", False):
                     kwargs = self.add_litellm_callbacks(kwargs)  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
-
                 seed = get_settings().config.get("seed", -1)
                 if temperature > 0 and seed >= 0:
                     raise ValueError(f"Seed ({seed}) is not supported with temperature ({temperature}) > 0")
@@ -585,7 +583,6 @@ class LiteLLMAIHandler(BaseAiHandler):
 
                 # Support for custom OpenAI body fields (e.g., Flex Processing)
                 kwargs = _process_litellm_extra_body(kwargs)  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
-
                 # Support for Bedrock custom inference profile via model_id
                 model_id = get_settings().get("litellm.model_id")
                 if model_id and 'bedrock/' in model:
@@ -626,7 +623,6 @@ class LiteLLMAIHandler(BaseAiHandler):
             except Exception as e:
                 get_logger().warning(f"Unknown error during LLM inference: {e}")
                 raise openai.APIError from e  # pyright: ignore[reportGeneralTypeIssues,reportCallIssue]
-
             get_logger().debug(f"\nAI response:\n{resp}")
 
             # log the full response for debugging

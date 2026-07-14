@@ -4,7 +4,6 @@ import hmac
 import time
 from collections import defaultdict
 from typing import Any, Callable  # pyright: ignore[reportImport,reportUnknownMemberType]
-
 from fastapi import HTTPException
 
 

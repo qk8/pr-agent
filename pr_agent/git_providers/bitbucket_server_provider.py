@@ -306,7 +306,6 @@ class BitbucketServerProvider(GitProvider):
                     new_file_content_str = decode_if_bytes(new_file_content_str)
 
             patch = load_large_diff(file_path, new_file_content_str, original_file_content_str, show_warning=False)  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
-
             diff_files.append(
                 FilePatchInfo(
                     original_file_content_str,  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
@@ -337,7 +336,6 @@ class BitbucketServerProvider(GitProvider):
     # function to create_inline_comment
     def create_inline_comment(self, body: str, relevant_file: str, relevant_line_in_file: str,
                               absolute_position: int = None):  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
-
         position, absolute_position = find_line_number_of_relevant_line_in_file(
             self.get_diff_files(),
             relevant_file.strip('`'),

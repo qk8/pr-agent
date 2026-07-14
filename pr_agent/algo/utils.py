@@ -1340,7 +1340,6 @@ def string_to_uniform_number(s: str) -> float:
 def process_description(description_full: str) -> tuple[str, list[object]]:
     if not description_full:
         return "", []  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
-
     # description_split = description_full.split(PRDescriptionHeader.FILE_WALKTHROUGH.value)
     if PRDescriptionHeader.FILE_WALKTHROUGH.value in description_full:
         try:
@@ -1359,7 +1358,6 @@ def process_description(description_full: str) -> tuple[str, list[object]]:
         if len(description_split) < 2:
             get_logger().error("Failed to split description into base and changes walkthrough", artifact={'description': description_full})
             return description_full.strip(), []  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
-
         base_description_str = description_split[0].strip()
         changes_walkthrough_str = ""
         files = []
@@ -1370,7 +1368,6 @@ def process_description(description_full: str) -> tuple[str, list[object]]:
     else:
         base_description_str = description_full.strip()
         return base_description_str, []  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
-
     try:
         if changes_walkthrough_str:
             # get the end of the table
@@ -1433,7 +1430,6 @@ def process_description(description_full: str) -> tuple[str, list[object]]:
         get_logger().exception(f"Failed to process description: {e}")
 
     return base_description_str, files  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
-
 def get_version() -> str:
     # First check pyproject.toml if running directly out of repository
     if os.path.exists("pyproject.toml"):

@@ -187,7 +187,6 @@ class PRDescription:
                     # leaves it untouched, avoiding reverting a manual edit (#2474).
                     title_to_publish = pr_title.strip() if get_settings().pr_description.generate_ai_title else None
                     self.git_provider.publish_description(title_to_publish, pr_body)  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
-
                     # publish final update message
                     if (get_settings().pr_description.final_update_message and not get_settings().config.get('is_auto_command', False)):
                         latest_commit_url = self.git_provider.get_latest_commit_url()
@@ -427,7 +426,6 @@ class PRDescription:
         except Exception as e:
             get_logger().error(f"Error extending additional files {self.pr_id}: {e}")
             return self.prediction or ""  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
-
     async def _get_prediction(self, model: str, patches_diff: str, prompt="pr_description_prompt") -> str:  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]
         variables = copy.deepcopy(self.vars)
         variables["diff"] = patches_diff  # update diff
@@ -548,7 +546,6 @@ class PRDescription:
         ai_diagram = self.data.get('changes_diagram')
         if ai_diagram:
             body = re.sub(r'<!--\s*pr_agent:diagram\s*-->|pr_agent:diagram', ai_diagram, body)  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
-
         return title, body, walkthrough_gfm, pr_file_changes  # type: ignore[return-value]
 
     def _prepare_pr_answer(self) -> tuple[str, str, str, list[dict[str, object]]]:
@@ -743,7 +740,6 @@ class PRDescription:
 
     def add_file_data(self, delta_nbsp, diff_plus_minus, file_change_description_br, filename, filename_publish, link,  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]
                       pr_body) -> str:  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
-
         if not file_change_description_br:
             pr_body += f"""
 <tr>

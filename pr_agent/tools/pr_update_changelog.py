@@ -20,7 +20,6 @@ CHANGELOG_LINES = 50
 
 class PRUpdateChangelog:
     def __init__(self, pr_url: str, cli_mode=False, args=None, ai_handler: partial | type[BaseAiHandler] = LiteLLMAIHandler):  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportMissingTypeArgument]
-
         self.git_provider = get_git_provider()(pr_url)
 
         # Determine whether pushing the changelog to the repo is both requested and possible.

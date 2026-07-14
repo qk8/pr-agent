@@ -299,7 +299,6 @@ class CodeCommitProvider(GitProvider):
         # a local ".pr_agent.toml" settings file is optional
         settings_filename = ".pr_agent.toml"
         return self.codecommit_client.get_file(self.repo_name, settings_filename, self.pr.source_commit, optional=True)  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
-
     def add_eyes_reaction(self, issue_comment_id: int, disable_eyes: bool = False) -> int | None:
         get_logger().info("CodeCommit provider does not support eyes reaction yet")
         return True
@@ -364,7 +363,6 @@ class CodeCommitProvider(GitProvider):
 
     def _get_pr(self):
         response = self.codecommit_client.get_pr(self.repo_name, self.pr_num)  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
-
         if len(response.targets) == 0:
             raise ValueError(f"No files found in CodeCommit PR: {self.pr_num}")
 

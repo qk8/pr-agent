@@ -50,7 +50,6 @@ def setup_logger(level: str = "INFO", fmt: LoggingFormat = LoggingFormat.CONSOLE
     elif fmt == LoggingFormat.CONSOLE:  # does not print the 'extra' fields
         logger.remove(None)
         logger.add(sys.stdout, level=level, colorize=True, filter=inv_analytics_filter)  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
-
     log_folder: str = get_settings().get("CONFIG.ANALYTICS_FOLDER", "")  # type: ignore[union-attr]
     if log_folder:
         pid = os.getpid()

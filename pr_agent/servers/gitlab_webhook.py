@@ -227,7 +227,6 @@ async def gitlab_webhook(background_tasks: BackgroundTasks, request: Request):
                     return JSONResponse(status_code=status.HTTP_200_OK, content=jsonable_encoder({"message": "success"}))
 
                 await _perform_commands_gitlab("pr_commands", PRAgent(), url, log_context, data)  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
-
             # for push event triggered merge requests
             elif object_attributes.get('action') == 'update' and object_attributes.get('oldrev'):
                 url = object_attributes.get('url')
@@ -248,7 +247,6 @@ async def gitlab_webhook(background_tasks: BackgroundTasks, request: Request):
 
                 get_logger().debug(f'A push event has been received: {url}')
                 await _perform_commands_gitlab("push_commands", PRAgent(), url, log_context, data)  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
-                
             # for draft to ready triggered merge requests
             elif object_attributes.get('action') == 'update' and is_draft_ready(data):
                 url = object_attributes.get('url')
@@ -256,7 +254,6 @@ async def gitlab_webhook(background_tasks: BackgroundTasks, request: Request):
 
                 # same as open MR
                 await _perform_commands_gitlab("pr_commands", PRAgent(), url, log_context, data)  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
-
         elif data.get('object_kind') == 'note' and data.get('event_type') == 'note': # comment on MR
             if 'merge_request' in data:
                 mr = data['merge_request']
@@ -270,7 +267,6 @@ async def gitlab_webhook(background_tasks: BackgroundTasks, request: Request):
                     body = handle_ask_line(body, data)
 
                 await handle_request(url, body, log_context, sender_id, notify=lambda: provider.add_eyes_reaction(comment_id))  # pyright: ignore[reportUnknownVariableType,reportUnknownMemberType]
-
     background_tasks.add_task(inner, request_json)
     end_time = datetime.now()
     get_logger().info(f"Processing time: {end_time - start_time}", request=request_json)

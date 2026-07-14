@@ -472,7 +472,6 @@ def get_main_pr_language(languages: dict[str, int] | None, files: list[Any] | No
 
     try:
         top_language = max(languages, key=languages.get).lower()  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
-
         # validate that the specific commit uses the main language
         extension_list = []
         for file in files:

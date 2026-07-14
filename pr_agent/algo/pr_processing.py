@@ -2,7 +2,6 @@ from __future__ import annotations
 
 import traceback
 from typing import Callable  # pyright: ignore[reportImport,reportUnknownMemberType]
-
 from github import RateLimitExceededException
 
 from pr_agent.algo.git_patch_processing import (
@@ -73,13 +72,11 @@ def get_pr_diff(git_provider: GitProvider, token_handler: TokenHandler,
         get_logger().info(f"Tokens: {total_tokens}, total tokens under limit: {get_max_tokens(model)}, "
                           f"returning full diff.")
         return "\n".join(patches_extended)  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
-
     # if we are over the limit, start pruning (If we got here, we will not extend the patches with extra lines)
     get_logger().info(f"Tokens: {total_tokens}, total tokens over limit: {get_max_tokens(model)}, "
                       f"pruning diff.")
     patches_compressed_list, total_tokens_list, deleted_files_list, remaining_files_list, file_dict, files_in_patches_list = \
         pr_generate_compressed_diff(pr_languages, token_handler, model, add_line_numbers_to_hunks, large_pr_handling)  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
-
     if large_pr_handling and len(patches_compressed_list) > 1:
         get_logger().info(f"Large PR handling mode, and found {len(patches_compressed_list)} patches with original diff.")
         return "" # return empty string, as we want to generate multiple patches with a different prompt
@@ -159,7 +156,6 @@ def get_pr_diff_multiple_patchs(git_provider: GitProvider, token_handler: TokenH
 
     patches_compressed_list, total_tokens_list, deleted_files_list, remaining_files_list, file_dict, files_in_patches_list = \
         pr_generate_compressed_diff(pr_languages, token_handler, model, add_line_numbers_to_hunks, large_pr_handling=True)  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
-
     return patches_compressed_list, total_tokens_list, deleted_files_list, remaining_files_list, file_dict, files_in_patches_list
 
 
@@ -215,7 +211,6 @@ def pr_generate_compressed_diff(top_langs: list[dict[str, object]], token_handle
     sorted_files = []
     for lang in top_langs:
         sorted_files.extend(sorted(lang['files'], key=lambda x: x.tokens, reverse=True))  # pyright: ignore[reportUnknownVariableType,reportUnknownMemberType]
-
     # generate patches for each file, and count tokens
     file_dict = {}
     for file in sorted_files:
@@ -397,7 +392,6 @@ def get_pr_multi_diffs(git_provider: GitProvider,
 
     # Sort files by main language
     pr_languages = sort_files_by_main_languages(git_provider.get_languages(), diff_files)  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
-
     # Get the maximum number of extra lines before and after the patch
     PATCH_EXTRA_LINES_BEFORE = get_settings().config.patch_extra_lines_before
     PATCH_EXTRA_LINES_AFTER = get_settings().config.patch_extra_lines_after
@@ -414,12 +408,10 @@ def get_pr_multi_diffs(git_provider: GitProvider,
     # if we are under the limit, return the full diff
     if total_tokens + OUTPUT_BUFFER_TOKENS_SOFT_THRESHOLD < get_max_tokens(model):
         return ["\n".join(patches_extended)] if patches_extended else []  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
-
     # Sort files within each language group by tokens in descending order
     sorted_files = []
     for lang in pr_languages:
         sorted_files.extend(sorted(lang['files'], key=lambda x: x.tokens, reverse=True))  # pyright: ignore[reportUnknownVariableType,reportUnknownMemberType]
-
     patches = []
     final_diff_list = []
     total_tokens = token_handler.prompt_tokens

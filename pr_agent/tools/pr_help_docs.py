@@ -355,7 +355,6 @@ class PRHelpDocs(object):
                 #Entire docs is too long. Rank and return according to relevance.
                 docs_prompt_to_send_to_model = await self._rank_docs_and_return_them_as_prompt(docs_filepath_to_contents,
                                                                                          max_allowed_txt_input)  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
-
             if not docs_prompt_to_send_to_model:
                 get_logger().error("Failed to generate docs prompt for model. Returning with no result...")
                 return

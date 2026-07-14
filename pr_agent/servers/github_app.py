@@ -205,8 +205,6 @@ async def handle_push_trigger_for_new_commits(body: dict[str, Any],
         async with _pending_task_duplicate_push_conditions[api_url]:  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
             _pending_task_duplicate_push_conditions[api_url].notify(1)
             _duplicate_push_triggers[api_url] -= 1  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
-
-
 def handle_closed_pr(body, event, action, log_context):  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]
     pull_request = body.get("pull_request", {})
     is_merged = pull_request.get("merged", False)

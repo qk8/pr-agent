@@ -19,7 +19,6 @@ from pr_agent.log import get_logger
 class PRAddDocs:
     def __init__(self, pr_url: str, cli_mode=False, args: list[str] | None = None,  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]
                  ai_handler: partial | type[BaseAiHandler] = LiteLLMAIHandler):  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType,reportMissingTypeArgument]
-
         self.git_provider = get_git_provider()(pr_url)
         self.main_language = get_main_pr_language(
             self.git_provider.get_languages(), self.git_provider.get_files()  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
