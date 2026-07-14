@@ -961,7 +961,7 @@ class GitLabProvider(GitProvider):
             commit_messages_str = clip_tokens(commit_messages_str, max_tokens)
         return commit_messages_str
 
-    def get_pr_id(self) -> Any:
+    def get_pr_id(self) -> str:
         try:
             pr_id = self.mr.web_url
             return pr_id

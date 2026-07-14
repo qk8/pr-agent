@@ -398,5 +398,8 @@ class GerritProvider(GitProvider):
     def remove_comment(self, comment):  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]
         pass
 
-    def get_pr_branch(self) -> Any:
-        return self.repo.head
+    def get_pr_branch(self) -> str | None:
+        try:
+            return str(self.repo.head.commit)
+        except Exception:
+            return None

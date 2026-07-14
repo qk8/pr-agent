@@ -873,7 +873,7 @@ class AzureDevopsProvider(GitProvider):
     def get_commit_messages(self):
         return ""  # not implemented yet
 
-    def get_pr_id(self) -> Any:
+    def get_pr_id(self) -> str:
         try:
             pr_id = f"{self.workspace_slug}/{self.repo_slug}/{self.pr_num}"
             return pr_id
