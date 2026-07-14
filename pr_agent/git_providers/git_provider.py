@@ -451,7 +451,7 @@ class GitProvider(ABC):
     def get_num_of_files(self):
         try:
             return len(self.get_diff_files())
-        except Exception as e:
+        except Exception as _:  # pyright: ignore[reportUnusedVariable]
             return -1
 
     def limit_output_characters(self, output: str, max_chars: int):
@@ -518,7 +518,7 @@ def get_main_pr_language(languages: dict[str, int] | None, files: list[Any] | No
         #         most_common_extension == top_language:
         #     main_language_str = top_language
 
-    except Exception as e:
+    except Exception as _:
         get_logger().exception(e)
 
     return main_language_str

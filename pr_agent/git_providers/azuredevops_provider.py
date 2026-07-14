@@ -88,7 +88,7 @@ class AzureDevopsProvider(GitProvider):
         """
         Publishes code suggestions as comments on the PR.
         """
-        post_parameters_list = []
+        post_parameters_list = []  # pyright: ignore[reportUnusedVariable]
         status = get_settings().azure_devops.get("default_comment_status", "closed")
         for suggestion in code_suggestions:
             body = suggestion['body']
@@ -727,7 +727,7 @@ class AzureDevopsProvider(GitProvider):
         )
         for f in files:
             if f.git_object_type == "blob":
-                file_name, file_extension = os.path.splitext(f.path)
+                file_name, file_extension = os.path.splitext(f.path)  # pyright: ignore[reportUnusedVariable]
                 languages.append(file_extension[1:])
 
         extension_counts = {}

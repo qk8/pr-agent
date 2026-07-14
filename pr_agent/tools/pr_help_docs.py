@@ -275,7 +275,7 @@ class PredictionPreparator:
             get_logger().error("ai handler not set. Cannot invoke model!")
             raise ValueError("PredictionPreparator not initialized")
         try:
-            response, finish_reason = await self.ai_handler.chat_completion(
+            response, __finish_reason = await self.ai_handler.chat_completion(  # pyright: ignore[reportUnusedVariable]
                 model=model, temperature=get_settings().config.temperature, system=self.system_prompt, user=self.user_prompt)
             return response
         except Exception as e:

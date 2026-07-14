@@ -119,16 +119,16 @@ class PRDescription:
             if get_settings().pr_description.enable_semantic_files_types:
                 self.file_label_dict = self._prepare_file_labels()
 
-            pr_labels, pr_file_changes = [], []
+            pr_labels, pr_file_changes = [], []  # pyright: ignore[reportUnusedVariable]
             if get_settings().pr_description.publish_labels:
                 pr_labels = self._prepare_labels()
             else:
                 get_logger().debug(f"Publishing labels disabled")
 
             if get_settings().pr_description.use_description_markers:
-                pr_title, pr_body, changes_walkthrough, pr_file_changes = self._prepare_pr_answer_with_markers()
+                pr_title, pr_body, changes_walkthrough, pr_file_changes = self._prepare_pr_answer_with_markers()  # pyright: ignore[reportUnusedVariable]
             else:
-                pr_title, pr_body, changes_walkthrough, pr_file_changes = self._prepare_pr_answer()
+                pr_title, pr_body, changes_walkthrough, pr_file_changes = self._prepare_pr_answer()  # pyright: ignore[reportUnusedVariable]
                 if not self.git_provider.is_supported(
                         "publish_file_comments") or not get_settings().pr_description.inline_file_summary:
                     pr_body += "\n\n" + changes_walkthrough + "___\n\n"
@@ -241,8 +241,8 @@ class PRDescription:
                 get_settings().pr_description_only_files_prompts.system,
                 get_settings().pr_description_only_files_prompts.user,
             )
-            (patches_compressed_list, total_tokens_list, deleted_files_list, remaining_files_list, file_dict,
-             files_in_patches_list) = get_pr_diff_multiple_patchs(
+            (patches_compressed_list, total_tokens_list, deleted_files_list, remaining_files_list, file_dict,  # pyright: ignore[reportUnusedVariable]
+             files_in_patches_list) = get_pr_diff_multiple_patchs(  # pyright: ignore[reportUnusedVariable]
                 self.git_provider, token_handler_only_files_prompt, model)
 
             # get the files prediction for each patch
@@ -437,7 +437,7 @@ class PRDescription:
         system_prompt = environment.from_string(get_settings().get(prompt, {}).get("system", "")).render(self.variables)
         user_prompt = environment.from_string(get_settings().get(prompt, {}).get("user", "")).render(self.variables)
 
-        response, finish_reason = await self.ai_handler.chat_completion(  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
+        response, __finish_reason = await self.ai_handler.chat_completion(  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
             model=model,
             temperature=get_settings().config.temperature,
             system=system_prompt,

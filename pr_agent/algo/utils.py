@@ -484,7 +484,7 @@ def process_can_be_split(emoji, value):  # pyright: ignore[reportUnknownParamete
             markdown_text += f"{emoji} <strong>No multiple PR themes</strong>\n\n"
         else:
             markdown_text += f"{emoji} <strong>{key_nice}</strong><br><br>\n\n"
-            for i, split in enumerate(value):
+            for i, split in enumerate(value):  # pyright: ignore[reportUnusedVariable]
                 title = split.get('title', '')
                 relevant_files = split.get('relevant_files', [])
                 markdown_text += f"<details><summary>\nSub-PR theme: <b>{title}</b></summary>\n\n"
@@ -1153,14 +1153,14 @@ def find_line_number_of_relevant_line_in_file(diff_files: list[FilePatchInfo],
             patch = file.patch
             patch_lines = patch.splitlines()
             delta = 0
-            start1, size1, start2, size2 = 0, 0, 0, 0
+            start1, size1, start2, size2 = 0, 0, 0, 0  # pyright: ignore[reportUnusedVariable]
             if absolute_position != -1: # matching absolute to relative
                 for i, line in enumerate(patch_lines):
                     # new hunk
                     if line.startswith('@@'):
                         delta = 0
                         match = re_hunk_header.match(line)
-                        start1, size1, start2, size2 = map(int, match.groups()[:4])
+                        start1, size1, start2, size2 = map(int, match.groups()[:4])  # pyright: ignore[reportUnusedVariable]
                     elif not line.startswith('-'):
                         delta += 1
 
@@ -1182,7 +1182,7 @@ def find_line_number_of_relevant_line_in_file(diff_files: list[FilePatchInfo],
                     if line.startswith('@@'):
                         delta = 0
                         match = re_hunk_header.match(line)
-                        start1, size1, start2, size2 = map(int, match.groups()[:4])
+                        start1, size1, start2, size2 = map(int, match.groups()[:4])  # pyright: ignore[reportUnusedVariable]
                     elif not line.startswith('-'):
                         delta += 1
 
@@ -1197,7 +1197,7 @@ def find_line_number_of_relevant_line_in_file(diff_files: list[FilePatchInfo],
                         if line.startswith('@@'):
                             delta = 0
                             match = re_hunk_header.match(line)
-                            start1, size1, start2, size2 = map(int, match.groups()[:4])
+                            start1, size1, start2, size2 = map(int, match.groups()[:4])  # pyright: ignore[reportUnusedVariable]
                         elif not line.startswith('-'):
                             delta += 1
 

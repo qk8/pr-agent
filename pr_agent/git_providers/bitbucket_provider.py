@@ -410,7 +410,7 @@ class BitbucketProvider(GitProvider):
                         pr_comment_updated = pr_comment
                     get_logger().info(f"Persistent mode - updating comment {comment_url} to latest {name} message")
                     d = {"content": {"raw": pr_comment_updated}}
-                    response = comment._update_data(comment.put(None, data=d))
+                    _response = comment._update_data(comment.put(None, data=d))
                     if final_update_message:
                         self.publish_comment(
                             f"**[Persistent {name}]({comment_url})** updated to latest commit {latest_commit_url}")
@@ -498,7 +498,7 @@ class BitbucketProvider(GitProvider):
                 return ""
 
             diff_files = self.get_diff_files()
-            position, absolute_position = find_line_number_of_relevant_line_in_file \
+            _position, absolute_position = find_line_number_of_relevant_line_in_file \
                 (diff_files, relevant_file, relevant_line_str)
 
             if absolute_position != -1 and self.pr_url:

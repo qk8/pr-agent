@@ -219,7 +219,7 @@ class BitbucketServerProvider(GitProvider):
                                                                      self.repo_slug,
                                                                      path,
                                                                      commit_id)
-        except HTTPError as e:
+        except HTTPError as _:
             get_logger().debug(f"File {path} not found at commit id: {commit_id}")
         return file_content
 
@@ -385,7 +385,7 @@ class BitbucketServerProvider(GitProvider):
                 return ""
 
             diff_files = self.get_diff_files()
-            position, absolute_position = find_line_number_of_relevant_line_in_file \
+            _position, absolute_position = find_line_number_of_relevant_line_in_file \
                 (diff_files, relevant_file, relevant_line_str)
 
             if absolute_position != -1:

@@ -345,7 +345,7 @@ __old hunk__
     new_content_lines = []
     old_content_lines = []
     match = None
-    start1, size1, start2, size2 = -1, -1, -1, -1
+    start1, size1, start2, size2 = -1, -1, -1, -1  # pyright: ignore[reportUnusedVariable]
     prev_header_line = []
     header_line = []
     for line_i, line in enumerate(patch_lines):
@@ -376,7 +376,7 @@ __old hunk__
             if match:
                 prev_header_line = header_line
 
-            section_header, size1, size2, start1, start2 = extract_hunk_headers(match)
+            section_header, size1, size2, start1, start2 = extract_hunk_headers(match)  # pyright: ignore[reportUnusedVariable]
 
         elif line.startswith('+'):
             new_content_lines.append(line)
@@ -431,7 +431,7 @@ def extract_hunk_lines_from_patch(patch: str, file_name, line_start, line_end, s
 
                 match = RE_HUNK_HEADER.match(line)
 
-                section_header, size1, size2, start1, start2 = extract_hunk_headers(match)
+                section_header, size1, size2, start1, start2 = extract_hunk_headers(match)  # pyright: ignore[reportUnusedVariable]
 
                 # check if line range is in this hunk
                 if side.lower() == 'left':

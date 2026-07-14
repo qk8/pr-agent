@@ -22,7 +22,7 @@ def extract_header(snippet):  # pyright: ignore[reportUnknownParameterType,repor
     res = ''
     lines = snippet.split('===Snippet content===')[0].split('\n')
     highest_header = ''
-    highest_level = float('inf')
+    highest_level = float('inf')  # pyright: ignore[reportUnusedVariable]
     for line in lines[::-1]:
         line = line.strip()
         if line.startswith('Header '):
@@ -53,7 +53,7 @@ class PRHelpMessage:
             environment = Environment(undefined=StrictUndefined)
             system_prompt = environment.from_string(get_settings().pr_help_prompts.system).render(variables)
             user_prompt = environment.from_string(get_settings().pr_help_prompts.user).render(variables)
-            response, finish_reason = await self.ai_handler.chat_completion(  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
+            response, __finish_reason = await self.ai_handler.chat_completion(  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
                 model=model, temperature=get_settings().config.temperature, system=system_prompt, user=user_prompt)
             return response
         except Exception as e:
@@ -276,11 +276,11 @@ class PRHelpMessage:
         relevant_snippets_full = []
         relevant_pages_full = []
         relevant_snippets_full_header = []
-        th = 0.75
+        th = 0.75  # pyright: ignore[reportUnusedVariable]
         for s in sim_results:
             page = s[0].metadata['source']
             content = s[0].page_content
-            score = s[1]
+            score = s[1]  # pyright: ignore[reportUnusedVariable]
             relevant_snippets_full.append(content)
             relevant_snippets_full_header.append(extract_header(content))
             relevant_pages_full.append(page)

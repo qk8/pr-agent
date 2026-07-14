@@ -602,9 +602,9 @@ class GitLabProvider(GitProvider):
                         score = original_suggestion.get('score', 7)
 
                     if hasattr(self, 'main_language'):
-                        language = self.main_language
+                        _language = self.main_language
                     else:
-                        language = ''
+                        _language = ''
                     link = self.get_line_link(relevant_file, line_start, line_end)
                     body_fallback =f"**Suggestion:** {content} [{label}, importance: {score}]\n\n"
                     body_fallback +=f"\n\n<details><summary>[{target_file.filename} [{line_start}-{line_end}]]({link}):</summary>\n\n"
@@ -721,7 +721,7 @@ class GitLabProvider(GitProvider):
                 match = self.RE_HUNK_HEADER.match(line)
                 if not match:
                     continue
-                start_old, size_old, start_new, size_new, _ = match.groups()
+                start_old, _size_old, start_new, _size_new, _ = match.groups()
                 source_line_no = int(start_old)
                 target_line_no = int(start_new)
                 continue
@@ -985,7 +985,7 @@ class GitLabProvider(GitProvider):
             if not relevant_line_str:
                 return ""
 
-            position, absolute_position = find_line_number_of_relevant_line_in_file \
+            _position, absolute_position = find_line_number_of_relevant_line_in_file \
                 (self.diff_files, relevant_file, relevant_line_str)  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
             if absolute_position != -1:
                 # link to right file only

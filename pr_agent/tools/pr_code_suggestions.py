@@ -272,7 +272,7 @@ class PRCodeSuggestions:
         else:
             latest_suggestion_header = f"Latest suggestions up to {last_commit_num}"
         latest_commit_html_comment = f"<!-- {last_commit_num} -->"
-        found_comment = None
+        found_comment = None  # pyright: ignore[reportUnusedVariable]
 
         if max_previous_comments > 0:
             try:
@@ -280,7 +280,7 @@ class PRCodeSuggestions:
                 for comment in prev_comments:
                     if comment.body.startswith(initial_header):
                         prev_suggestions = comment.body
-                        found_comment = comment
+                        found_comment = comment  # pyright: ignore[reportUnusedVariable]
                         comment_url = git_provider.get_comment_url(comment)
 
                         if history_header.strip() not in comment.body:
@@ -394,7 +394,7 @@ class PRCodeSuggestions:
         environment = Environment(undefined=StrictUndefined)
         system_prompt = environment.from_string(self.pr_code_suggestions_prompt_system).render(variables)
         user_prompt = environment.from_string(self.pr_code_suggestions_prompt_user).render(variables)
-        response, finish_reason = await self.ai_handler.chat_completion(  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
+        response, _finish_reason = await self.ai_handler.chat_completion(  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
             model=model, temperature=get_settings().config.temperature, system=system_prompt, user=user_prompt)
         if not get_settings().config.publish_output:
             get_settings().system_prompt = system_prompt
@@ -417,7 +417,7 @@ class PRCodeSuggestions:
             await self.analyze_self_reflection_response(data, response_reflect)
         else:
             # get_logger().error(f"Could not self-reflect on suggestions. using default score 7")
-            for i, suggestion in enumerate(data["code_suggestions"]):  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
+            for _i, suggestion in enumerate(data["code_suggestions"]):  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
                 suggestion["score"] = 7
                 suggestion["score_why"] = ""
 
@@ -938,7 +938,7 @@ class PRCodeSuggestions:
                     get_settings().pr_code_suggestions_reflect_prompt.user).render(variables)
 
             with get_logger().contextualize(command="self_reflect_on_suggestions"):
-                response_reflect, finish_reason_reflect = await self.ai_handler.chat_completion(model=model,  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
+                response_reflect, _finish_reason_reflect = await self.ai_handler.chat_completion(model=model,  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
                                                                                                 system=system_prompt_reflect,
                                                                                                 temperature=get_settings().config.temperature,
                                                                                                 user=user_prompt_reflect)

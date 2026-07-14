@@ -63,7 +63,7 @@ def get_pr_diff(git_provider: GitProvider, token_handler: TokenHandler,
             pass
 
     # generate a standard diff string, with patch extension
-    patches_extended, total_tokens, patches_extended_tokens = pr_generate_extended_diff(
+    patches_extended, total_tokens, _patches_extended_tokens = pr_generate_extended_diff(
         pr_languages, token_handler, add_line_numbers_to_hunks,
         patch_extra_lines_before=PATCH_EXTRA_LINES_BEFORE, patch_extra_lines_after=PATCH_EXTRA_LINES_AFTER)
 
@@ -76,7 +76,7 @@ def get_pr_diff(git_provider: GitProvider, token_handler: TokenHandler,
     get_logger().info(f"Tokens: {total_tokens}, total tokens over limit: {get_max_tokens(model)}, "
                       f"pruning diff.")
     patches_compressed_list, total_tokens_list, deleted_files_list, remaining_files_list, file_dict, files_in_patches_list = \
-        pr_generate_compressed_diff(pr_languages, token_handler, model, add_line_numbers_to_hunks, large_pr_handling)  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
+        pr_generate_compressed_diff(pr_languages, token_handler, model, add_line_numbers_to_hunks, large_pr_handling)  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]  # pyright: ignore[reportUnusedVariable]
     if large_pr_handling and len(patches_compressed_list) > 1:
         get_logger().info(f"Large PR handling mode, and found {len(patches_compressed_list)} patches with original diff.")
         return "" # return empty string, as we want to generate multiple patches with a different prompt
@@ -254,7 +254,7 @@ def pr_generate_compressed_diff(top_langs: list[dict[str, object]], token_handle
     # additional iterations (if needed)
     if large_pr_handling:
         NUMBER_OF_ALLOWED_ITERATIONS = get_settings().pr_description.get("max_ai_calls", 4) - 1 # one more call is to summarize
-        for i in range(NUMBER_OF_ALLOWED_ITERATIONS-1):
+        for _ in range(NUMBER_OF_ALLOWED_ITERATIONS-1):
             if remaining_files_list:
                 total_tokens, patches, remaining_files_list, files_in_patch_list = generate_full_patch(convert_hunks_to_line_numbers,
                                                                                  file_dict,
@@ -281,7 +281,7 @@ def generate_full_patch(convert_hunks_to_line_numbers, file_dict, max_tokens_mod
 
         patch = data['patch']
         new_patch_tokens = data['tokens']
-        edit_type = data['edit_type']
+        _edit_type = data['edit_type']
 
         # Hard Stop, no more tokens
         if total_tokens > max_tokens_model - OUTPUT_BUFFER_TOKENS_HARD_THRESHOLD:
@@ -399,7 +399,7 @@ def get_pr_multi_diffs(git_provider: GitProvider,
     PATCH_EXTRA_LINES_AFTER = cap_and_log_extra_lines(PATCH_EXTRA_LINES_AFTER, "after")
 
     # try first a single run with standard diff string, with patch extension, and no deletions
-    patches_extended, total_tokens, patches_extended_tokens = pr_generate_extended_diff(
+    patches_extended, total_tokens, _patches_extended_tokens = pr_generate_extended_diff(
         pr_languages, token_handler,
         add_line_numbers_to_hunks=add_line_numbers,
         patch_extra_lines_before=PATCH_EXTRA_LINES_BEFORE,

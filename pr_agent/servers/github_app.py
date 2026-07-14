@@ -129,7 +129,7 @@ async def handle_new_pr_opened(body: dict[str, Any],
                                action: str,
                                log_context: dict[str, Any],
                                agent: PRAgent):
-    title = body.get("pull_request", {}).get("title", "")
+    title = body.get("pull_request", {}).get("title", "")  # pyright: ignore[reportUnusedVariable]
 
     pull_request, api_url = _check_pull_request_event(action, body, log_context)
     if not (pull_request and api_url):

@@ -26,7 +26,7 @@ class PRSimilarIssue:
         self.cli_mode = get_settings().CONFIG.CLI_MODE
         self.max_issues_to_scan = get_settings().pr_similar_issue.max_issues_to_scan
         self.git_provider = get_git_provider()()  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
-        repo_name, issue_number = self.git_provider._parse_issue_url(issue_url.split('=')[-1])  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
+        repo_name, _issue_number = self.git_provider._parse_issue_url(issue_url.split('=')[-1])  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
         self.git_provider.repo = repo_name
         self.git_provider.repo_obj = self.git_provider.github_client.get_repo(repo_name)
         self.token_handler = TokenHandler()
@@ -90,7 +90,7 @@ class PRSimilarIssue:
                 for issue in issues_paginated_list:
                     if issue.pull_request:
                         continue
-                    issue_str, comments, number = self._process_issue(issue)
+                    issue_str, comments, number = self._process_issue(issue)  # pyright: ignore[reportUnusedVariable]
                     issue_key = f"issue_{number}"
                     id = issue_key + "." + "issue"
                     res = pinecone_index.fetch([id]).to_dict()
@@ -155,7 +155,7 @@ class PRSimilarIssue:
                 for issue in issues_paginated_list:
                     if issue.pull_request:
                         continue
-                    issue_str, comments, number = self._process_issue(issue)
+                    issue_str, comments, number = self._process_issue(issue)  # pyright: ignore[reportUnusedVariable]
                     issue_key = f"issue_{number}"
                     issue_id = issue_key + "." + "issue"
                     res = self.table.search().limit(len(self.table)).where(f"id='{issue_id}'").to_list()  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
@@ -235,7 +235,7 @@ class PRSimilarIssue:
                 for issue in issues_paginated_list:
                     if issue.pull_request:
                         continue
-                    issue_str, comments, number = self._process_issue(issue)
+                    issue_str, comments, number = self._process_issue(issue)  # pyright: ignore[reportUnusedVariable]
                     issue_key = f"issue_{number}"
                     point_id = issue_key + "." + "issue"
                     response = self.qdrant.count(
@@ -274,9 +274,9 @@ class PRSimilarIssue:
                     )
             return ""
         get_logger().info('Getting issue...')
-        repo_name, original_issue_number = self.git_provider._parse_issue_url(self.issue_url.split('=')[-1])  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
+        _, original_issue_number = self.git_provider._parse_issue_url(self.issue_url.split('=')[-1])  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
         issue_main = self.git_provider.repo_obj.get_issue(original_issue_number)  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
-        issue_str, comments, number = self._process_issue(issue_main)
+        issue_str, comments, number = self._process_issue(issue_main)  # pyright: ignore[reportUnusedVariable]
         openai.api_key = get_settings().openai.key
         get_logger().info('Done')
 
@@ -384,7 +384,7 @@ class PRSimilarIssue:
                 url = list(issue.get_comments())[relevant_comment_number_list[i]].html_url
             similar_issues_str += f"{i + 1}. **[{title}]({url})** (score={score_list[i]})\n\n"
         if get_settings().config.publish_output:
-            response = issue_main.create_comment(similar_issues_str)
+            response = issue_main.create_comment(similar_issues_str)  # pyright: ignore[reportUnusedVariable]
         get_logger().info(similar_issues_str)
         get_logger().info('Done')
 
@@ -466,7 +466,7 @@ class PRSimilarIssue:
         except:
             embeds = []
             get_logger().error('Failed to embed entire list, embedding one by one...')
-            for i, text in enumerate(list_to_encode):
+            for i, text in enumerate(list_to_encode):  # pyright: ignore[reportUnusedVariable]
                 try:
                     res = openai.Embedding.create(input=[text], engine=MODEL)
                     embeds.append(res['data'][0]['embedding'])
@@ -562,7 +562,7 @@ class PRSimilarIssue:
         except:
             embeds = []
             get_logger().error('Failed to embed entire list, embedding one by one...')
-            for i, text in enumerate(list_to_encode):
+            for i, text in enumerate(list_to_encode):  # pyright: ignore[reportUnusedVariable]
                 try:
                     res = openai.Embedding.create(input=[text], engine=MODEL)
                     embeds.append(res['data'][0]['embedding'])
@@ -661,7 +661,7 @@ class PRSimilarIssue:
         except Exception:
             embeds = []
             get_logger().error('Failed to embed entire list, embedding one by one...')
-            for i, text in enumerate(list_to_encode):
+            for i, text in enumerate(list_to_encode):  # pyright: ignore[reportUnusedVariable]
                 try:
                     res = openai.Embedding.create(input=[text], engine=MODEL)
                     embeds.append(res['data'][0]['embedding'])
