@@ -1,3 +1,4 @@
+from __future__ import annotations
 from pr_agent.config_loader import get_settings
 from pr_agent.identity_providers.default_identity_provider import \
     DefaultIdentityProvider

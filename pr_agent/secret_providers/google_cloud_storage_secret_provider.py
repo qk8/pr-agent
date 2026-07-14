@@ -1,3 +1,4 @@
+from __future__ import annotations
 import ujson
 from google.cloud import storage
 

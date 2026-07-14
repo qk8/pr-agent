@@ -1,3 +1,4 @@
+from __future__ import annotations
 from pr_agent.config_loader import get_settings
 
 DEFAULT_PROGRESS_GIF_WIDTH = 48

@@ -1,3 +1,4 @@
+from __future__ import annotations
 import json
 import boto3
 from botocore.exceptions import ClientError

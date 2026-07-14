@@ -4,6 +4,8 @@ import shlex
 from functools import partial
 from typing import TYPE_CHECKING, Any
 
+from pr_agent.algo.ai_handlers.litellm_ai_handler import LiteLLMAIHandler
+
 if TYPE_CHECKING:
     from pr_agent.algo.ai_handlers.base_ai_handler import BaseAiHandler
 
@@ -54,7 +56,7 @@ commands: list[str] = list(command2class.keys())
 
 
 class PRAgent:
-    def __init__(self, ai_handler: type["BaseAiHandler"] | partial[Any] = partial):  # pyright: ignore
+    def __init__(self, ai_handler: type["BaseAiHandler"] | partial[Any] = LiteLLMAIHandler):
         self.ai_handler: type["BaseAiHandler"] | partial[Any] = ai_handler
 
     async def _handle_request(self, pr_url: str, request: str | list[str], notify: Any = None) -> bool:

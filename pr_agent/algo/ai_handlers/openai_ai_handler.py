@@ -1,3 +1,4 @@
+from __future__ import annotations
 from os import environ
 from pr_agent.algo.ai_handlers.base_ai_handler import BaseAiHandler
 import openai

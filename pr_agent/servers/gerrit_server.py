@@ -1,3 +1,4 @@
+from __future__ import annotations
 import copy
 from enum import Enum
 from json import JSONDecodeError

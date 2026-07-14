@@ -1,3 +1,4 @@
+from __future__ import annotations
 from pr_agent.identity_providers.identity_provider import (Eligibility,
                                                            IdentityProvider)
 

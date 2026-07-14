@@ -1,3 +1,4 @@
+from __future__ import annotations
 """MOSAICO observability helpers: parse the observability-extension metadata,
 bind correlation IDs into loguru, and open a Langfuse trace span.
 

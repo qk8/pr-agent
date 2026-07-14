@@ -1,3 +1,4 @@
+from __future__ import annotations
 _LANGCHAIN_INSTALLED = False
 
 try:

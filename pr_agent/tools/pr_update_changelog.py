@@ -1,3 +1,4 @@
+from __future__ import annotations
 import copy
 from datetime import date
 from functools import partial

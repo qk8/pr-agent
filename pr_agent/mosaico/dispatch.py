@@ -1,3 +1,4 @@
+from __future__ import annotations
 """Text router: turn inbound MOSAICO text into a pr-agent command and return the
 rendered markdown.
 

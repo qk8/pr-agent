@@ -1,3 +1,4 @@
+from __future__ import annotations
 """MOSAICO A2A server (A2A 1.0).
 
 Builds a plain Starlette app with A2A routes (agent-card + JSONRPC) plus a GET /health

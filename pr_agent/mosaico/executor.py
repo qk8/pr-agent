@@ -1,3 +1,4 @@
+from __future__ import annotations
 """MOSAICO A2A executor + the /health LLM probe (A2A 1.0).
 
 PRAgentExecutor.execute runs a single non-streaming path: it FIRST installs a

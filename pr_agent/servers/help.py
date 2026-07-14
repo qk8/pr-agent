@@ -1,3 +1,4 @@
+from __future__ import annotations
 class HelpMessage:
     @staticmethod
     def get_general_commands_text():

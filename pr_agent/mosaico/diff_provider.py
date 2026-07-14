@@ -1,3 +1,4 @@
+from __future__ import annotations
 """DiffInputProvider — a GitProvider that feeds a SUPPLIED unified diff to pr-agent's
 tools (no host, no checkout). Used by the MOSAICO path (b): the inbound text is a
 pasted unified diff. INPUT methods are real; publish/label/comment/reaction methods

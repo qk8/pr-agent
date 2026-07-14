@@ -1,3 +1,4 @@
+from __future__ import annotations
 import asyncio.locks
 import copy
 import os

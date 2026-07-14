@@ -1,3 +1,4 @@
+from __future__ import annotations
 """Builds the MOSAICO A2A agent card for pr-agent.
 
 Mirrors docstring-agent/__main__.py:36-68. The observability extension is advertised

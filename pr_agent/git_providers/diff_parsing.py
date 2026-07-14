@@ -1,3 +1,4 @@
+from __future__ import annotations
 from unidiff import PatchSet
 from unidiff.errors import UnidiffParseError
 

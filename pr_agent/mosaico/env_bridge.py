@@ -1,3 +1,4 @@
+from __future__ import annotations
 """Maps MOSAICO's env-var contract onto pr-agent's Dynaconf settings and registers
 the Langfuse litellm callback. Every function is a no-op unless the corresponding
 MOSAICO env var is set: importing or calling apply_mosaico_env() with no MOSAICO env

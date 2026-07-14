@@ -1,3 +1,4 @@
+from __future__ import annotations
 """Idempotent registration of DiffInputProvider into pr-agent's provider registry.
 
 Importing this module inserts the "mosaico_diff" provider via setdefault (never

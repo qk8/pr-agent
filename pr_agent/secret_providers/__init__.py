@@ -1,3 +1,4 @@
+from __future__ import annotations
 from pr_agent.config_loader import get_settings
 
 
