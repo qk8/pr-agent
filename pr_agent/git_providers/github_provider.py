@@ -86,7 +86,7 @@ class GithubProvider(GitProvider):
                 return None
             # else: Valid repo handle:
             return repo_obj.get_issue(issue_number)
-        except Exception as e:
+        except Exception as _:
             get_logger().exception(f"Failed to get an issue object for issue: {issue_url}, belonging to owner/repo: {repo_name}")
             return None
 
@@ -115,7 +115,7 @@ class GithubProvider(GitProvider):
                 get_logger().error(f"url is neither an issues url nor a PR url nor a valid git url: {given_url}. Returning empty result.")
                 return ""
             return repo_path
-        except Exception as e:
+        except Exception as _:
             get_logger().exception(f"unable to parse url: {given_url}. Returning empty result.")
             return ""
 
@@ -231,7 +231,7 @@ class GithubProvider(GitProvider):
         else:
             try:
                 return len(self.git_files)  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
-            except Exception as e:
+            except Exception as _:
                 return -1
 
     def get_diff_files(self) -> list[FilePatchInfo]:
@@ -442,12 +442,12 @@ class GithubProvider(GitProvider):
             except Exception:
                 get_logger().warning(f"Failed to update check run {existing_id}, creating new one")
         try:
-            headers, data = self.pr._requester.requestJsonAndCheck(
+            _headers, _data = self.pr._requester.requestJsonAndCheck(
                 "POST",
                 f"{self.base_url}/repos/{self.repo}/check-runs",
                 input=create_body,
             )
-            self._check_run_ids[name] = data["id"]
+            self._check_run_ids[name] = _data["id"]
             return True
         except Exception:
             get_logger().warning(f"Failed to create check run, falling back to comment")
@@ -594,7 +594,7 @@ class GithubProvider(GitProvider):
         try:
             # event ="" # By leaving this blank, you set the review action state to PENDING
             input = dict(commit_id=self.last_commit_id.sha, comments=[comment])
-            headers, data = self.pr._requester.requestJsonAndCheck(
+            _headers, data = self.pr._requester.requestJsonAndCheck(
                 "POST", f"{self.pr.url}/reviews", input=input)
             pending_review_id = data["id"]
             is_verified = True
@@ -713,7 +713,7 @@ class GithubProvider(GitProvider):
         try:
             # self.pr.get_issue_comment(comment_id).edit(body)
             body = self.limit_output_characters(body, self.max_comment_chars)
-            headers, data_patch = self.pr._requester.requestJsonAndCheck(
+            _headers, _data_patch = self.pr._requester.requestJsonAndCheck(
                 "PATCH", f"{self.base_url}/repos/{self.repo}/issues/comments/{comment_id}",
                 input={"body": body}
             )
@@ -724,7 +724,7 @@ class GithubProvider(GitProvider):
         try:
             # self.pr.get_issue_comment(comment_id).edit(body)
             body = self.limit_output_characters(body, self.max_comment_chars)
-            headers, data_patch = self.pr._requester.requestJsonAndCheck(
+            _headers, _data_patch = self.pr._requester.requestJsonAndCheck(
                 "POST", f"{self.base_url}/repos/{self.repo}/pulls/{self.pr_num}/comments/{comment_id}/replies",
                 input={"body": body}
             )
@@ -734,7 +734,7 @@ class GithubProvider(GitProvider):
     def get_comment_body_from_comment_id(self, comment_id: int):
         try:
             # self.pr.get_issue_comment(comment_id).edit(body)
-            headers, data_patch = self.pr._requester.requestJsonAndCheck(
+            _headers, data_patch = self.pr._requester.requestJsonAndCheck(
                 "GET", f"{self.base_url}/repos/{self.repo}/issues/comments/{comment_id}"
             )
             return data_patch.get("body","")
@@ -744,7 +744,7 @@ class GithubProvider(GitProvider):
 
     def publish_file_comments(self, file_comments: list[dict[str, object]]) -> bool:
         try:
-            headers, existing_comments = self.pr._requester.requestJsonAndCheck(
+            _headers, existing_comments = self.pr._requester.requestJsonAndCheck(
                 "GET", f"{self.pr.url}/comments"
             )
             for comment in file_comments:
@@ -761,13 +761,13 @@ class GithubProvider(GitProvider):
                         same_comment_creator = self.github_user_id == existing_comment['user']['login']
                     if existing_comment['subject_type'] == 'file' and comment['path'] == existing_comment['path'] and same_comment_creator:
 
-                        headers, data_patch = self.pr._requester.requestJsonAndCheck(
+                        _headers, _data_patch = self.pr._requester.requestJsonAndCheck(
                             "PATCH", f"{self.base_url}/repos/{self.repo}/pulls/comments/{existing_comment['id']}", input={"body":comment['body']}
                         )
                         found = True
                         break
                 if not found:
-                    headers, data_post = self.pr._requester.requestJsonAndCheck(
+                    _headers, _data_post = self.pr._requester.requestJsonAndCheck(
                         "POST", f"{self.pr.url}/comments", input=comment
                     )
             return True
@@ -811,9 +811,8 @@ class GithubProvider(GitProvider):
         if not self.github_user_id:
             try:
                 self.github_user_id = self.github_client.get_user().raw_data['login']
-            except Exception as e:
+            except Exception as _:
                 self.github_user_id = ""
-                # logging.exception(f"Failed to get user id, error: {e}")
         return self.github_user_id
 
     def get_notifications(self, since: datetime):
@@ -940,7 +939,7 @@ class GithubProvider(GitProvider):
         if disable_eyes:
             return None
         try:
-            headers, data_patch = self.pr._requester.requestJsonAndCheck(
+            _headers, data_patch = self.pr._requester.requestJsonAndCheck(
                 "POST", f"{self.base_url}/repos/{self.repo}/issues/comments/{issue_comment_id}/reactions",
                 input={"content": "eyes"}
             )
@@ -952,7 +951,7 @@ class GithubProvider(GitProvider):
     def remove_reaction(self, issue_comment_id: int, reaction_id: str) -> bool:
         try:
             # self.pr.get_issue_comment(issue_comment_id).delete_reaction(reaction_id)
-            headers, data_patch = self.pr._requester.requestJsonAndCheck(
+            _headers, _data_patch = self.pr._requester.requestJsonAndCheck(
                 "DELETE",
                 f"{self.base_url}/repos/{self.repo}/issues/comments/{issue_comment_id}/reactions/{reaction_id}"
             )
@@ -1095,7 +1094,7 @@ class GithubProvider(GitProvider):
             for p in pr_types:
                 color = label_color_map.get(p, "d1bcf9")  # default to "Other" color
                 post_parameters.append({"name": p, "color": color})
-            headers, data = self.pr._requester.requestJsonAndCheck(
+            _headers, _data = self.pr._requester.requestJsonAndCheck(
                 "PUT", f"{self.pr.issue_url}/labels", input=post_parameters
             )
         except Exception as e:
@@ -1107,7 +1106,7 @@ class GithubProvider(GitProvider):
                 labels =self.pr.labels
                 return [label.name for label in labels]
             else: # obtain the latest labels. Maybe they changed while the AI was running
-                headers, labels = self.pr._requester.requestJsonAndCheck(
+                _headers, labels = self.pr._requester.requestJsonAndCheck(
                     "GET", f"{self.pr.issue_url}/labels")
                 return [label['name'] for label in labels]
 
@@ -1144,7 +1143,7 @@ class GithubProvider(GitProvider):
             if not relevant_line_str:
                 return ""
 
-            position, absolute_position = find_line_number_of_relevant_line_in_file \
+            _position, absolute_position = find_line_number_of_relevant_line_in_file \
                 (self.diff_files, relevant_file, relevant_line_str)  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
             if absolute_position != -1:
                 # # link to right file only
@@ -1317,12 +1316,12 @@ class GithubProvider(GitProvider):
                         if not hasattr(file, 'patches_range'):
                             file.patches_range = []
                             patch_lines = patch_str.splitlines()
-                            for i, line in enumerate(patch_lines):
+                            for _i, line in enumerate(patch_lines):
                                 if line.startswith('@@'):
                                     match = RE_HUNK_HEADER.match(line)
                                     # identify hunk header
                                     if match:
-                                        section_header, size1, size2, start1, start2 = extract_hunk_headers(match)
+                                        _section_header, _size1, size2, _start1, start2 = extract_hunk_headers(match)
                                         file.patches_range.append({'start': start2, 'end': start2 + size2 - 1})
 
                         patches_range = file.patches_range
@@ -1337,7 +1336,7 @@ class GithubProvider(GitProvider):
                         min_distance = float('inf')
                         patch_range_min = None
                         # find the hunk that contains the comment, or the closest one
-                        for i, patch_range in enumerate(patches_range):
+                        for _i, patch_range in enumerate(patches_range):
                             d1 = comment_start_line - patch_range['start']
                             d2 = patch_range['end'] - comment_end_line
                             if d1 >= 0 and d2 >= 0:  # found a valid hunk
