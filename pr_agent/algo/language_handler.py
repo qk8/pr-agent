@@ -1,10 +1,11 @@
 from __future__ import annotations
+from typing import Any
 # Language Selection, source: https://github.com/bigcode-project/bigcode-dataset/blob/main/language_selection/programming-languages-to-file-extensions.json  # noqa E501
 
 from pr_agent.config_loader import get_settings
 
 
-def filter_bad_extensions(files):  # pyright: ignore
+def filter_bad_extensions(files):  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]
     # Bad Extensions, source: https://github.com/EleutherAI/github-downloader/blob/345e7c4cbb9e0dc8a0615fd995a08bf9d73b3fe6/download_repo_text.py  # noqa: E501
     bad_extensions = get_settings().bad_extensions.default
     if get_settings().config.use_extra_bad_extensions:
@@ -12,7 +13,7 @@ def filter_bad_extensions(files):  # pyright: ignore
     return [f for f in files if f.filename is not None and is_valid_file(f.filename, bad_extensions)]
 
 
-def is_valid_file(filename:str, bad_extensions=None) -> bool:  # pyright: ignore
+def is_valid_file(filename:str, bad_extensions=None) -> bool:  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]
     if not filename:
         return False
     if not bad_extensions:
@@ -34,7 +35,7 @@ def is_valid_file(filename:str, bad_extensions=None) -> bool:  # pyright: ignore
     return filename.split('.')[-1] not in bad_extensions
 
 
-def sort_files_by_main_languages(languages: dict[str, int], files: list[str]) -> list[str]:
+def sort_files_by_main_languages(languages: dict[str, int], files: list[str]) -> list[dict[str, Any]]:
     """
     Sort files by their main language, put the files that are in the main language first and the rest files after
     """
@@ -62,7 +63,7 @@ def sort_files_by_main_languages(languages: dict[str, int], files: list[str]) ->
     # if no languages detected, put all files in the "Other" category
     if not languages:
         files_sorted = [({"language": "Other", "files": list(files_filtered)})]
-        return files_sorted  # pyright: ignore
+        return files_sorted
 
     main_extensions_flat = []
     for ext in main_extensions:

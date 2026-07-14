@@ -118,7 +118,7 @@ def return_document_headings(text: str, ext: str) -> str:
         return ""
 
 # Load documentation files to memory: full file path (as will be given as prompt) -> doc contents
-def map_documentation_files_to_contents(base_path: str, doc_files: list[str], max_allowed_file_len=5000) -> dict[str, str]:  # pyright: ignore
+def map_documentation_files_to_contents(base_path: str, doc_files: list[str], max_allowed_file_len=5000) -> dict[str, str]:  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]
     try:
         returned_dict = {}
         for file in doc_files:
@@ -145,7 +145,7 @@ def map_documentation_files_to_contents(base_path: str, doc_files: list[str], ma
 
 # Goes over files' contents, generating payload for prompt while decorating them with a header to mark where each file begins,
 # as to help the LLM to give a better answer.
-def aggregate_documentation_files_for_prompt_contents(file_path_to_contents: dict[str, str], return_just_headings=False) -> str:  # pyright: ignore
+def aggregate_documentation_files_for_prompt_contents(file_path_to_contents: dict[str, str], return_just_headings=False) -> str:  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]
     try:
         docs_prompt = ""
         for idx, file_path in enumerate(file_path_to_contents):
@@ -258,7 +258,7 @@ def clean_markdown_content(content: str) -> str:
         return ""
 
 class PredictionPreparator:
-    def __init__(self, ai_handler, vars, system_prompt, user_prompt):  # pyright: ignore
+    def __init__(self, ai_handler, vars, system_prompt, user_prompt):  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]
         try:
             self.ai_handler = ai_handler
             variables = copy.deepcopy(vars)
@@ -284,7 +284,7 @@ class PredictionPreparator:
 
 
 class PRHelpDocs(object):
-    def __init__(self, ctx_url, ai_handler: partial | type[BaseAiHandler] = LiteLLMAIHandler, args: tuple[str]=None, return_as_string: bool=False):  # pyright: ignore
+    def __init__(self, ctx_url, ai_handler: partial | type[BaseAiHandler] = LiteLLMAIHandler, args: tuple[str]=None, return_as_string: bool=False):  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportMissingTypeArgument]
         try:
             self.ctx_url = ctx_url
             self.question = args[0] if args else None
@@ -320,7 +320,7 @@ class PRHelpDocs(object):
                 "snippets": "",
             }
             self.token_handler = TokenHandler(None,
-                                                  self.vars,  # pyright: ignore
+                                                  self.vars,  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
                                                   get_settings().pr_help_docs_prompts.system,
                                                   get_settings().pr_help_docs_prompts.user)
         except Exception as e:
@@ -349,12 +349,12 @@ class PRHelpDocs(object):
 
             #First, check if the text is not too long to even query the LLM provider:
             max_allowed_txt_input = get_maximal_text_input_length_for_token_count_estimation()
-            invoke_llm_just_with_headings = self._trim_docs_input(docs_prompt_to_send_to_model, max_allowed_txt_input,  # pyright: ignore
+            invoke_llm_just_with_headings = self._trim_docs_input(docs_prompt_to_send_to_model, max_allowed_txt_input,  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
                                                                   only_return_if_trim_needed=True)
             if invoke_llm_just_with_headings:
                 #Entire docs is too long. Rank and return according to relevance.
                 docs_prompt_to_send_to_model = await self._rank_docs_and_return_them_as_prompt(docs_filepath_to_contents,
-                                                                                         max_allowed_txt_input)  # pyright: ignore
+                                                                                         max_allowed_txt_input)  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
 
             if not docs_prompt_to_send_to_model:
                 get_logger().error("Failed to generate docs prompt for model. Returning with no result...")
@@ -366,7 +366,7 @@ class PRHelpDocs(object):
                                                                              get_settings().pr_help_docs_prompts.system,
                                                                              get_settings().pr_help_docs_prompts.user),
                                                         model_type=ModelType.REGULAR)
-            response_yaml = load_yaml(response)  # pyright: ignore
+            response_yaml = load_yaml(response)  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
             if not response_yaml:
                 get_logger().error("Failed to parse the AI response.", artifacts={'response': response})
                 return
@@ -376,13 +376,13 @@ class PRHelpDocs(object):
                 get_logger().error("Failed to extract response/relevant sections.",
                                        artifacts={'raw_response': response, 'response_str': response_str, 'relevant_sections': relevant_sections})
                 return
-            if int(response_yaml.get('question_is_relevant', '1')) == 0:  # pyright: ignore
+            if int(response_yaml.get('question_is_relevant', '1')) == 0:  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
                 get_logger().warning(f"Question is not relevant. Returning without an answer...",
                                          artifacts={'raw_response': response})
                 return
 
             # Format the response as markdown
-            answer_str = self._format_model_answer(response_str, relevant_sections)  # pyright: ignore
+            answer_str = self._format_model_answer(response_str, relevant_sections)  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
             if self.return_as_string: #Skip publishing
                 return answer_str
             #Otherwise, publish the answer if answer is non empty and publish is not turned off:
@@ -394,7 +394,7 @@ class PRHelpDocs(object):
         except Exception as e:
             get_logger().exception('failed to provide answer to given user question as a result of a thrown exception (see above)')
 
-    def _find_all_document_files_matching_exts(self, abs_docs_path: str, ignore_readme=False, max_allowed_files=5000) -> list[str]:  # pyright: ignore
+    def _find_all_document_files_matching_exts(self, abs_docs_path: str, ignore_readme=False, max_allowed_files=5000) -> list[str]:  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]
         try:
             matching_files = []
 
@@ -455,7 +455,7 @@ class PRHelpDocs(object):
             get_logger().exception(f"Unexpected exception thrown. Returning empty dict.")
             return {}
 
-    def _trim_docs_input(self, docs_input: str, max_allowed_txt_input: int, only_return_if_trim_needed=False) -> bool|str:  # pyright: ignore
+    def _trim_docs_input(self, docs_input: str, max_allowed_txt_input: int, only_return_if_trim_needed=False) -> bool|str:  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]
         try:
             if len(docs_input) >= max_allowed_txt_input:
                 get_logger().warning(
@@ -511,12 +511,12 @@ class PRHelpDocs(object):
                                                                              get_settings().pr_help_docs_headings_prompts.system,
                                                                              get_settings().pr_help_docs_headings_prompts.user),
                                                         model_type=ModelType.REGULAR)
-            response_yaml = load_yaml(response)  # pyright: ignore
+            response_yaml = load_yaml(response)  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
             if not response_yaml:
                 get_logger().error("Failed to parse the AI response.", artifacts={'response': response})
                 return ""
             # else: Sanitize the output so that the file names match 1:1 dictionary keys. Do this via the file index and not its name, which may be altered by the model.
-            valid_indices = [int(entry['idx']) for entry in response_yaml.get('relevant_files_ranking')  # pyright: ignore
+            valid_indices = [int(entry['idx']) for entry in response_yaml.get('relevant_files_ranking')  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
                              if int(entry['idx']) >= 0 and int(entry['idx']) < len(docs_filepath_to_contents)]
             valid_file_paths = [list(docs_filepath_to_contents.keys())[idx] for idx in valid_indices]
             selected_docs_dict = {file_path: docs_filepath_to_contents[file_path] for file_path in valid_file_paths}
@@ -529,7 +529,9 @@ class PRHelpDocs(object):
             if not docs_prompt_to_send_to_model:
                 get_logger().error("_trim_docs_input returned an empty result.")
                 return ""
-            return docs_prompt_to_send_to_model  # pyright: ignore
+            if isinstance(docs_prompt_to_send_to_model, str):
+                return docs_prompt_to_send_to_model
+            return ""  # pyright: ignore[return-value]
         except Exception as e:
             get_logger().exception(f"Unexpected exception thrown. Returning empty result.")
             return ""
@@ -537,9 +539,9 @@ class PRHelpDocs(object):
     def _format_model_answer(self, response_str: str, relevant_sections: list[dict[str, str]]) -> str:
         try:
             canonical_url_prefix, canonical_url_suffix = (
-                self.git_provider.get_canonical_url_parts(repo_git_url=self.repo_url if self.repo_url_given_explicitly else None,  # pyright: ignore
-                                                          desired_branch=self.repo_desired_branch))  # pyright: ignore
-            answer_str = format_markdown_q_and_a_response(self.question, response_str, relevant_sections,  # pyright: ignore
+                self.git_provider.get_canonical_url_parts(repo_git_url=self.repo_url if self.repo_url_given_explicitly else None,  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
+                                                          desired_branch=self.repo_desired_branch))  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
+            answer_str = format_markdown_q_and_a_response(self.question, response_str, relevant_sections,  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
                                                           self.supported_doc_exts, canonical_url_prefix, canonical_url_suffix)
             if answer_str:
                 #Remove the question phrase and replace with light bulb and a heading mentioning this is an automated answer:

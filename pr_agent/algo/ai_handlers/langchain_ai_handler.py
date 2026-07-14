@@ -37,7 +37,7 @@ class LangChainOpenAIHandler(BaseAiHandler):
         """
         return get_settings().get("OPENAI.DEPLOYMENT_ID", None)
 
-    async def _create_chat_async(self, deployment_id=None):  # pyright: ignore
+    async def _create_chat_async(self, deployment_id=None):  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]
         try:
             if self.azure:
                 # Using Azure OpenAI service
@@ -67,7 +67,7 @@ class LangChainOpenAIHandler(BaseAiHandler):
         retry=retry_if_exception_type(openai.APIError) & retry_if_not_exception_type(openai.RateLimitError),
         stop=stop_after_attempt(OPENAI_RETRIES),
     )
-    async def chat_completion(self, model: str, system: str, user: str, temperature: float = 0.2, img_path: str = None):  # pyright: ignore
+    async def chat_completion(self, model: str, system: str, user: str, temperature: float = 0.2, img_path: str = None):  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]
         if img_path:
             get_logger().warning(f"Image path is not supported for LangChainOpenAIHandler. Ignoring image path: {img_path}")
         try:
@@ -108,4 +108,4 @@ class LangChainOpenAIHandler(BaseAiHandler):
             raise
         except Exception as e:
             get_logger().warning(f"Unknown error during LLM inference: {e}")
-            raise openai.APIError from e  # pyright: ignore
+            raise openai.APIError from e  # pyright: ignore[reportGeneralTypeIssues,reportCallIssue]

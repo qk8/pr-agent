@@ -78,7 +78,7 @@ def set_parser():
     return parser
 
 
-def run_command(pr_url, command):  # pyright: ignore
+def run_command(pr_url, command):  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]
     # Preparing the command
     run_command_str = f"--pr_url={pr_url} {command.lstrip('/')}"
     args = set_parser().parse_args(run_command_str.split())
@@ -87,7 +87,7 @@ def run_command(pr_url, command):  # pyright: ignore
     run(args=args)
 
 
-def run(inargs=None, args=None):  # pyright: ignore
+def run(inargs=None, args=None):  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]
     parser = set_parser()
     if not args:
         args = parser.parse_args(inargs)

@@ -113,7 +113,7 @@ async def health_check() -> str:
         if getattr(handler, "api_base", None):
             kwargs["api_base"] = handler.api_base
 
-        await litellm.acompletion(**kwargs)  # pyright: ignore
+        await litellm.acompletion(**kwargs)  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
         return "OK"
     except Exception as e:
         get_logger().warning(f"MOSAICO health_check unhealthy: {e}")

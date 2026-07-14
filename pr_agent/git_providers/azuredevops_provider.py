@@ -32,7 +32,7 @@ except ImportError:
     AZURE_DEVOPS_AVAILABLE = False
 
 
-def _to_naive_utc(dt):  # pyright: ignore
+def _to_naive_utc(dt):  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]
     if dt is None:
         return None
     if getattr(dt, "tzinfo", None) is not None:
@@ -41,7 +41,7 @@ def _to_naive_utc(dt):  # pyright: ignore
 
 
 class _AzureCommitInner:
-    def __init__(self, raw):  # pyright: ignore
+    def __init__(self, raw):  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]
         self.message = getattr(raw, "comment", "") or ""
         author = getattr(raw, "author", None)
         author_date = _to_naive_utc(getattr(author, "date", None)) if author else None
@@ -51,7 +51,7 @@ class _AzureCommitInner:
 class _AzureCommitAdapter:
     """Mimics PyGithub `Commit` shape (.sha, .commit.author.date, .commit.message, .parents)."""
 
-    def __init__(self, raw):  # pyright: ignore
+    def __init__(self, raw):  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]
         self.sha = raw.commit_id
         self.commit_id = raw.commit_id
         self.commit = _AzureCommitInner(raw)
@@ -100,7 +100,7 @@ class AzureDevopsProvider(GitProvider):
                     f"Failed to publish code suggestion, relevant_lines_start is {relevant_lines_start}")
                 continue
 
-            if relevant_lines_end < relevant_lines_start:  # pyright: ignore
+            if relevant_lines_end < relevant_lines_start:  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
                 get_logger().warning(f"Failed to publish code suggestion, "
                                        f"relevant_lines_end is {relevant_lines_end} and "
                                        f"relevant_lines_start is {relevant_lines_start}")
@@ -123,7 +123,7 @@ class AzureDevopsProvider(GitProvider):
                 get_logger().error(f"Azure failed to publish code suggestion, error: {e}", suggestion=suggestion)
         return True
 
-    def reply_to_comment_from_comment_id(self, comment_id: int, body: str, is_temporary: bool = False) -> Comment:
+    def reply_to_comment_from_comment_id(self, comment_id: int, body: str, is_temporary: bool = False) -> Comment | None:
         # comment_id is actually thread_id
         return self.reply_to_thread(comment_id, body, is_temporary)
 
@@ -155,7 +155,7 @@ class AzureDevopsProvider(GitProvider):
         except Exception as e:
             get_logger().exception(f"Failed to remove comment, error: {e}")
 
-    def publish_labels(self, pr_types):  # pyright: ignore
+    def publish_labels(self, pr_types):  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]
         try:
             for pr_type in pr_types:
                 self.azure_devops_client.create_pull_request_label(
@@ -167,7 +167,7 @@ class AzureDevopsProvider(GitProvider):
         except Exception as e:
             get_logger().warning(f"Failed to publish labels, error: {e}")
 
-    def get_pr_labels(self, update=False):  # pyright: ignore
+    def get_pr_labels(self, update=False):  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]
         try:
             labels = self.azure_devops_client.get_pull_request_labels(
                 project=self.workspace_slug,
@@ -187,7 +187,7 @@ class AzureDevopsProvider(GitProvider):
         self.workspace_slug, self.repo_slug, self.pr_num = self._parse_pr_url(pr_url)
         self.pr = self._get_pr()
 
-    def get_incremental_commits(self, incremental=None):  # pyright: ignore
+    def get_incremental_commits(self, incremental=None):  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]
         if incremental is None:
             incremental = IncrementalPR(False)
         self.incremental = incremental
@@ -600,10 +600,10 @@ class AzureDevopsProvider(GitProvider):
             get_logger().exception(f"Failed to get diff files, error: {e}")
             return []
 
-    def publish_comment(self, pr_comment: str, is_temporary: bool = False, thread_context=None) -> Comment:  # pyright: ignore
+    def publish_comment(self, pr_comment: str, is_temporary: bool = False, thread_context=None) -> Comment | None:  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]
         if is_temporary and not get_settings().config.publish_output_progress:
             get_logger().debug(f"Skipping publish_comment for temporary comment: {pr_comment}")
-            return None  # pyright: ignore
+            return None
         comment = Comment(content=pr_comment)
 
         status = get_settings().azure_devops.get("default_comment_status", "closed")
@@ -623,8 +623,8 @@ class AzureDevopsProvider(GitProvider):
     def publish_persistent_comment(self, pr_comment: str,
                                    initial_header: str,
                                    update_header: bool = True,
-                                   name='review',  # pyright: ignore
-                                   final_update_message=True):  # pyright: ignore
+                                   name='review',  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
+                                   final_update_message=True):  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
         return self.publish_persistent_comment_full(pr_comment, initial_header, update_header, name, final_update_message)
 
     def publish_description(self, pr_title: str, pr_body: str):
@@ -668,11 +668,11 @@ class AzureDevopsProvider(GitProvider):
         except Exception as e:
             get_logger().exception(f"Failed to remove temp comments, error: {e}")
 
-    def publish_inline_comment(self, body: str, relevant_file: str, relevant_line_in_file: str, original_suggestion=None):  # pyright: ignore
-        self.publish_inline_comments([self.create_inline_comment(body, relevant_file, relevant_line_in_file)])  # pyright: ignore
+    def publish_inline_comment(self, body: str, relevant_file: str, relevant_line_in_file: str, original_suggestion=None):  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]
+        self.publish_inline_comments([self.create_inline_comment(body, relevant_file, relevant_line_in_file)])  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
 
     def create_inline_comment(self, body: str, relevant_file: str, relevant_line_in_file: str,
-                              absolute_position: int = None):  # pyright: ignore
+                              absolute_position: int = None):  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
         position, absolute_position = find_line_number_of_relevant_line_in_file(self.get_diff_files(),
                                                                                 relevant_file.strip('`'),
                                                                                 relevant_line_in_file,
@@ -690,7 +690,7 @@ class AzureDevopsProvider(GitProvider):
             overall_success = True
             for comment in comments:
                 try:
-                    self.publish_comment(comment["body"],  # pyright: ignore
+                    self.publish_comment(comment["body"],  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
                                         thread_context={
                                             "filePath": comment["path"],
                                             "rightFileStart": {
@@ -784,7 +784,7 @@ class AzureDevopsProvider(GitProvider):
         except Exception as e:
             get_logger().exception(f"Failed to set thread status, error: {e}")
             
-    def reply_to_thread(self, thread_id: int, body: str, is_temporary: bool = False) -> Comment:  # pyright: ignore
+    def reply_to_thread(self, thread_id: int, body: str, is_temporary: bool = False) -> Comment | None:  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]
         try:
             comment = Comment(content=body)
             response = self.azure_devops_client.create_comment(comment, self.repo_slug, self.pr_num, thread_id, self.workspace_slug)
@@ -794,14 +794,16 @@ class AzureDevopsProvider(GitProvider):
             return response
         except Exception as e:
             get_logger().exception(f"Failed to reply to thread, error: {e}")
-    
-    def get_thread_context(self, thread_id: int) -> CommentThreadContext:  # pyright: ignore
+            return None
+
+    def get_thread_context(self, thread_id: int) -> CommentThreadContext | None:  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]
         try:
             thread = self.azure_devops_client.get_pull_request_thread(self.repo_slug, self.pr_num, thread_id, self.workspace_slug)
             return thread.thread_context
         except Exception as e:
             get_logger().exception(f"Failed to set thread status, error: {e}")
-    
+            return None
+
     @staticmethod
     def _parse_pr_url(pr_url: str) -> tuple[str, str, int]:
         parsed_url = urlparse(pr_url)
@@ -880,13 +882,13 @@ class AzureDevopsProvider(GitProvider):
                 get_logger().info(f"Failed to get PR id, error: {e}")
             return ""
 
-    def publish_file_comments(self, file_comments: list[dict[str, object]]) -> bool:  # pyright: ignore
-        pass
+    def publish_file_comments(self, file_comments: list[dict[str, object]]) -> bool:  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]
+        return True
 
-    def get_line_link(self, relevant_file: str, relevant_line_start: int, relevant_line_end: int = None) -> str:  # pyright: ignore
+    def get_line_link(self, relevant_file: str, relevant_line_start: int, relevant_line_end: int = None) -> str:  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]
         return self.pr_url+f"?_a=files&path={relevant_file}"
 
-    def get_comment_url(self, comment) -> str:  # pyright: ignore
+    def get_comment_url(self, comment) -> str:  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]
         return self.pr_url + "?discussionId=" + str(comment.thread_id)
 
     def get_latest_commit_url(self) -> str:
@@ -894,8 +896,8 @@ class AzureDevopsProvider(GitProvider):
         last = commits[0]
         # workspace/repo slugs are stored decoded (e.g. "Dev Project") for the REST API,
         # so re-encode them when building a web URL to avoid raw spaces in markdown output
-        workspace = quote(self.workspace_slug, safe='')  # pyright: ignore
-        repo = quote(self.repo_slug, safe='')  # pyright: ignore
+        workspace = quote(self.workspace_slug, safe='')  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
+        repo = quote(self.repo_slug, safe='')  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
         url = self.azure_devops_client.normalized_url + "/" + workspace + "/_git/" + repo + "/commit/" + last.commit_id
         return url
 

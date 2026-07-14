@@ -33,7 +33,7 @@ async def handle_gitea_webhooks(background_tasks: BackgroundTasks, request: Requ
     context["git_provider"] = {}
 
     # Handle the webhook in background
-    background_tasks.add_task(handle_request, body, event=request.headers.get("X-Gitea-Event", None))  # pyright: ignore
+    background_tasks.add_task(handle_request, body, event=request.headers.get("X-Gitea-Event", None))  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
     return {}
 
 async def get_body(request: Request):
@@ -149,7 +149,7 @@ async def _perform_commands_gitea(commands_conf: str, agent: PRAgent, body: dict
         get_logger().info(f"{commands_conf}. Performing auto command '{new_command}', for {api_url=}")
         await agent.handle_request(api_url, new_command)
 
-def should_process_pr_logic(body) -> bool:  # pyright: ignore
+def should_process_pr_logic(body) -> bool:  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]
     try:
         pull_request = body.get("pull_request", {})
         title = pull_request.get("title", "")

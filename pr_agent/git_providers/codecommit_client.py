@@ -31,7 +31,7 @@ class CodeCommitPullRequestResponse:
         self.description = json.get("description", "")
 
         self.targets = []
-        for target in json.get("pullRequestTargets", []):  # pyright: ignore
+        for target in json.get("pullRequestTargets", []):  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
             self.targets.append(CodeCommitPullRequestResponse.CodeCommitPullRequestTarget(target))
 
     class CodeCommitPullRequestTarget:
@@ -217,7 +217,7 @@ class CodeCommitClient:
         except Exception as e:
             raise ValueError(f"Error calling publish_description") from e
 
-    def publish_comment(self, repo_name: str, pr_number: int, destination_commit: str, source_commit: str, comment: str, annotation_file: str = None, annotation_line: int = None):  # pyright: ignore
+    def publish_comment(self, repo_name: str, pr_number: int, destination_commit: str, source_commit: str, comment: str, annotation_file: str = None, annotation_line: int = None):  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]
         """
         Publish a comment to a pull request
 

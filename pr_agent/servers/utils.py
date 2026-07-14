@@ -3,12 +3,12 @@ import hashlib
 import hmac
 import time
 from collections import defaultdict
-from typing import Any, Callable  # pyright: ignore
+from typing import Any, Callable  # pyright: ignore[reportImport,reportUnknownMemberType]
 
 from fastapi import HTTPException
 
 
-def verify_signature(payload_body, secret_token, signature_header):  # pyright: ignore
+def verify_signature(payload_body, secret_token, signature_header):  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]
     """Verify that the payload was sent from GitHub by validating SHA256.
 
     Raise and return 403 if not authorized.
@@ -36,12 +36,12 @@ class DefaultDictWithTimeout(defaultdict[str, object]):
 
     def __init__(
         self,
-        default_factory: Callable[[], Any] = None,  # pyright: ignore
-        ttl: int = None,  # pyright: ignore
+        default_factory: Callable[[], Any] = None,  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
+        ttl: int = None,  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
         refresh_interval: int = 60,
         update_key_time_on_get: bool = True,
-        *args,  # pyright: ignore
-        **kwargs,  # pyright: ignore
+        *args,  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
+        **kwargs,  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
     ):
         """
         Args:
@@ -72,16 +72,16 @@ class DefaultDictWithTimeout(defaultdict[str, object]):
             del self[key]
         self.__last_refresh = request_time
 
-    def __getitem__(self, __key):  # pyright: ignore
+    def __getitem__(self, __key):  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]
         if self.__update_key_time_on_get:
             self.__key_times[__key] = self.__time()
         self.__refresh()
         return super().__getitem__(__key)
 
-    def __setitem__(self, __key, __value):  # pyright: ignore
+    def __setitem__(self, __key, __value):  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]
         self.__key_times[__key] = self.__time()
         return super().__setitem__(__key, __value)
 
-    def __delitem__(self, __key):  # pyright: ignore
+    def __delitem__(self, __key):  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]
         del self.__key_times[__key]
         return super().__delitem__(__key)

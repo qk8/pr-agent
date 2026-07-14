@@ -19,11 +19,11 @@ from pr_agent.log import get_logger
 from pr_agent.servers.help import HelpMessage
 
 class PR_LineQuestions:
-    def __init__(self, pr_url: str, args=None, ai_handler: partial | type[BaseAiHandler] = LiteLLMAIHandler):  # pyright: ignore
+    def __init__(self, pr_url: str, args=None, ai_handler: partial | type[BaseAiHandler] = LiteLLMAIHandler):  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportMissingTypeArgument]
         self.question_str = self.parse_args(args)
         self.git_provider = get_git_provider()(pr_url)
         self.main_pr_language = get_main_pr_language(
-            self.git_provider.get_languages(), self.git_provider.get_files()  # pyright: ignore
+            self.git_provider.get_languages(), self.git_provider.get_files()  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
         )
         self.ai_handler = ai_handler()
         self.ai_handler.main_pr_language = self.main_pr_language
@@ -39,13 +39,13 @@ class PR_LineQuestions:
             "extra_instructions": get_settings().pr_questions.extra_instructions,
         }
         self.token_handler = TokenHandler(self.git_provider.pr,
-                                          self.vars,  # pyright: ignore
+                                          self.vars,  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
                                           get_settings().pr_line_questions_prompt.system,
                                           get_settings().pr_line_questions_prompt.user)
         self.patches_diff = None
         self.prediction = None
 
-    def parse_args(self, args):  # pyright: ignore
+    def parse_args(self, args):  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]
         if args and len(args) > 0:
             question_str = " ".join(args)
         else:
@@ -162,6 +162,6 @@ class PR_LineQuestions:
             print(f"\nSystem prompt:\n{system_prompt}")
             print(f"\nUser prompt:\n{user_prompt}")
 
-        response, finish_reason = await self.ai_handler.chat_completion(  # pyright: ignore
+        response, finish_reason = await self.ai_handler.chat_completion(  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
             model=model, temperature=get_settings().config.temperature, system=system_prompt, user=user_prompt)
         return response

@@ -10,7 +10,7 @@ class PRConfig:
     """
     The PRConfig class is responsible for listing all configuration options available for the user.
     """
-    def __init__(self, pr_url: str, args=None, ai_handler=None):  # pyright: ignore
+    def __init__(self, pr_url: str, args=None, ai_handler=None):  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]
         """
         Initialize the PRConfig object with the necessary attributes and objects to comment on a pull request.
 
@@ -49,7 +49,7 @@ class PRConfig:
             get_logger().error("Caught exception during Dynaconf loading. Returning empty dict",
                                artifact={"exception": e})
             conf_settings = {}
-        configuration_headers = [header.lower() for header in conf_settings.keys()]  # pyright: ignore
+        configuration_headers = [header.lower() for header in conf_settings.keys()]  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
         relevant_configs = {
             header: configs for header, configs in get_settings().to_dict().items()
             if (header.lower().startswith("pr_") or header.lower().startswith("config")) and header.lower() in configuration_headers

@@ -16,7 +16,7 @@ MODEL = "text-embedding-ada-002"
 
 
 class PRSimilarIssue:
-    def __init__(self, issue_url: str, ai_handler, args: list[str] | None = None):  # pyright: ignore
+    def __init__(self, issue_url: str, ai_handler, args: list[str] | None = None):  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]
         self.issue_url = issue_url
         self.supported = get_settings().config.git_provider == "github"
         if not self.supported:
@@ -24,8 +24,8 @@ class PRSimilarIssue:
 
         self.cli_mode = get_settings().CONFIG.CLI_MODE
         self.max_issues_to_scan = get_settings().pr_similar_issue.max_issues_to_scan
-        self.git_provider = get_git_provider()()  # pyright: ignore
-        repo_name, issue_number = self.git_provider._parse_issue_url(issue_url.split('=')[-1])  # pyright: ignore
+        self.git_provider = get_git_provider()()  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
+        repo_name, issue_number = self.git_provider._parse_issue_url(issue_url.split('=')[-1])  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
         self.git_provider.repo = repo_name
         self.git_provider.repo_obj = self.git_provider.github_client.get_repo(repo_name)
         self.token_handler = TokenHandler()
@@ -37,39 +37,39 @@ class PRSimilarIssue:
             try:
                 import pandas as pd
                 import pinecone
-                from pinecone_datasets import DatasetMetadata
+                from pinecone_datasets import DatasetMetadata  # pyright: ignore[reportUndefinedVariable]
             except:
                 raise Exception("Please install 'pinecone' and 'pinecone_datasets' to use pinecone as vectordb")
             # assuming pinecone api key and environment are set in secrets file
             try:
-                api_key = get_settings().pinecone.api_key
-                environment = get_settings().pinecone.environment
+                api_key = get_settings().pinecone.api_key  # pyright: ignore[reportUndefinedVariable]
+                environment = get_settings().pinecone.environment  # pyright: ignore[reportUndefinedVariable]
             except Exception:
                 if not self.cli_mode:
-                    repo_name, original_issue_number = self.git_provider._parse_issue_url(self.issue_url.split('=')[-1])  # pyright: ignore
-                    issue_main = self.git_provider.repo_obj.get_issue(original_issue_number)  # pyright: ignore
+                    repo_name, original_issue_number = self.git_provider._parse_issue_url(self.issue_url.split('=')[-1])  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
+                    issue_main = self.git_provider.repo_obj.get_issue(original_issue_number)  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
                     issue_main.create_comment("Please set pinecone api key and environment in secrets file")
                 raise Exception("Please set pinecone api key and environment in secrets file")
 
             # check if index exists, and if repo is already indexed
             run_from_scratch = False
             if run_from_scratch:  # for debugging
-                pinecone.init(api_key=api_key, environment=environment)
-                if index_name in pinecone.list_indexes():
+                pinecone.init(api_key=api_key, environment=environment)  # pyright: ignore[reportUndefinedVariable]
+                if index_name in pinecone.list_indexes():  # pyright: ignore[reportUndefinedVariable]
                     get_logger().info('Removing index...')
-                    pinecone.delete_index(index_name)
+                    pinecone.delete_index(index_name)  # pyright: ignore[reportUndefinedVariable]
                     get_logger().info('Done')
 
             upsert = True
-            pinecone.init(api_key=api_key, environment=environment)
-            if not index_name in pinecone.list_indexes():
+            pinecone.init(api_key=api_key, environment=environment)  # pyright: ignore[reportUndefinedVariable]
+            if not index_name in pinecone.list_indexes():  # pyright: ignore[reportUndefinedVariable]
                 run_from_scratch = True
                 upsert = False
             else:
                 if get_settings().pr_similar_issue.force_update_dataset:
                     upsert = True
                 else:
-                    pinecone_index = pinecone.Index(index_name=index_name)
+                    pinecone_index = pinecone.Index(index_name=index_name)  # pyright: ignore[reportUndefinedVariable]
                     res = pinecone_index.fetch([f"example_issue_{repo_name_for_index}"]).to_dict()
                     if res["vectors"]:
                         upsert = False
@@ -82,7 +82,7 @@ class PRSimilarIssue:
                 get_logger().info('Done')
                 self._update_index_with_issues(issues, repo_name_for_index, upsert=upsert)
             else:  # update index if needed
-                pinecone_index = pinecone.Index(index_name=index_name)
+                pinecone_index = pinecone.Index(index_name=index_name)  # pyright: ignore[reportUndefinedVariable]
                 issues_to_update = []
                 issues_paginated_list = repo_obj.get_issues(state='all')
                 counter = 1
@@ -157,7 +157,7 @@ class PRSimilarIssue:
                     issue_str, comments, number = self._process_issue(issue)
                     issue_key = f"issue_{number}"
                     issue_id = issue_key + "." + "issue"
-                    res = self.table.search().limit(len(self.table)).where(f"id='{issue_id}'").to_list()  # pyright: ignore
+                    res = self.table.search().limit(len(self.table)).where(f"id='{issue_id}'").to_list()  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
                     is_new_issue = True
                     for r in res:
                         if r['metadata']['repo'] == repo_name_for_index:
@@ -191,8 +191,8 @@ class PRSimilarIssue:
                 url = get_settings().qdrant.url
             except Exception:
                 if not self.cli_mode:
-                    repo_name, original_issue_number = self.git_provider._parse_issue_url(self.issue_url.split('=')[-1])  # pyright: ignore
-                    issue_main = self.git_provider.repo_obj.get_issue(original_issue_number)  # pyright: ignore
+                    repo_name, original_issue_number = self.git_provider._parse_issue_url(self.issue_url.split('=')[-1])  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
+                    issue_main = self.git_provider.repo_obj.get_issue(original_issue_number)  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
                     issue_main.create_comment("Please set qdrant url and api key in secrets file")
                 raise Exception("Please set qdrant url and api key in secrets file")
 
@@ -273,8 +273,8 @@ class PRSimilarIssue:
                     )
             return ""
         get_logger().info('Getting issue...')
-        repo_name, original_issue_number = self.git_provider._parse_issue_url(self.issue_url.split('=')[-1])  # pyright: ignore
-        issue_main = self.git_provider.repo_obj.get_issue(original_issue_number)  # pyright: ignore
+        repo_name, original_issue_number = self.git_provider._parse_issue_url(self.issue_url.split('=')[-1])  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
+        issue_main = self.git_provider.repo_obj.get_issue(original_issue_number)  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
         issue_str, comments, number = self._process_issue(issue_main)
         openai.api_key = get_settings().openai.key
         get_logger().info('Done')
@@ -288,7 +288,7 @@ class PRSimilarIssue:
         score_list = []
 
         if get_settings().pr_similar_issue.vectordb == "pinecone":
-            pinecone_index = pinecone.Index(index_name=self.index_name)  # pyright: ignore
+            pinecone_index = pinecone.Index(index_name=self.index_name)  # pyright: ignore[reportUndefinedVariable]
             res = pinecone_index.query(embeds[0],
                                     top_k=5,
                                     filter={"repo": self.repo_name_for_index},
@@ -387,7 +387,7 @@ class PRSimilarIssue:
         get_logger().info(similar_issues_str)
         get_logger().info('Done')
 
-    def _process_issue(self, issue):  # pyright: ignore
+    def _process_issue(self, issue):  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]
         header = issue.title
         body = issue.body
         number = issue.number
@@ -398,7 +398,7 @@ class PRSimilarIssue:
         issue_str = f"Issue Header: \"{header}\"\n\nIssue Body:\n{body}"
         return issue_str, comments, number
 
-    def _update_index_with_issues(self, issues_list, repo_name_for_index, upsert=False):  # pyright: ignore
+    def _update_index_with_issues(self, issues_list, repo_name_for_index, upsert=False):  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]
         get_logger().info('Processing issues...')
         corpus = Corpus()
         example_issue_record = Record(
@@ -453,7 +453,7 @@ class PRSimilarIssue:
                                                   level=IssueLevel.COMMENT)
                             )
                             corpus.append(comment_record)
-        df = pd.DataFrame(corpus.model_dump()["documents"])  # pyright: ignore
+        df = pd.DataFrame(corpus.model_dump()["documents"])  # pyright: ignore[reportUndefinedVariable]
         get_logger().info('Done')
 
         get_logger().info('Embedding...')
@@ -472,13 +472,13 @@ class PRSimilarIssue:
                 except:
                     embeds.append([0] * 1536)
         df["values"] = embeds
-        meta = DatasetMetadata.empty()  # pyright: ignore
+        meta = DatasetMetadata.empty()  # pyright: ignore[reportUndefinedVariable]
         meta.dense_model.dimension = len(embeds[0])
-        ds = Dataset.from_pandas(df, meta)  # pyright: ignore
+        ds = Dataset.from_pandas(df, meta)  # pyright: ignore[reportUndefinedVariable]
         get_logger().info('Done')
 
-        api_key = get_settings().pinecone.api_key
-        environment = get_settings().pinecone.environment
+        api_key = get_settings().pinecone.api_key  # pyright: ignore[reportUndefinedVariable]
+        environment = get_settings().pinecone.environment  # pyright: ignore[reportUndefinedVariable]
         if not upsert:
             get_logger().info('Creating index from scratch...')
             ds.to_pinecone_index(self.index_name, api_key=api_key, environment=environment)
@@ -488,12 +488,12 @@ class PRSimilarIssue:
             namespace = ""
             batch_size: int = 100
             concurrency: int = 10
-            pinecone.init(api_key=api_key, environment=environment)  # pyright: ignore
+            pinecone.init(api_key=api_key, environment=environment)  # pyright: ignore[reportUndefinedVariable]
             ds._upsert_to_index(self.index_name, namespace, batch_size, concurrency)
             time.sleep(5)  # wait for pinecone to finalize upserting before querying
         get_logger().info('Done')
 
-    def _update_table_with_issues(self, issues_list, repo_name_for_index, ingest=False):  # pyright: ignore
+    def _update_table_with_issues(self, issues_list, repo_name_for_index, ingest=False):  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]
         get_logger().info('Processing issues...')
 
         corpus = Corpus()
@@ -549,7 +549,7 @@ class PRSimilarIssue:
                                                     level=IssueLevel.COMMENT)
                             )
                             corpus.append(comment_record)
-        df = pd.DataFrame(corpus.model_dump()["documents"])  # pyright: ignore
+        df = pd.DataFrame(corpus.model_dump()["documents"])  # pyright: ignore[reportUndefinedVariable]
         get_logger().info('Done')
 
         get_logger().info('Embedding...')
@@ -584,7 +584,7 @@ class PRSimilarIssue:
         get_logger().info('Done')
 
 
-    def _update_qdrant_with_issues(self, issues_list, repo_name_for_index, ingest=False):  # pyright: ignore
+    def _update_qdrant_with_issues(self, issues_list, repo_name_for_index, ingest=False):  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]
         try:
             import uuid
 
@@ -648,7 +648,7 @@ class PRSimilarIssue:
                             )
                             corpus.append(comment_record)
 
-        df = pd.DataFrame(corpus.model_dump()["documents"])
+        df = pd.DataFrame(corpus.model_dump()["documents"])  # pyright: ignore[reportUndefinedVariable]
         get_logger().info('Done')
 
         get_logger().info('Embedding...')

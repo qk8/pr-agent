@@ -50,7 +50,7 @@ async def handle_gerrit_request(action: Action, item: Item):
     )
 
 
-async def get_body(request):  # pyright: ignore
+async def get_body(request):  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]
     try:
         body = await request.json()
     except JSONDecodeError as e:

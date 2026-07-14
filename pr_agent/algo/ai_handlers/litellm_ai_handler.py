@@ -268,7 +268,7 @@ class LiteLLMAIHandler(BaseAiHandler):
         self.streaming_required_models = STREAMING_REQUIRED_MODELS
 
     @staticmethod
-    def _write_frozen_aws_creds_to_env(frozen) -> None:  # pyright: ignore
+    def _write_frozen_aws_creds_to_env(frozen) -> None:  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]
         """Write a botocore FrozenCredentials snapshot into os.environ for litellm/Bedrock."""
         os.environ["AWS_ACCESS_KEY_ID"] = frozen.access_key
         os.environ["AWS_SECRET_ACCESS_KEY"] = frozen.secret_key
@@ -302,14 +302,14 @@ class LiteLLMAIHandler(BaseAiHandler):
         os.environ["AWS_ACCESS_KEY_ID"] = self._aws_static_creds["AWS_ACCESS_KEY_ID"]
         os.environ["AWS_SECRET_ACCESS_KEY"] = self._aws_static_creds["AWS_SECRET_ACCESS_KEY"]
         os.environ["AWS_REGION_NAME"] = self._aws_static_creds["AWS_REGION_NAME"]
-        if "AWS_SESSION_TOKEN" in self._aws_static_creds:  # pyright: ignore
+        if "AWS_SESSION_TOKEN" in self._aws_static_creds:  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
             os.environ["AWS_SESSION_TOKEN"] = self._aws_static_creds["AWS_SESSION_TOKEN"]
         elif "AWS_SESSION_TOKEN" in os.environ:
             del os.environ["AWS_SESSION_TOKEN"]
         self._aws_imds_fell_back = True
         get_logger().warning("Bedrock call failed with ambient (IMDS) credentials; retrying with static credentials")
 
-    def prepare_logs(self, response, system, user, resp, finish_reason):  # pyright: ignore
+    def prepare_logs(self, response, system, user, resp, finish_reason):  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]
         response_log = response.dict().copy()
         response_log['system'] = system
         response_log['user'] = user
@@ -361,7 +361,7 @@ class LiteLLMAIHandler(BaseAiHandler):
     def add_litellm_callbacks(self, kwargs: dict[str, object]) -> dict[str, object]:
         captured_extra = []
 
-        def capture_logs(message):  # pyright: ignore
+        def capture_logs(message):  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]
             # Parsing the log message and context
             record = message.record
             log_entry = {}
@@ -423,7 +423,7 @@ class LiteLLMAIHandler(BaseAiHandler):
         retry=retry_if_exception_type(openai.APIError) & retry_if_not_exception_type(openai.RateLimitError),
         stop=stop_after_attempt(MODEL_RETRIES),
     )
-    async def chat_completion(self, model: str, system: str, user: str, temperature: float = 0.2, img_path: str = None):  # pyright: ignore
+    async def chat_completion(self, model: str, system: str, user: str, temperature: float = 0.2, img_path: str = None):  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]
         # Serialize env-var mutation + Bedrock call for IMDS mode to prevent concurrent
         # requests from interleaving os.environ credentials during asyncio.gather usage.
         _bedrock_imds = self._aws_imds_mode and 'bedrock/' in model
@@ -463,7 +463,7 @@ class LiteLLMAIHandler(BaseAiHandler):
                     except Exception as e:
                         get_logger().error(f"Error fetching image: {img_path}", e)
                         return f"Error fetching image: {img_path}", "error"
-                    messages[1]["content"] = [{"type": "text", "text": messages[1]["content"]},  # pyright: ignore
+                    messages[1]["content"] = [{"type": "text", "text": messages[1]["content"]},  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
                                               {"type": "image_url", "image_url": {"url": img_path}}]
 
                 thinking_kwargs_gpt5 = None
@@ -557,10 +557,10 @@ class LiteLLMAIHandler(BaseAiHandler):
 
                 # https://docs.anthropic.com/en/docs/build-with-claude/extended-thinking
                 if (model in self.claude_extended_thinking_models) and get_settings().config.get("enable_claude_extended_thinking", False):
-                    kwargs = self._configure_claude_extended_thinking(model, kwargs)  # pyright: ignore
+                    kwargs = self._configure_claude_extended_thinking(model, kwargs)  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
 
                 if get_settings().litellm.get("enable_callbacks", False):
-                    kwargs = self.add_litellm_callbacks(kwargs)  # pyright: ignore
+                    kwargs = self.add_litellm_callbacks(kwargs)  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
 
                 seed = get_settings().config.get("seed", -1)
                 if temperature > 0 and seed >= 0:
@@ -583,7 +583,7 @@ class LiteLLMAIHandler(BaseAiHandler):
                     kwargs["extra_headers"] = litellm_extra_headers
 
                 # Support for custom OpenAI body fields (e.g., Flex Processing)
-                kwargs = _process_litellm_extra_body(kwargs)  # pyright: ignore
+                kwargs = _process_litellm_extra_body(kwargs)  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
 
                 # Support for Bedrock custom inference profile via model_id
                 model_id = get_settings().get("litellm.model_id")
@@ -624,7 +624,7 @@ class LiteLLMAIHandler(BaseAiHandler):
                     raise
             except Exception as e:
                 get_logger().warning(f"Unknown error during LLM inference: {e}")
-                raise openai.APIError from e  # pyright: ignore
+                raise openai.APIError from e  # pyright: ignore[reportGeneralTypeIssues,reportCallIssue]
 
             get_logger().debug(f"\nAI response:\n{resp}")
 
@@ -638,7 +638,7 @@ class LiteLLMAIHandler(BaseAiHandler):
 
             return resp, finish_reason
 
-    async def _get_completion(self, **kwargs):  # pyright: ignore
+    async def _get_completion(self, **kwargs):  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]
         """
         Wrapper that automatically handles streaming for required models.
         """
@@ -654,7 +654,7 @@ class LiteLLMAIHandler(BaseAiHandler):
         else:
             response = await acompletion(**kwargs)
             if response is None or len(response["choices"]) == 0:
-                raise openai.APIError  # pyright: ignore
+                raise openai.APIError  # pyright: ignore[reportGeneralTypeIssues,reportCallIssue]
             return (response["choices"][0]['message']['content'],
                     response["choices"][0]["finish_reason"],
                     response)

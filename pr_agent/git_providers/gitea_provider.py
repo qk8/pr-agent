@@ -75,14 +75,14 @@ class GiteaProvider(GitProvider):
             self.__set_repo_and_owner_from_pr()
             self.enabled_pr = True
             self.pr = self.repo_api.get_pull_request(
-                owner=self.owner,  # pyright: ignore
-                repo=self.repo,  # pyright: ignore
-                pr_number=self.pr_number  # pyright: ignore
+                owner=self.owner,  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
+                repo=self.repo,  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
+                pr_number=self.pr_number  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
             )
             self.git_files = self.repo_api.get_change_file_pull_request(
-                owner=self.owner,  # pyright: ignore
-                repo=self.repo,  # pyright: ignore
-                pr_number=self.pr_number  # pyright: ignore
+                owner=self.owner,  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
+                repo=self.repo,  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
+                pr_number=self.pr_number  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
             )
             # Optional ignore with user custom
             self.git_files = filter_ignored(self.git_files, platform="gitea")
@@ -91,8 +91,8 @@ class GiteaProvider(GitProvider):
             self.__add_file_content()
             self.__add_file_diff()
             self.pr_commits = self.repo_api.list_all_commits(
-                owner=self.owner,  # pyright: ignore
-                repo=self.repo  # pyright: ignore
+                owner=self.owner,  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
+                repo=self.repo  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
             )
             self.last_commit = self.pr_commits[-1]
             self.last_commit_id = self.last_commit
@@ -115,8 +115,8 @@ class GiteaProvider(GitProvider):
             if file_path and self.sha:
                 try:
                     content = self.repo_api.get_file_content(
-                        owner=self.owner,  # pyright: ignore
-                        repo=self.repo,  # pyright: ignore
+                        owner=self.owner,  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
+                        repo=self.repo,  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
                         commit_sha=self.sha,
                         filepath=file_path
                     )
@@ -128,9 +128,9 @@ class GiteaProvider(GitProvider):
     def __add_file_diff(self):
         try:
             diff_contents = self.repo_api.get_pull_request_diff(
-                    owner=self.owner,  # pyright: ignore
-                    repo=self.repo,  # pyright: ignore
-                    pr_number=self.pr_number  # pyright: ignore
+                    owner=self.owner,  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
+                    repo=self.repo,  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
+                    pr_number=self.pr_number  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
             )
 
             lines = diff_contents.splitlines()
@@ -230,17 +230,17 @@ class GiteaProvider(GitProvider):
     def get_latest_commit_url(self) -> str:
         return self.last_commit.html_url
 
-    def get_comment_url(self, comment) -> str:  # pyright: ignore
+    def get_comment_url(self, comment) -> str:  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]
         return comment.html_url
 
     def publish_persistent_comment(self, pr_comment: str,
                                    initial_header: str,
                                    update_header: bool = True,
-                                   name='review',  # pyright: ignore
-                                   final_update_message=True):  # pyright: ignore
+                                   name='review',  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
+                                   final_update_message=True):  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
         self.publish_persistent_comment_full(pr_comment, initial_header, update_header, name, final_update_message)
 
-    def publish_comment(self, comment: str,is_temporary: bool = False) -> None:
+    def publish_comment(self, comment: str, is_temporary: bool = False) -> dict[str, Any] | None:
         """Publish a comment to the pull request"""
         if is_temporary and not get_settings().config.publish_output_progress:
             get_logger().debug("Skipping publish_comment for temporary comment")
@@ -256,9 +256,9 @@ class GiteaProvider(GitProvider):
 
         comment = self.limit_output_characters(comment, self.max_comment_chars)
         response = self.repo_api.create_comment(
-            owner=self.owner,  # pyright: ignore
-            repo=self.repo,  # pyright: ignore
-            index=index,  # pyright: ignore
+            owner=self.owner,  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
+            repo=self.repo,  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
+            index=index,  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
             comment=comment
         )
 
@@ -276,15 +276,15 @@ class GiteaProvider(GitProvider):
         }
         self.comments_list.append(comment_obj)
         self.logger.info("Comment published")
-        return comment_obj  # pyright: ignore
+        return comment_obj  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
 
-    def edit_comment(self, comment, body : str):  # pyright: ignore
+    def edit_comment(self, comment, body : str):  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]
         body = self.limit_output_characters(body, self.max_comment_chars)
         try:
             self.repo_api.edit_comment(
-                owner=self.owner,  # pyright: ignore
-                repo=self.repo,  # pyright: ignore
-                comment_id=comment.get("comment_id") if isinstance(comment, dict) else comment.id,  # pyright: ignore
+                owner=self.owner,  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
+                repo=self.repo,  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
+                comment_id=comment.get("comment_id") if isinstance(comment, dict) else comment.id,  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
                 comment=body
             )
         except ApiException as e:
@@ -295,7 +295,7 @@ class GiteaProvider(GitProvider):
             return None
 
 
-    def publish_inline_comment(self,body: str, relevant_file: str, relevant_line_in_file: str, original_suggestion=None):  # pyright: ignore
+    def publish_inline_comment(self,body: str, relevant_file: str, relevant_line_in_file: str, original_suggestion=None):  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]
         """Publish an inline comment on a specific line"""
         body = self.limit_output_characters(body, self.max_comment_chars)
         position, absolute_position = find_line_number_of_relevant_line_in_file(self.diff_files,
@@ -315,9 +315,9 @@ class GiteaProvider(GitProvider):
 
     def publish_inline_comments(self, comments: list[dict[str, Any]],body : str = "Inline comment") -> None:
         response = self.repo_api.create_inline_comment(
-            owner=self.owner,  # pyright: ignore
-            repo=self.repo,  # pyright: ignore
-            pr_number=self.pr_number if self.enabled_pr else self.issue_number,  # pyright: ignore
+            owner=self.owner,  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
+            repo=self.repo,  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
+            pr_number=self.pr_number if self.enabled_pr else self.issue_number,  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
             body=body,
             commit_id=self.last_commit.sha if self.last_commit else "",
             comments=comments
@@ -355,19 +355,19 @@ class GiteaProvider(GitProvider):
                 return None
 
             comments = self.repo_api.list_all_comments(
-                owner=self.owner,  # pyright: ignore
-                repo=self.repo,  # pyright: ignore
-                index=self.pr_number if self.enabled_pr else self.issue_number  # pyright: ignore
+                owner=self.owner,  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
+                repo=self.repo,  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
+                index=self.pr_number if self.enabled_pr else self.issue_number  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
             )
 
-            comment_ids = [comment.id for comment in comments]  # pyright: ignore
+            comment_ids = [comment.id for comment in comments]  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
             if issue_comment_id not in comment_ids:
                 self.logger.error(f"Comment ID {issue_comment_id} not found. Available IDs: {comment_ids}")
                 return None
 
             response = self.repo_api.add_reaction_comment(
-                owner=self.owner,  # pyright: ignore
-                repo=self.repo,  # pyright: ignore
+                owner=self.owner,  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
+                repo=self.repo,  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
                 comment_id=issue_comment_id,
                 reaction="eyes"
             )
@@ -389,8 +389,8 @@ class GiteaProvider(GitProvider):
         """Remove reaction from a comment"""
         try:
             response = self.repo_api.remove_reaction_comment(
-                owner=self.owner,  # pyright: ignore
-                repo=self.repo,  # pyright: ignore
+                owner=self.owner,  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
+                repo=self.repo,  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
                 comment_id=comment_id
             )
             if not response:
@@ -404,9 +404,9 @@ class GiteaProvider(GitProvider):
         """Get commit messages for the PR"""
         max_tokens = get_settings().get("CONFIG.MAX_COMMITS_TOKENS", None)
         pr_commits = self.repo_api.get_pr_commits(
-            owner=self.owner,  # pyright: ignore
-            repo=self.repo,  # pyright: ignore
-            pr_number=self.pr_number  # pyright: ignore
+            owner=self.owner,  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
+            repo=self.repo,  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
+            pr_number=self.pr_number  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
         )
 
         if not pr_commits:
@@ -431,16 +431,16 @@ class GiteaProvider(GitProvider):
 
     def _get_file_content_from_base(self, filename: str) -> str:
         return self.repo_api.get_file_content(
-            owner=self.owner,  # pyright: ignore
-            repo=self.repo,  # pyright: ignore
+            owner=self.owner,  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
+            repo=self.repo,  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
             commit_sha=self.base_sha,
             filepath=filename
         )
 
     def _get_file_content_from_latest_commit(self, filename: str) -> str:
         return self.repo_api.get_file_content(
-            owner=self.owner,  # pyright: ignore
-            repo=self.repo,  # pyright: ignore
+            owner=self.owner,  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
+            repo=self.repo,  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
             commit_sha=self.last_commit.sha,
             filepath=filename
         )
@@ -521,7 +521,7 @@ class GiteaProvider(GitProvider):
         self.diff_files = diff_files
         return diff_files
 
-    def get_line_link(self, relevant_file, relevant_line_start, relevant_line_end = None) -> str:  # pyright: ignore
+    def get_line_link(self, relevant_file, relevant_line_start, relevant_line_end = None) -> str:  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]
         if relevant_line_start == -1:
             link = f"{self.base_url}/{self.owner}/{self.repo}/src/branch/{self.get_pr_branch()}/{relevant_file}"
         elif relevant_line_end:
@@ -551,24 +551,28 @@ class GiteaProvider(GitProvider):
         """Get all comments in the PR"""
         index = self.issue_number if self.enabled_issue else self.pr_number
         comments = self.repo_api.list_all_comments(
-            owner=self.owner,  # pyright: ignore
-            repo=self.repo,  # pyright: ignore
-            index=index  # pyright: ignore
+            owner=self.owner,  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
+            repo=self.repo,  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
+            index=index  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
         )
         if not comments:
             self.logger.error("Failed to get comments")
             return []
 
-        return comments  # pyright: ignore
+        result: list[dict[str, Any]] = []
+        for c in comments:  # pyright: ignore
+            cid = getattr(c, "id", None)
+            result.append({"is_temporary": False, "comment": c, "comment_id": cid})
+        return result
 
     def get_languages(self) -> set[str]:
         """Get programming languages used in the repository"""
         languages = self.repo_api.get_languages(
-            owner=self.owner,  # pyright: ignore
-            repo=self.repo  # pyright: ignore
+            owner=self.owner,  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
+            repo=self.repo  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
         )
 
-        return languages  # pyright: ignore
+        return set(languages.keys())
 
     def get_pr_branch(self) -> str:
         """Get the branch name of the PR"""
@@ -590,7 +594,7 @@ class GiteaProvider(GitProvider):
 
         return self.pr.body if self.pr.body else ""
 
-    def get_pr_labels(self,update=False) -> list[str]:  # pyright: ignore
+    def get_pr_labels(self,update=False) -> list[str]:  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]
         """Get labels assigned to the PR"""
         if not update:
             if not self.pr.labels:
@@ -599,15 +603,15 @@ class GiteaProvider(GitProvider):
             return [label.name for label in self.pr.labels]
 
         labels = self.repo_api.get_issue_labels(
-            owner=self.owner,  # pyright: ignore
-            repo=self.repo,  # pyright: ignore
-            issue_number=self.pr_number  # pyright: ignore
+            owner=self.owner,  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
+            repo=self.repo,  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
+            issue_number=self.pr_number  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
         )
         if not labels:
             self.logger.error("Failed to get PR labels")
             return []
 
-        return [label.name for label in labels]  # pyright: ignore
+        return [label.name for label in labels]  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
 
     def get_repo_settings(self) -> bytes:
         """Get repository settings"""
@@ -616,9 +620,9 @@ class GiteaProvider(GitProvider):
             return b""
 
         response = self.repo_api.get_file_content(
-            owner=self.owner,  # pyright: ignore
-            repo=self.repo,  # pyright: ignore
-            commit_sha=self.sha,  # pyright: ignore
+            owner=self.owner,  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
+            repo=self.repo,  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
+            commit_sha=self.sha,  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
             filepath=self.repo_settings
         )
         if not response:
@@ -635,7 +639,7 @@ class GiteaProvider(GitProvider):
         """Get the ID of the authenticated user"""
         return f"{self.pr.user.id}" if self.pr else ""
 
-    def is_supported(self, capability) -> bool:  # pyright: ignore
+    def is_supported(self, capability) -> bool:  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]
         """Check if the provider is supported"""
         return True
 
@@ -652,7 +656,7 @@ class GiteaProvider(GitProvider):
         )
         if pr_title is not None:
             edit_kwargs["title"] = pr_title
-        response = self.repo_api.edit_pull_request(**edit_kwargs)  # pyright: ignore
+        response = self.repo_api.edit_pull_request(**edit_kwargs)  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
 
         if not response:
             self.logger.error("Failed to publish PR description")
@@ -661,9 +665,9 @@ class GiteaProvider(GitProvider):
         self.logger.info("PR description published successfully")
         if self.enabled_pr:
             self.pr = self.repo_api.get_pull_request(
-                owner=self.owner,  # pyright: ignore
-                repo=self.repo,  # pyright: ignore
-                pr_number=self.pr_number  # pyright: ignore
+                owner=self.owner,  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
+                repo=self.repo,  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
+                pr_number=self.pr_number  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
             )
 
     def publish_labels(self, labels: list[int]) -> None:
@@ -673,16 +677,16 @@ class GiteaProvider(GitProvider):
             return None
 
         response = self.repo_api.add_labels(
-            owner=self.owner,  # pyright: ignore
-            repo=self.repo,  # pyright: ignore
-            issue_number=self.pr_number if self.enabled_pr else self.issue_number,  # pyright: ignore
+            owner=self.owner,  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
+            repo=self.repo,  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
+            issue_number=self.pr_number if self.enabled_pr else self.issue_number,  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
             labels=labels
         )
 
         if response:
             self.logger.info("Labels added successfully")
 
-    def remove_comment(self, comment) -> None:  # pyright: ignore
+    def remove_comment(self, comment) -> None:  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]
         """Remove a specific comment"""
         if not comment:
             return
@@ -693,8 +697,8 @@ class GiteaProvider(GitProvider):
                 self.logger.error("Comment ID not found")
                 return None
             self.repo_api.remove_comment(
-                owner=self.owner,  # pyright: ignore
-                repo=self.repo,  # pyright: ignore
+                owner=self.owner,  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
+                repo=self.repo,  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
                 comment_id=comment_id
             )
 
@@ -793,7 +797,7 @@ class RepoApi(giteapy.RepositoryApi):
         super().__init__(client)
 
     def create_inline_comment(self, owner: str, repo: str, pr_number: int, body : str ,commit_id : str, comments: list[dict[str, Any]]):
-        body = {  # pyright: ignore
+        body = {  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
             "body": body,
             "comments": comments,
             "commit_id": commit_id,
@@ -886,7 +890,7 @@ class RepoApi(giteapy.RepositoryApi):
 
     def edit_pull_request(self, owner: str, repo: str, pr_number: int,title : str, body: str):
         """Edit pull request description"""
-        body = {  # pyright: ignore
+        body = {  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
             "body": body,
             "title" : title
         }

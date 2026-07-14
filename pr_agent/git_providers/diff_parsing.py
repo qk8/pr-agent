@@ -61,7 +61,7 @@ def parse_unified_diff(diff_text: str) -> list[FilePatchInfo]:
                 base_file="",
                 head_file="",
                 patch=str(pf),
-                filename=filename,  # pyright: ignore
+                filename=filename,  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
                 edit_type=edit_type,
                 old_filename=old_filename,
             )

@@ -25,7 +25,7 @@ _GLOBAL_SETTINGS_CACHE_MAX_SIZE = 256
 _GLOBAL_SETTINGS_CACHE_MAX_VALUE_BYTES = 1024 * 1024
 
 
-def get_cached_global_settings(cache_key, fetch_fn):  # pyright: ignore
+def get_cached_global_settings(cache_key, fetch_fn):  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]
     """Return the org/group/workspace global .pr_agent.toml via a bounded TTL cache.
 
     Global settings change rarely, so caching avoids a provider API lookup (and repeated
@@ -144,7 +144,7 @@ class GitProvider(ABC):
     #            print(returned_obj.path) #Use returned_obj.path.
     #    #From this point, returned_obj.path may be deleted at any point and therefore must not be used.
     class ScopedClonedRepo(object):
-        def __init__(self, dest_folder):  # pyright: ignore
+        def __init__(self, dest_folder):  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]
             self.path = dest_folder
 
         def __del__(self):
@@ -239,28 +239,28 @@ class GitProvider(ABC):
     def get_pr_description_full(self) -> str:
         pass
 
-    def edit_comment(self, comment, body: str):  # pyright: ignore
+    def edit_comment(self, comment, body: str):  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]
         pass
 
     def edit_comment_from_comment_id(self, comment_id: int, body: str):
         pass
 
-    def get_comment_body_from_comment_id(self, comment_id: int) -> str:  # pyright: ignore
-        pass
+    def get_comment_body_from_comment_id(self, comment_id: int) -> str:  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]
+        return ""
 
     def reply_to_comment_from_comment_id(self, comment_id: int, body: str):
         pass
 
-    def get_pr_description(self, full: bool = True, split_changes_walkthrough=False) -> str | tuple[str, list[str]]:  # pyright: ignore
+    def get_pr_description(self, full: bool = True, split_changes_walkthrough=False) -> str | tuple[str, list[str]]:  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]
         from pr_agent.algo.utils import clip_tokens
         from pr_agent.config_loader import get_settings
         max_tokens_description = get_settings().get("CONFIG.MAX_DESCRIPTION_TOKENS", None)
         description = self.get_pr_description_full() if full else self.get_user_description()
         if split_changes_walkthrough:
-            description, files = process_description(description)  # pyright: ignore
+            description, files = process_description(description)  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
             if max_tokens_description:
                 description = clip_tokens(description, max_tokens_description)
-            return description, files
+            return description, [str(f) for f in files]
         else:
             if max_tokens_description:
                 description = clip_tokens(description, max_tokens_description)
@@ -333,7 +333,7 @@ class GitProvider(ABC):
     def get_pr_id(self):
         return ""
 
-    def get_line_link(self, relevant_file: str, relevant_line_start: int, relevant_line_end: int = None) -> str:  # pyright: ignore
+    def get_line_link(self, relevant_file: str, relevant_line_start: int, relevant_line_end: int = None) -> str:  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]
         return ""
 
     def get_lines_link_original_file(self, filepath:str, component_range: Range) -> str:
@@ -354,8 +354,8 @@ class GitProvider(ABC):
     def publish_persistent_comment_full(self, pr_comment: str,
                                    initial_header: str,
                                    update_header: bool = True,
-                                   name='review',  # pyright: ignore
-                                   final_update_message=True):  # pyright: ignore
+                                   name='review',  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
+                                   final_update_message=True):  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
         try:
             prev_comments = list(self.get_issue_comments())
             for comment in prev_comments:
@@ -403,11 +403,11 @@ class GitProvider(ABC):
     def get_issue_comments(self) -> list[Any]:
         pass
 
-    def get_comment_url(self, comment) -> str:  # pyright: ignore
+    def get_comment_url(self, comment) -> str:  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]
         return ""
 
-    def get_review_thread_comments(self, comment_id: int) -> list[dict[str, object]]:  # pyright: ignore
-        pass
+    def get_review_thread_comments(self, comment_id: int) -> list[dict[str, object]]:  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]
+        return []
 
     #### labels operations ####
     @abstractmethod
@@ -471,7 +471,7 @@ def get_main_pr_language(languages: dict[str, int] | None, files: list[Any] | No
         return main_language_str
 
     try:
-        top_language = max(languages, key=languages.get).lower()  # pyright: ignore
+        top_language = max(languages, key=languages.get).lower()  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
 
         # validate that the specific commit uses the main language
         extension_list = []
@@ -479,7 +479,7 @@ def get_main_pr_language(languages: dict[str, int] | None, files: list[Any] | No
             if not file:
                 continue
             if isinstance(file, str):
-                file = FilePatchInfo(base_file=None, head_file=None, patch=None, filename=file)  # pyright: ignore
+                file = FilePatchInfo(base_file=None, head_file=None, patch=None, filename=file)  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
             extension_list.append(file.filename.rsplit('.')[-1])
 
         # get the most common extension

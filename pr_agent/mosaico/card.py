@@ -93,5 +93,5 @@ def build_agent_card() -> AgentCard:
             streaming=False,
             extensions=extensions,
         ),
-        skills=_build_skills(),  # pyright: ignore
+        skills=_build_skills(),  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
     )

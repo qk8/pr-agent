@@ -71,7 +71,7 @@ class GithubProvider(GitProvider):
         else: #Instantiated the provider without a PR / Issue
             self.pr_commits = None
 
-    def _get_issue_handle(self, issue_url) -> Issue | None:  # pyright: ignore
+    def _get_issue_handle(self, issue_url) -> Issue | None:  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]
         repo_name, issue_number = self._parse_issue_url(issue_url)
         if not repo_name or not issue_number:
             get_logger().error(f"Given url: {issue_url} is not a valid issue.")
@@ -89,7 +89,7 @@ class GithubProvider(GitProvider):
             get_logger().exception(f"Failed to get an issue object for issue: {issue_url}, belonging to owner/repo: {repo_name}")
             return None
 
-    def get_incremental_commits(self, incremental=IncrementalPR(False)):  # pyright: ignore
+    def get_incremental_commits(self, incremental=IncrementalPR(False)):  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]
         self.incremental = incremental
         if self.incremental.is_incremental:
             self.unreviewed_files_map = dict()
@@ -173,7 +173,7 @@ class GithubProvider(GitProvider):
             self.incremental.commits_range = self.get_commit_range()
             # Get all files changed during the commit range
 
-            for commit in self.incremental.commits_range:  # pyright: ignore
+            for commit in self.incremental.commits_range:  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
                 if commit.commit.message.startswith(f"Merge branch '{self._get_repo().default_branch}'"):
                     get_logger().info(f"Skipping merge commit {commit.commit.message}")
                     continue
@@ -185,7 +185,7 @@ class GithubProvider(GitProvider):
     def get_commit_range(self):
         last_review_time = self.previous_review.created_at
         first_new_commit_index = None
-        for index in range(len(self.pr_commits) - 1, -1, -1):  # pyright: ignore
+        for index in range(len(self.pr_commits) - 1, -1, -1):  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
             if self.pr_commits[index].commit.author.date > last_review_time:
                 self.incremental.first_new_commit = self.pr_commits[index]
                 first_new_commit_index = index
@@ -229,7 +229,7 @@ class GithubProvider(GitProvider):
             return self.git_files.totalCount
         else:
             try:
-                return len(self.git_files)  # pyright: ignore
+                return len(self.git_files)  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
             except Exception as e:
                 return -1
 
@@ -317,7 +317,7 @@ class GithubProvider(GitProvider):
                         new_file_content_str = self._get_pr_file_content(file, self.pr.head.sha)  # communication with GitHub
 
                     if self.incremental.is_incremental and self.unreviewed_files_map:
-                        original_file_content_str = self._get_pr_file_content(file, self.incremental.last_seen_commit_sha)  # pyright: ignore
+                        original_file_content_str = self._get_pr_file_content(file, self.incremental.last_seen_commit_sha)  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
                         patch = load_large_diff(file.filename, new_file_content_str, original_file_content_str)
                         self.unreviewed_files_map[file.filename] = patch
                     else:
@@ -381,14 +381,14 @@ class GithubProvider(GitProvider):
     def get_latest_commit_url(self) -> str:
         return self.last_commit_id.html_url
 
-    def get_comment_url(self, comment) -> str:  # pyright: ignore
+    def get_comment_url(self, comment) -> str:  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]
         return comment.html_url
 
     def publish_persistent_comment(self, pr_comment: str,
                                    initial_header: str,
                                    update_header: bool = True,
-                                   name='review',  # pyright: ignore
-                                   final_update_message=True):  # pyright: ignore
+                                   name='review',  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
+                                   final_update_message=True):  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
         if get_settings().github.publish_as_check_run:
             if self._publish_check_run(pr_comment, name):
                 return
@@ -491,15 +491,15 @@ class GithubProvider(GitProvider):
         self.pr.comments_list.append(response)
         return response
 
-    def publish_inline_comment(self, body: str, relevant_file: str, relevant_line_in_file: str, original_suggestion=None):  # pyright: ignore
+    def publish_inline_comment(self, body: str, relevant_file: str, relevant_line_in_file: str, original_suggestion=None):  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]
         body = self.limit_output_characters(body, self.max_comment_chars)
-        self.publish_inline_comments([self.create_inline_comment(body, relevant_file, relevant_line_in_file)])  # pyright: ignore
+        self.publish_inline_comments([self.create_inline_comment(body, relevant_file, relevant_line_in_file)])  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
 
 
     def create_inline_comment(self, body: str, relevant_file: str, relevant_line_in_file: str,
-                              absolute_position: int = None):  # pyright: ignore
+                              absolute_position: int = None):  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
         body = self.limit_output_characters(body, self.max_comment_chars)
-        position, absolute_position = find_line_number_of_relevant_line_in_file(self.diff_files,  # pyright: ignore
+        position, absolute_position = find_line_number_of_relevant_line_in_file(self.diff_files,  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
                                                                                 relevant_file.strip('`'),
                                                                                 relevant_line_in_file,
                                                                                 absolute_position)
@@ -514,7 +514,7 @@ class GithubProvider(GitProvider):
     def publish_inline_comments(self, comments: list[dict[str, object]], disable_fallback: bool = False):
         try:
             # publish all comments in a single message
-            self.pr.create_review(commit=self.last_commit_id, comments=comments)  # pyright: ignore
+            self.pr.create_review(commit=self.last_commit_id, comments=comments)  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
         except Exception as e:
             get_logger().info(f"Initially failed to publish inline comments as committable")
 
@@ -557,7 +557,7 @@ class GithubProvider(GitProvider):
             ]
         
         
-            return thread_comments  # pyright: ignore
+            return [{"id": c.id, "body": c.body, "created_at": c.created_at, "user": c.user.login if hasattr(c.user, "login") else None, "html_url": getattr(c, "html_url", None)} for c in thread_comments]
                 
         except Exception as e:
             get_logger().exception(f"Failed to get review comments for an inline ask command", artifact={"comment_id": comment_id, "error": e})
@@ -574,7 +574,7 @@ class GithubProvider(GitProvider):
         # publish as a group the verified comments
         if verified_comments:
             try:
-                self.pr.create_review(commit=self.last_commit_id, comments=verified_comments)  # pyright: ignore
+                self.pr.create_review(commit=self.last_commit_id, comments=verified_comments)  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
             except:
                 pass
 
@@ -634,7 +634,7 @@ class GithubProvider(GitProvider):
         for comment in invalid_comments:
             try:
                 fixed_comment = copy.deepcopy(comment)  # avoid modifying the original comment dict for later logging
-                if "```suggestion" in comment["body"]:  # pyright: ignore
+                if "```suggestion" in comment["body"]:  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
                     fixed_comment["body"] = comment["body"].split("```suggestion")[0]
                 if "start_line" in comment:
                     fixed_comment["line"] = comment["start_line"]
@@ -697,7 +697,7 @@ class GithubProvider(GitProvider):
             get_logger().error(f"Failed to publish code suggestion, error: {e}")
             return False
 
-    def edit_comment(self, comment, body: str):  # pyright: ignore
+    def edit_comment(self, comment, body: str):  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]
         try:
             body = self.limit_output_characters(body, self.max_comment_chars)
             comment.edit(body=body)
@@ -750,7 +750,7 @@ class GithubProvider(GitProvider):
             )
             for comment in file_comments:
                 comment['commit_id'] = self.last_commit_id.sha
-                comment['body'] = self.limit_output_characters(comment['body'], self.max_comment_chars)  # pyright: ignore
+                comment['body'] = self.limit_output_characters(comment['body'], self.max_comment_chars)  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
 
                 found = False
                 for existing_comment in existing_comments:
@@ -785,7 +785,7 @@ class GithubProvider(GitProvider):
         except Exception as e:
             get_logger().exception(f"Failed to remove initial comment, error: {e}")
 
-    def remove_comment(self, comment):  # pyright: ignore
+    def remove_comment(self, comment):  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]
         try:
             comment.delete()
         except Exception as e:
@@ -895,7 +895,7 @@ class GithubProvider(GitProvider):
         return get_cached_global_settings(
             f"github:{repo_owner}", lambda: self._fetch_global_repo_settings(repo_owner))
 
-    def _fetch_global_repo_settings(self, repo_owner):  # pyright: ignore
+    def _fetch_global_repo_settings(self, repo_owner):  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]
         try:
             global_settings_repo = self.github_client.get_repo(f"{repo_owner}/pr-agent-settings")
             return global_settings_repo.get_contents(".pr_agent.toml").decoded_content
@@ -1052,12 +1052,12 @@ class GithubProvider(GitProvider):
                 self.repo_obj.full_name == self.repo:
             return self.repo_obj
         else:
-            self.repo_obj = self.github_client.get_repo(self.repo)  # pyright: ignore
+            self.repo_obj = self.github_client.get_repo(self.repo)  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
             return self.repo_obj
 
 
     def _get_pr(self):
-        return self._get_repo().get_pull(self.pr_num)  # pyright: ignore
+        return self._get_repo().get_pull(self.pr_num)  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
 
     def get_pr_file_content(self, file_path: str, branch: str) -> str:
         try:
@@ -1071,7 +1071,7 @@ class GithubProvider(GitProvider):
         return file_content_str
 
     def create_or_update_pr_file(
-        self, file_path: str, branch: str, contents="", message=""  # pyright: ignore
+        self, file_path: str, branch: str, contents="", message=""  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
     ) -> None:
         try:
             file_obj = self._get_repo().get_contents(file_path, ref=branch)
@@ -1089,7 +1089,7 @@ class GithubProvider(GitProvider):
     def _get_pr_file_content(self, file: FilePatchInfo, sha: str) -> str:
         return self.get_pr_file_content(file.filename, sha)
 
-    def publish_labels(self, pr_types):  # pyright: ignore
+    def publish_labels(self, pr_types):  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]
         try:
             label_color_map = {"Bug fix": "1d76db", "Tests": "e99695", "Bug fix with tests": "c5def5",
                                "Enhancement": "bfd4f2", "Documentation": "d4c5f9",
@@ -1104,7 +1104,7 @@ class GithubProvider(GitProvider):
         except Exception as e:
             get_logger().warning(f"Failed to publish labels, error: {e}")
 
-    def get_pr_labels(self, update=False):  # pyright: ignore
+    def get_pr_labels(self, update=False):  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]
         try:
             if not update:
                 labels =self.pr.labels
@@ -1140,7 +1140,7 @@ class GithubProvider(GitProvider):
             commit_messages_str = clip_tokens(commit_messages_str, max_tokens)
         return commit_messages_str
 
-    def generate_link_to_relevant_line_number(self, suggestion) -> str:  # pyright: ignore
+    def generate_link_to_relevant_line_number(self, suggestion) -> str:  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]
         try:
             relevant_file = suggestion['relevant_file'].strip('`').strip("'").strip('\n')
             relevant_line_str = suggestion['relevant_line'].strip('\n')
@@ -1148,7 +1148,7 @@ class GithubProvider(GitProvider):
                 return ""
 
             position, absolute_position = find_line_number_of_relevant_line_in_file \
-                (self.diff_files, relevant_file, relevant_line_str)  # pyright: ignore
+                (self.diff_files, relevant_file, relevant_line_str)  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
 
             if absolute_position != -1:
                 # # link to right file only
@@ -1164,7 +1164,7 @@ class GithubProvider(GitProvider):
 
         return ""
 
-    def get_line_link(self, relevant_file: str, relevant_line_start: int, relevant_line_end: int = None) -> str:  # pyright: ignore
+    def get_line_link(self, relevant_file: str, relevant_line_start: int, relevant_line_end: int = None) -> str:  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]
         sha_file = hashlib.sha256(relevant_file.encode('utf-8')).hexdigest()
         if relevant_line_start == -1:
             link = f"{self.base_url_html}/{self.repo}/pull/{self.pr_num}/files#diff-{sha_file}"
@@ -1208,7 +1208,7 @@ class GithubProvider(GitProvider):
         except:
             return ""
 
-    def fetch_sub_issues(self, issue_url):  # pyright: ignore
+    def fetch_sub_issues(self, issue_url):  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]
         """
         Fetch sub-issues linked to the given GitHub issue URL using GraphQL via PyGitHub.
         """
@@ -1299,7 +1299,7 @@ class GithubProvider(GitProvider):
     def calc_pr_statistics(self, pull_request_data: dict[str, object]) -> dict[str, object]:
             return {}
 
-    def validate_comments_inside_hunks(self, code_suggestions):  # pyright: ignore
+    def validate_comments_inside_hunks(self, code_suggestions):  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]
         """
         validate that all committable comments are inside PR hunks - this is a must for committable comments in GitHub
         """

@@ -43,9 +43,9 @@ class BitbucketServerProvider(GitProvider):
         password = get_settings().get("BITBUCKET_SERVER.PASSWORD", None)
         if bitbucket_client: # if Bitbucket client is provided, use it
             self.bitbucket_client = bitbucket_client
-            self.bitbucket_server_url = getattr(bitbucket_client, 'url', None) or self._parse_bitbucket_server(pr_url)  # pyright: ignore
+            self.bitbucket_server_url = getattr(bitbucket_client, 'url', None) or self._parse_bitbucket_server(pr_url)  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
         else:
-            self.bitbucket_server_url = self._parse_bitbucket_server(pr_url)  # pyright: ignore
+            self.bitbucket_server_url = self._parse_bitbucket_server(pr_url)  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
             if not self.bitbucket_server_url:
                 raise ValueError("Invalid or missing Bitbucket Server URL parsed from PR URL.")
             
@@ -68,7 +68,7 @@ class BitbucketServerProvider(GitProvider):
         if pr_url:
             self.set_pr(pr_url)
 
-    def get_git_repo_url(self, pr_url: str=None) -> str: #bitbucket server does not support issue url, so ignore param  # pyright: ignore
+    def get_git_repo_url(self, pr_url: str=None) -> str: #bitbucket server does not support issue url, so ignore param  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]
         try:
             parsed_url = urlparse(self.pr_url)
             return f"{parsed_url.scheme}://{parsed_url.netloc}/scm/{self.workspace_slug.lower()}/{self.repo_slug.lower()}.git"
@@ -79,15 +79,15 @@ class BitbucketServerProvider(GitProvider):
     # Given a git repo url, return prefix and suffix of the provider in order to view a given file belonging to that repo.
     # Example: https://bitbucket.dev.my_inc.com/scm/my_work/my_repo.git and branch: my_branch -> prefix: "https://bitbucket.dev.my_inc.com/projects/MY_WORK/repos/my_repo/browse/src", suffix: "?at=refs%2Fheads%2Fmy_branch"
     # In case git url is not provided, provider will use PR context (which includes branch) to determine the prefix and suffix.
-    def get_canonical_url_parts(self, repo_git_url:str=None, desired_branch:str=None) -> tuple[str, str]:  # pyright: ignore
+    def get_canonical_url_parts(self, repo_git_url:str=None, desired_branch:str=None) -> tuple[str, str]:  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]
         workspace_name = None
         project_name = None
         if not repo_git_url:
             workspace_name = self.workspace_slug
             project_name = self.repo_slug
             default_branch_dict = self.bitbucket_client.get_default_branch(workspace_name, project_name)
-            if 'displayId' in default_branch_dict:  # pyright: ignore
-                desired_branch = default_branch_dict['displayId']  # pyright: ignore
+            if 'displayId' in default_branch_dict:  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
+                desired_branch = default_branch_dict['displayId']  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
             else:
                 get_logger().error(f"Cannot obtain default branch for workspace_name={workspace_name}, "
                                    f"project_name={project_name}, default_branch_dict={default_branch_dict}")
@@ -150,7 +150,7 @@ class BitbucketServerProvider(GitProvider):
                     patch = "\n".join(patch_orig.splitlines()[5:]).strip('\n')
                     diff_code = f"\n\n```diff\n{patch.rstrip()}\n```"
                     # replace ```suggestion ... ``` with diff_code, using regex:
-                    body = re.sub(r'```suggestion.*?```', diff_code, body, flags=re.DOTALL)  # pyright: ignore
+                    body = re.sub(r'```suggestion.*?```', diff_code, body, flags=re.DOTALL)  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
                 except Exception as e:
                     get_logger().exception(f"Bitbucket failed to get diff code for publishing, error: {e}")
                     continue
@@ -164,7 +164,7 @@ class BitbucketServerProvider(GitProvider):
                 )
                 continue
 
-            if relevant_lines_end < relevant_lines_start:  # pyright: ignore
+            if relevant_lines_end < relevant_lines_start:  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
                 get_logger().warning(
                     f"Failed to publish code suggestion, "
                     f"relevant_lines_end is {relevant_lines_end} and "
@@ -172,7 +172,7 @@ class BitbucketServerProvider(GitProvider):
                 )
                 continue
 
-            if relevant_lines_end > relevant_lines_start:  # pyright: ignore
+            if relevant_lines_end > relevant_lines_start:  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
                 # Bitbucket does not support multi-line suggestions so use a code block instead - https://jira.atlassian.com/browse/BSERV-4553
                 body = body.replace("```suggestion", "```")
                 post_parameters = {
@@ -199,8 +199,8 @@ class BitbucketServerProvider(GitProvider):
                 get_logger().error(f"Failed to publish code suggestion, error: {e}")
             return False
 
-    def publish_file_comments(self, file_comments: list[dict[str, object]]) -> bool:  # pyright: ignore
-        pass
+    def publish_file_comments(self, file_comments: list[dict[str, object]]) -> bool:  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]
+        return True
 
     def is_supported(self, capability: str) -> bool:
         if capability in ['get_issue_comments', 'get_labels', 'gfm_markdown', 'publish_file_comments']:
@@ -229,7 +229,7 @@ class BitbucketServerProvider(GitProvider):
 
     #gets the best common ancestor: https://git-scm.com/docs/git-merge-base
     @staticmethod
-    def get_best_common_ancestor(source_commits_list, destination_commits_list, guaranteed_common_ancestor) -> str:  # pyright: ignore
+    def get_best_common_ancestor(source_commits_list, destination_commits_list, guaranteed_common_ancestor) -> str:  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]
         destination_commit_hashes = {commit['id'] for commit in destination_commits_list} | {guaranteed_common_ancestor}
 
         for commit in source_commits_list:
@@ -248,7 +248,7 @@ class BitbucketServerProvider(GitProvider):
         # if Bitbucket api version is >= 8.16 then use the merge-base api for 2-way diff calculation
         if self.bitbucket_api_version is not None and self.bitbucket_api_version >= parse_version("8.16"):
             try:
-                base_sha = self.bitbucket_client.get(self._get_merge_base())['id']  # pyright: ignore
+                base_sha = self.bitbucket_client.get(self._get_merge_base())['id']  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
             except Exception as e:
                 get_logger().error(f"Failed to get the best common ancestor for PR: {self.pr_url}, \nerror: {e}")
                 raise e
@@ -304,12 +304,12 @@ class BitbucketServerProvider(GitProvider):
                     new_file_content_str = self.get_file(file_path, head_sha)
                     new_file_content_str = decode_if_bytes(new_file_content_str)
 
-            patch = load_large_diff(file_path, new_file_content_str, original_file_content_str, show_warning=False)  # pyright: ignore
+            patch = load_large_diff(file_path, new_file_content_str, original_file_content_str, show_warning=False)  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
 
             diff_files.append(
                 FilePatchInfo(
-                    original_file_content_str,  # pyright: ignore
-                    new_file_content_str,  # pyright: ignore
+                    original_file_content_str,  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
+                    new_file_content_str,  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
                     patch,
                     file_path,
                     edit_type=edit_type,
@@ -330,12 +330,12 @@ class BitbucketServerProvider(GitProvider):
         except ValueError as e:
             get_logger().exception(f"Failed to remove temp comments, error: {e}")
 
-    def remove_comment(self, comment):  # pyright: ignore
+    def remove_comment(self, comment):  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]
         pass
 
     # function to create_inline_comment
     def create_inline_comment(self, body: str, relevant_file: str, relevant_line_in_file: str,
-                              absolute_position: int = None):  # pyright: ignore
+                              absolute_position: int = None):  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
 
         position, absolute_position = find_line_number_of_relevant_line_in_file(
             self.get_diff_files(),
@@ -352,7 +352,7 @@ class BitbucketServerProvider(GitProvider):
         path = relevant_file.strip()
         return dict(body=body, path=path, position=absolute_position) if subject_type == "LINE" else {}
 
-    def publish_inline_comment(self, comment: str, from_line: int, file: str, original_suggestion=None):  # pyright: ignore
+    def publish_inline_comment(self, comment: str, from_line: int, file: str, original_suggestion=None):  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]
         payload = {
             "text": comment,
             "severity": "NORMAL",
@@ -371,14 +371,14 @@ class BitbucketServerProvider(GitProvider):
             get_logger().error(f"Failed to publish inline comment to '{file}' at line {from_line}, error: {e}")
             raise e
 
-    def get_line_link(self, relevant_file: str, relevant_line_start: int, relevant_line_end: int = None) -> str:  # pyright: ignore
+    def get_line_link(self, relevant_file: str, relevant_line_start: int, relevant_line_end: int = None) -> str:  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]
         if relevant_line_start == -1:
             link = f"{self.pr_url}/diff#{quote_plus(relevant_file)}"
         else:
             link = f"{self.pr_url}/diff#{quote_plus(relevant_file)}?t={relevant_line_start}"
         return link
 
-    def generate_link_to_relevant_line_number(self, suggestion) -> str:  # pyright: ignore
+    def generate_link_to_relevant_line_number(self, suggestion) -> str:  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]
         try:
             relevant_file = suggestion['relevant_file'].strip('`').strip("'").rstrip()
             relevant_line_str = suggestion['relevant_line'].rstrip()
@@ -412,12 +412,12 @@ class BitbucketServerProvider(GitProvider):
     def publish_inline_comments(self, comments: list[dict[str, object]]):
         for comment in comments:
             if 'position' in comment:
-                self.publish_inline_comment(comment['body'], comment['position'], comment['path'])  # pyright: ignore
+                self.publish_inline_comment(comment['body'], comment['position'], comment['path'])  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
             elif 'start_line' in comment: # multi-line comment
                 # note that bitbucket does not seem to support range - only a comment on a single line - https://community.developer.atlassian.com/t/api-post-endpoint-for-inline-pull-request-comments/60452
-                self.publish_inline_comment(comment['body'], comment['start_line'], comment['path'])  # pyright: ignore
+                self.publish_inline_comment(comment['body'], comment['start_line'], comment['path'])  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
             elif 'line' in comment: # single-line comment
-                self.publish_inline_comment(comment['body'], comment['line'], comment['path'])  # pyright: ignore
+                self.publish_inline_comment(comment['body'], comment['line'], comment['path'])  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
             else:
                 get_logger().error(f"Could not publish inline comment: {comment}")
 
@@ -513,7 +513,7 @@ class BitbucketServerProvider(GitProvider):
         try:
             pr = self.bitbucket_client.get_pull_request(self.workspace_slug, self.repo_slug,
                                                         pull_request_id=self.pr_num)
-            return type('new_dict', (object,), pr)  # pyright: ignore
+            return type('new_dict', (object,), pr)  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
         except Exception as e:
             get_logger().error(f"Failed to get pull request, error: {e}")
             raise e
@@ -549,7 +549,7 @@ class BitbucketServerProvider(GitProvider):
         pass
 
     # bitbucket does not support labels
-    def get_pr_labels(self, update=False):  # pyright: ignore
+    def get_pr_labels(self, update=False):  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]
         pass
 
     def _get_pr_comments_path(self):
@@ -571,7 +571,7 @@ class BitbucketServerProvider(GitProvider):
 
     #Overriding the shell command, since for some reason usage of x-token-auth doesn't work, as mentioned here:
     # https://stackoverflow.com/questions/56760396/cloning-bitbucket-server-repo-with-access-tokens
-    def _clone_inner(self, repo_url: str, dest_folder: str, operation_timeout_in_seconds: int=None):  # pyright: ignore
+    def _clone_inner(self, repo_url: str, dest_folder: str, operation_timeout_in_seconds: int=None):  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]
         bearer_token = self.bearer_token
         if not bearer_token:
             #Shouldn't happen since this is checked in _prepare_clone, therefore - throwing an exception.

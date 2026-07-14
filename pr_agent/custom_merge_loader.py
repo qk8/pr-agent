@@ -84,7 +84,7 @@ def load(obj: "DynaBox", env: str | None = None, silent: bool = True, key: str |
                 continue
 
             # Security: Check file contents for forbidden directives
-            validate_file_security(file_data, settings_file)  # pyright: ignore
+            validate_file_security(file_data, settings_file)  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
 
             for section_name, section_data in file_data.items():
                 if not isinstance(section_data, dict):

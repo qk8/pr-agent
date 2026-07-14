@@ -43,7 +43,7 @@ async def handle_request_comment(url: str, body: str, thread_id: int, comment_id
         with get_logger().contextualize(**log_context):
             agent = PRAgent()
             provider = get_git_provider_with_context(pr_url=url)
-            body = handle_line_comment(body, thread_id, provider)  # pyright: ignore
+            body = handle_line_comment(body, thread_id, provider)  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
             handled = await agent.handle_request(url, body, notify=lambda: provider.reply_to_thread(thread_id, "On it! ⏳", True))
             # mark command comment as closed
             if handled:
@@ -116,7 +116,7 @@ async def _perform_commands_azure(commands_conf: str, agent: PRAgent, api_url: s
             get_logger().error(f"Failed to perform command {command}: {e}")
 
 
-async def handle_request_azure(data, log_context):  # pyright: ignore
+async def handle_request_azure(data, log_context):  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]
     if data["eventType"] == "git.pullrequest.created":
         # API V1 (latest)
         pr_url = unquote(data["resource"]["_links"]["web"]["href"].replace("_apis/git/repositories", "_git"))

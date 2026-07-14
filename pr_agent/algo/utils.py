@@ -335,7 +335,7 @@ def convert_to_markdown_v2(output_data: dict[str, object],
     return markdown_text
 
 
-def extract_relevant_lines_str(end_line, files, relevant_file, start_line, dedent=False) -> str:  # pyright: ignore
+def extract_relevant_lines_str(end_line, files, relevant_file, start_line, dedent=False) -> str:  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]
     """
     Finds 'relevant_file' in 'files', and extracts the lines from 'start_line' to 'end_line' string from the file content.
     """
@@ -375,7 +375,7 @@ def extract_relevant_lines_str(end_line, files, relevant_file, start_line, deden
         return ""
 
 
-def ticket_markdown_logic(emoji, markdown_text, value, gfm_supported) -> str:  # pyright: ignore
+def ticket_markdown_logic(emoji, markdown_text, value, gfm_supported) -> str:  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]
     ticket_compliance_str = ""
     compliance_emoji = ''
     # Track compliance levels across all tickets
@@ -472,7 +472,7 @@ def ticket_markdown_logic(emoji, markdown_text, value, gfm_supported) -> str:  #
     return markdown_text
 
 
-def process_can_be_split(emoji, value):  # pyright: ignore
+def process_can_be_split(emoji, value):  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]
     try:
         # key_nice = "Can this PR be split?"
         key_nice = "Multiple PR themes"
@@ -588,7 +588,7 @@ def parse_code_suggestion(code_suggestion: dict[str, object], i: int = 0, gfm_su
     return markdown_text
 
 
-def try_fix_json(review, max_iter=10, code_suggestions=False):  # pyright: ignore
+def try_fix_json(review, max_iter=10, code_suggestions=False):  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]
     """
     Fix broken or incomplete JSON messages and return the parsed JSON data.
 
@@ -646,7 +646,7 @@ def try_fix_json(review, max_iter=10, code_suggestions=False):  # pyright: ignor
     return data
 
 
-def fix_json_escape_char(json_message=None):  # pyright: ignore
+def fix_json_escape_char(json_message=None):  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]
     """
     Fix broken or incomplete JSON messages and return the parsed JSON data.
 
@@ -661,19 +661,19 @@ def fix_json_escape_char(json_message=None):  # pyright: ignore
 
     """
     try:
-        result = json.loads(json_message)  # pyright: ignore
+        result = json.loads(json_message)  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
     except Exception as e:
         # Find the offending character index:
         idx_to_replace = int(str(e).split(' ')[-1].replace(')', ''))
         # Remove the offending character:
-        json_message = list(json_message)  # pyright: ignore
+        json_message = list(json_message)  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
         json_message[idx_to_replace] = ' '
         new_message = ''.join(json_message)
         return fix_json_escape_char(json_message=new_message)
     return result
 
 
-def convert_str_to_datetime(date_str):  # pyright: ignore
+def convert_str_to_datetime(date_str):  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]
     """
     Convert a string representation of a date and time into a datetime object.
 
@@ -691,7 +691,7 @@ def convert_str_to_datetime(date_str):  # pyright: ignore
     return datetime.strptime(date_str, datetime_format)
 
 
-def load_large_diff(filename, new_file_content_str: str, original_file_content_str: str, show_warning: bool = True) -> str:  # pyright: ignore
+def load_large_diff(filename, new_file_content_str: str, original_file_content_str: str, show_warning: bool = True) -> str:  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]
     """
     Generate a patch for a modified file by comparing the original content of the file with the new content provided as
     input.
@@ -780,9 +780,9 @@ def load_yaml(response_text: str, keys_fix_yaml: list[str] = [], first_key: str 
 
 def try_fix_yaml(response_text: str,
                  keys_fix_yaml: list[str] = [],
-                 first_key="",  # pyright: ignore
-                 last_key="",  # pyright: ignore
-                 response_text_original: str = "") -> dict[str, object]:  # pyright: ignore
+                 first_key="",  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
+                 last_key="",  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
+                 response_text_original: str = "") -> dict[str, object]:  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
     response_text_lines = response_text.split('\n')
 
     keys_yaml = ['relevant line:', 'suggestion content:', 'relevant file:', 'existing code:',
@@ -937,6 +937,9 @@ def try_fix_yaml(response_text: str,
         except:
             pass
 
+    # If none of the fallbacks succeeded, return empty dict
+    return {}
+
     # # sixth fallback - try to remove last lines
     # for i in range(1, len(response_text_lines)):
     #     response_text_lines_tmp = '\n'.join(response_text_lines[:-i])
@@ -949,7 +952,7 @@ def try_fix_yaml(response_text: str,
 
 
 
-def set_custom_labels(variables, git_provider=None):  # pyright: ignore
+def set_custom_labels(variables, git_provider=None):  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]
     if not get_settings().config.enable_custom_labels:
         return
 
@@ -974,7 +977,7 @@ def set_custom_labels(variables, git_provider=None):  # pyright: ignore
         counter += 1
     variables["labels_minimal_to_labels_dict"] = labels_minimal_to_labels_dict
 
-def get_user_labels(current_labels: list[str] = None):  # pyright: ignore
+def get_user_labels(current_labels: list[str] = None):  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]
     """
     Only keep labels that has been added by the user
     """
@@ -999,7 +1002,7 @@ def get_user_labels(current_labels: list[str] = None):  # pyright: ignore
     return user_labels
 
 
-def get_max_tokens(model):  # pyright: ignore
+def get_max_tokens(model):  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]
     """
     Get the maximum number of tokens allowed for a model.
     logic:
@@ -1023,7 +1026,7 @@ def get_max_tokens(model):  # pyright: ignore
     return max_tokens_model
 
 
-def clip_tokens(text: str, max_tokens: int, add_three_dots=True, num_input_tokens=None, delete_last_line=False) -> str:  # pyright: ignore
+def clip_tokens(text: str, max_tokens: int, add_three_dots=True, num_input_tokens=None, delete_last_line=False) -> str:  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]
     """
     Clip the number of tokens in a string to a maximum number of tokens.
 
@@ -1121,7 +1124,7 @@ def clip_tokens(text: str, max_tokens: int, add_three_dots=True, num_input_token
         get_logger().warning(f"Failed to clip tokens: {e}")
         return text
 
-def replace_code_tags(text):  # pyright: ignore
+def replace_code_tags(text):  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]
     """
     Replace odd instances of ` with <code> and even instances of ` with </code>
     """
@@ -1135,7 +1138,7 @@ def replace_code_tags(text):  # pyright: ignore
 def find_line_number_of_relevant_line_in_file(diff_files: list[FilePatchInfo],
                                               relevant_file: str,
                                               relevant_line_in_file: str,
-                                              absolute_position: int = None) -> tuple[int, int]:  # pyright: ignore
+                                              absolute_position: int = None) -> tuple[int, int]:  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
     position = -1
     if absolute_position is None:
         absolute_position = -1
@@ -1228,7 +1231,7 @@ def get_rate_limit_status(github_token: str) -> dict[str, object]:
     return rate_limit_info
 
 
-def validate_rate_limit_github(github_token, installation_id=None, threshold=0.1) -> bool:  # pyright: ignore
+def validate_rate_limit_github(github_token, installation_id=None, threshold=0.1) -> bool:  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]
     try:
         rate_limit_status = get_rate_limit_status(github_token)
         if installation_id:
@@ -1246,7 +1249,7 @@ def validate_rate_limit_github(github_token, installation_id=None, threshold=0.1
         return True
 
 
-def validate_and_await_rate_limit(github_token):  # pyright: ignore
+def validate_and_await_rate_limit(github_token):  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]
     try:
         rate_limit_status = get_rate_limit_status(github_token)
         # validate that the rate limit is not exceeded
@@ -1306,7 +1309,7 @@ def show_relevant_configurations(relevant_section: str) -> str:
     markdown_text += "\n</details>\n"
     return markdown_text
 
-def is_value_no(value):  # pyright: ignore
+def is_value_no(value):  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]
     if not value:
         return True
     value_str = str(value).strip().lower()
@@ -1315,7 +1318,7 @@ def is_value_no(value):  # pyright: ignore
     return False
 
 
-def set_pr_string(repo_name, pr_number):  # pyright: ignore
+def set_pr_string(repo_name, pr_number):  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]
     return f"{repo_name}#{pr_number}"
 
 
@@ -1334,9 +1337,9 @@ def string_to_uniform_number(s: str) -> float:
     return uniform_number
 
 
-def process_description(description_full: str) -> tuple[str]:
+def process_description(description_full: str) -> tuple[str, list[object]]:
     if not description_full:
-        return "", []  # pyright: ignore
+        return "", []  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
 
     # description_split = description_full.split(PRDescriptionHeader.FILE_WALKTHROUGH.value)
     if PRDescriptionHeader.FILE_WALKTHROUGH.value in description_full:
@@ -1355,7 +1358,7 @@ def process_description(description_full: str) -> tuple[str]:
 
         if len(description_split) < 2:
             get_logger().error("Failed to split description into base and changes walkthrough", artifact={'description': description_full})
-            return description_full.strip(), []  # pyright: ignore
+            return description_full.strip(), []  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
 
         base_description_str = description_split[0].strip()
         changes_walkthrough_str = ""
@@ -1366,7 +1369,7 @@ def process_description(description_full: str) -> tuple[str]:
             get_logger().debug("No changes walkthrough found")
     else:
         base_description_str = description_full.strip()
-        return base_description_str, []  # pyright: ignore
+        return base_description_str, []  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
 
     try:
         if changes_walkthrough_str:
@@ -1429,7 +1432,7 @@ def process_description(description_full: str) -> tuple[str]:
     except Exception as e:
         get_logger().exception(f"Failed to process description: {e}")
 
-    return base_description_str, files  # pyright: ignore
+    return base_description_str, files  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
 
 def get_version() -> str:
     # First check pyproject.toml if running directly out of repository
@@ -1453,7 +1456,7 @@ def get_version() -> str:
         return "unknown"
 
 
-def set_file_languages(diff_files) -> list[FilePatchInfo]:  # pyright: ignore
+def set_file_languages(diff_files) -> list[FilePatchInfo]:  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]
     try:
         # if the language is already set, do not change it
         if hasattr(diff_files[0], 'language') and diff_files[0].language:
@@ -1476,7 +1479,7 @@ def set_file_languages(diff_files) -> list[FilePatchInfo]:  # pyright: ignore
 
     return diff_files
 
-def format_todo_item(todo_item: TodoItem, git_provider, gfm_supported) -> str:  # pyright: ignore
+def format_todo_item(todo_item: TodoItem, git_provider, gfm_supported) -> str:  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]
     relevant_file = todo_item.get('relevant_file', '').strip()
     line_number = todo_item.get('line_number', '')
     content = todo_item.get('content', '')
@@ -1495,7 +1498,7 @@ def format_todo_item(todo_item: TodoItem, git_provider, gfm_supported) -> str:  
         return file_ref
 
 
-def format_todo_items(value: list[TodoItem] | TodoItem, git_provider, gfm_supported) -> str:  # pyright: ignore
+def format_todo_items(value: list[TodoItem] | TodoItem, git_provider, gfm_supported) -> str:  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]
     markdown_text = ""
     MAX_ITEMS = 5 # limit the number of items to display
     if gfm_supported:

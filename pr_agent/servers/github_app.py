@@ -51,7 +51,7 @@ async def handle_github_webhooks(background_tasks: BackgroundTasks, request: Req
     context["installation_id"] = installation_id
     context["settings"] = copy.deepcopy(global_settings)
     context["git_provider"] = {}
-    background_tasks.add_task(handle_request, body, event=request.headers.get("X-GitHub-Event", None))  # pyright: ignore
+    background_tasks.add_task(handle_request, body, event=request.headers.get("X-GitHub-Event", None))  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
     return {}
 
 
@@ -61,7 +61,7 @@ async def handle_marketplace_webhooks(request: Request, response: Response):
     get_logger().info(f'Request body:\n{body}')
 
 
-async def get_body(request):  # pyright: ignore
+async def get_body(request):  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]
     try:
         body = await request.json()
     except Exception as e:
@@ -175,18 +175,18 @@ async def handle_push_trigger_for_new_commits(body: dict[str, Any],
     # so we keep just one waiting as a delegate to trigger the processing for the new commits when done waiting.
     current_active_tasks = _duplicate_push_triggers.setdefault(api_url, 0)
     max_active_tasks = 2 if get_settings().github_app.push_trigger_pending_tasks_backlog else 1
-    if current_active_tasks < max_active_tasks:  # pyright: ignore
+    if current_active_tasks < max_active_tasks:  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
         # first task can enter, and second tasks too if backlog is enabled
         get_logger().info(
             f"Continue processing push trigger for {api_url=} because there are {current_active_tasks} active tasks"
         )
-        _duplicate_push_triggers[api_url] += 1  # pyright: ignore
+        _duplicate_push_triggers[api_url] += 1  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
     else:
         get_logger().info(
             f"Skipping push trigger for {api_url=} because another event already triggered the same processing"
         )
         return {}
-    async with _pending_task_duplicate_push_conditions[api_url]:  # pyright: ignore
+    async with _pending_task_duplicate_push_conditions[api_url]:  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
         if current_active_tasks == 1:
             # second task waits
             get_logger().info(
@@ -202,23 +202,23 @@ async def handle_push_trigger_for_new_commits(body: dict[str, Any],
 
     finally:
         # release the waiting task block
-        async with _pending_task_duplicate_push_conditions[api_url]:  # pyright: ignore
+        async with _pending_task_duplicate_push_conditions[api_url]:  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
             _pending_task_duplicate_push_conditions[api_url].notify(1)
-            _duplicate_push_triggers[api_url] -= 1  # pyright: ignore
+            _duplicate_push_triggers[api_url] -= 1  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
 
 
-def handle_closed_pr(body, event, action, log_context):  # pyright: ignore
+def handle_closed_pr(body, event, action, log_context):  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]
     pull_request = body.get("pull_request", {})
     is_merged = pull_request.get("merged", False)
     if not is_merged:
         return
     api_url = pull_request.get("url", "")
-    pr_statistics = get_git_provider()(pr_url=api_url).calc_pr_statistics(pull_request)  # pyright: ignore
+    pr_statistics = get_git_provider()(pr_url=api_url).calc_pr_statistics(pull_request)  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
     log_context["api_url"] = api_url
     get_logger().info("PR-Agent statistics for closed PR", analytics=True, pr_statistics=pr_statistics, **log_context)
 
 
-def get_log_context(body, event, action, build_number):  # pyright: ignore
+def get_log_context(body, event, action, build_number):  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]
     sender = ""
     sender_id = ""
     sender_type = ""
@@ -239,7 +239,7 @@ def get_log_context(body, event, action, build_number):  # pyright: ignore
     return log_context, sender, sender_id, sender_type
 
 
-def is_bot_user(sender, sender_type):  # pyright: ignore
+def is_bot_user(sender, sender_type):  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]
     try:
         # logic to ignore PRs opened by bot
         if get_settings().get("GITHUB_APP.IGNORE_BOT_PR", False) and sender_type == "Bot":
@@ -251,7 +251,7 @@ def is_bot_user(sender, sender_type):  # pyright: ignore
     return False
 
 
-def should_process_pr_logic(body) -> bool:  # pyright: ignore
+def should_process_pr_logic(body) -> bool:  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]
     try:
         pull_request = body.get("pull_request", {})
         title = pull_request.get("title", "")
@@ -377,7 +377,7 @@ def handle_line_comments(body: dict[str, object], comment_body: str | Any) -> st
 
 
 def _check_pull_request_event(action: str, body: dict[str, object], log_context: dict[str, object]) -> tuple[dict[str, Any], str]:
-    invalid_result = {}, ""
+    invalid_result: tuple[dict[str, Any], str] = {}, ""
     pull_request = body.get("pull_request")
     if not pull_request:
         return invalid_result
@@ -390,7 +390,7 @@ def _check_pull_request_event(action: str, body: dict[str, object], log_context:
     if action in ("review_requested", "synchronize") and pull_request.get("created_at") == pull_request.get("updated_at"):
         # avoid double reviews when opening a PR for the first time
         return invalid_result
-    return pull_request, api_url  # pyright: ignore
+    return pull_request, api_url  # type: ignore[return-value]
 
 
 async def _perform_auto_commands_github(commands_conf: str, agent: PRAgent, body: dict[str, object], api_url: str,

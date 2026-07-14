@@ -44,7 +44,7 @@ def get_git_provider():
     return _GIT_PROVIDERS[provider_id]
 
 
-def get_git_provider_with_context(pr_url) -> GitProvider:  # pyright: ignore
+def get_git_provider_with_context(pr_url) -> GitProvider:  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]
     """
     Get a GitProvider instance for the given PR URL. If the GitProvider instance is already in the context, return it.
     """

@@ -14,7 +14,7 @@ GITHUB_TICKET_PATTERN = re.compile(
 # Option A: issue number at start of branch or after /, followed by - or end (e.g. feature/1-test-issue, 123-fix)
 BRANCH_ISSUE_PATTERN = re.compile(r"(?:^|/)(\d{1,6})(?=-|$)")
 
-def find_jira_tickets(text):  # pyright: ignore
+def find_jira_tickets(text):  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]
     # Regular expression patterns for JIRA tickets
     patterns = [
         r'\b[A-Z]{2,10}-\d{1,7}\b',  # Standard JIRA ticket format (e.g., PROJ-123)
@@ -36,7 +36,7 @@ def find_jira_tickets(text):  # pyright: ignore
     return list(tickets)
 
 
-def extract_ticket_links_from_pr_description(pr_description, repo_path, base_url_html='https://github.com'):  # pyright: ignore
+def extract_ticket_links_from_pr_description(pr_description, repo_path, base_url_html='https://github.com'):  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]
     """
     Extract all ticket links from PR description
     """
@@ -45,7 +45,7 @@ def extract_ticket_links_from_pr_description(pr_description, repo_path, base_url
     seen = set()
     github_tickets = []
 
-    def _add(url):  # pyright: ignore
+    def _add(url):  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]
         if url not in seen:
             seen.add(url)
             github_tickets.append(url)
@@ -75,7 +75,7 @@ def extract_ticket_links_from_pr_description(pr_description, repo_path, base_url
 
     return github_tickets
 
-def extract_ticket_links_from_branch_name(branch_name, repo_path, base_url_html="https://github.com"):  # pyright: ignore
+def extract_ticket_links_from_branch_name(branch_name, repo_path, base_url_html="https://github.com"):  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]
     """
     Extract GitHub issue URLs from branch name. Numbers are matched at start of branch or after /,
     followed by - or end (e.g. feature/1-test-issue -> #1). Respects extract_issue_from_branch
@@ -115,7 +115,7 @@ def extract_ticket_links_from_branch_name(branch_name, repo_path, base_url_html=
     return list(github_tickets)
 
 
-async def extract_tickets(git_provider):  # pyright: ignore
+async def extract_tickets(git_provider):  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]
     MAX_TICKET_CHARACTERS = 10000
     try:
         if isinstance(git_provider, GithubProvider):
@@ -241,7 +241,7 @@ async def extract_tickets(git_provider):  # pyright: ignore
                            artifact={"traceback": traceback.format_exc()})
 
 
-async def extract_and_cache_pr_tickets(git_provider, vars):  # pyright: ignore
+async def extract_and_cache_pr_tickets(git_provider, vars):  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]
     if not get_settings().get('pr_reviewer.require_ticket_analysis_review', False):
         return
 

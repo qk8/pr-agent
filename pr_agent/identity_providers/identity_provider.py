@@ -11,9 +11,9 @@ class Eligibility(Enum):
 
 class IdentityProvider(ABC):
     @abstractmethod
-    def verify_eligibility(self, git_provider, git_provider_id, pr_url):  # pyright: ignore
+    def verify_eligibility(self, git_provider, git_provider_id, pr_url):  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]
         pass
 
     @abstractmethod
-    def inc_invocation_count(self, git_provider, git_provider_id):  # pyright: ignore
+    def inc_invocation_count(self, git_provider, git_provider_id):  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]
         pass

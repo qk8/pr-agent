@@ -24,5 +24,5 @@ app.include_router(router)
 handler = Mangum(app, lifespan="off")
 
 
-def lambda_handler(event, context):  # pyright: ignore
+def lambda_handler(event, context):  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]
     return handler(event, context)

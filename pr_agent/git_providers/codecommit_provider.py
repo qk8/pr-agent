@@ -91,13 +91,13 @@ class CodeCommitProvider(GitProvider):
             return self.git_files
 
         self.git_files = []
-        differences = self.codecommit_client.get_differences(self.repo_name, self.pr.destination_commit, self.pr.source_commit)  # pyright: ignore
+        differences = self.codecommit_client.get_differences(self.repo_name, self.pr.destination_commit, self.pr.source_commit)  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
         for item in differences:
             self.git_files.append(CodeCommitFile(item.before_blob_path,
                                                  item.before_blob_id,
                                                  item.after_blob_path,
                                                  item.after_blob_id,
-                                                 CodeCommitProvider._get_edit_type(item.change_type)))  # pyright: ignore
+                                                 CodeCommitProvider._get_edit_type(item.change_type)))  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
         return self.git_files
 
     def get_diff_files(self) -> list[FilePatchInfo]:
@@ -121,7 +121,7 @@ class CodeCommitProvider(GitProvider):
             if diff_item.a_blob_id is not None:
                 patch_filename = diff_item.a_path
                 original_file_content_str = self.codecommit_client.get_file(
-                    self.repo_name, diff_item.a_path, self.pr.destination_commit)  # pyright: ignore
+                    self.repo_name, diff_item.a_path, self.pr.destination_commit)  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
                 if isinstance(original_file_content_str, (bytes, bytearray)):
                     original_file_content_str = original_file_content_str.decode("utf-8")
             else:
@@ -129,7 +129,7 @@ class CodeCommitProvider(GitProvider):
 
             if diff_item.b_blob_id is not None:
                 patch_filename = diff_item.b_path
-                new_file_content_str = self.codecommit_client.get_file(self.repo_name, diff_item.b_path, self.pr.source_commit)  # pyright: ignore
+                new_file_content_str = self.codecommit_client.get_file(self.repo_name, diff_item.b_path, self.pr.source_commit)  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
                 if isinstance(new_file_content_str, (bytes, bytearray)):
                     new_file_content_str = new_file_content_str.decode("utf-8")
             else:
@@ -159,7 +159,7 @@ class CodeCommitProvider(GitProvider):
     def publish_description(self, pr_title: str, pr_body: str):
         try:
             self.codecommit_client.publish_description(
-                pr_number=self.pr_num,  # pyright: ignore
+                pr_number=self.pr_num,  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
                 pr_title=pr_title,
                 pr_body=CodeCommitProvider._add_additional_newlines(pr_body),
             )
@@ -176,10 +176,10 @@ class CodeCommitProvider(GitProvider):
 
         try:
             self.codecommit_client.publish_comment(
-                repo_name=self.repo_name,  # pyright: ignore
-                pr_number=self.pr_num,  # pyright: ignore
-                destination_commit=self.pr.destination_commit,  # pyright: ignore
-                source_commit=self.pr.source_commit,  # pyright: ignore
+                repo_name=self.repo_name,  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
+                pr_number=self.pr_num,  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
+                destination_commit=self.pr.destination_commit,  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
+                source_commit=self.pr.source_commit,  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
                 comment=pr_comment,
             )
         except Exception as e:
@@ -197,13 +197,13 @@ class CodeCommitProvider(GitProvider):
             try:
                 get_logger().debug(f"Code Suggestion #{counter} in file: {suggestion['relevant_file']}: {suggestion['relevant_lines_start']}")
                 self.codecommit_client.publish_comment(
-                    repo_name=self.repo_name,  # pyright: ignore
-                    pr_number=self.pr_num,  # pyright: ignore
-                    destination_commit=self.pr.destination_commit,  # pyright: ignore
-                    source_commit=self.pr.source_commit,  # pyright: ignore
-                    comment=suggestion["body"],  # pyright: ignore
-                    annotation_file=suggestion["relevant_file"],  # pyright: ignore
-                    annotation_line=suggestion["relevant_lines_start"],  # pyright: ignore
+                    repo_name=self.repo_name,  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
+                    pr_number=self.pr_num,  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
+                    destination_commit=self.pr.destination_commit,  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
+                    source_commit=self.pr.source_commit,  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
+                    comment=suggestion["body"],  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
+                    annotation_file=suggestion["relevant_file"],  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
+                    annotation_line=suggestion["relevant_lines_start"],  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
                 )
             except Exception as e:
                 raise ValueError(f"CodeCommit Cannot publish code suggestions for PR: {self.pr_num}") from e
@@ -215,19 +215,19 @@ class CodeCommitProvider(GitProvider):
         # Since this function publishes the suggestions one at a time anyway, we always return True here to avoid the retry.
         return True
 
-    def publish_labels(self, labels):  # pyright: ignore
+    def publish_labels(self, labels):  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]
         return [""]  # not implemented yet
 
-    def get_pr_labels(self, update=False):  # pyright: ignore
+    def get_pr_labels(self, update=False):  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]
         return [""]  # not implemented yet
 
     def remove_initial_comment(self):
         return ""  # not implemented yet
 
-    def remove_comment(self, comment):  # pyright: ignore
+    def remove_comment(self, comment):  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]
         return ""  # not implemented yet
 
-    def publish_inline_comment(self, body: str, relevant_file: str, relevant_line_in_file: str, original_suggestion=None):  # pyright: ignore
+    def publish_inline_comment(self, body: str, relevant_file: str, relevant_line_in_file: str, original_suggestion=None):  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]
         # https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/codecommit/client/post_comment_for_compared_commit.html
         raise NotImplementedError("CodeCommit provider does not support publishing inline comments yet")
 
@@ -286,7 +286,7 @@ class CodeCommitProvider(GitProvider):
         return self.pr.source_branch
 
     def get_pr_description_full(self) -> str:
-        return self.pr.description  # pyright: ignore
+        return self.pr.description if self.pr.description else ""
 
     def get_user_id(self):
         return -1  # not implemented yet
@@ -297,7 +297,7 @@ class CodeCommitProvider(GitProvider):
     def get_repo_settings(self):
         # a local ".pr_agent.toml" settings file is optional
         settings_filename = ".pr_agent.toml"
-        return self.codecommit_client.get_file(self.repo_name, settings_filename, self.pr.source_commit, optional=True)  # pyright: ignore
+        return self.codecommit_client.get_file(self.repo_name, settings_filename, self.pr.source_commit, optional=True)  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
 
     def add_eyes_reaction(self, issue_comment_id: int, disable_eyes: bool = False) -> int | None:
         get_logger().info("CodeCommit provider does not support eyes reaction yet")
@@ -362,7 +362,7 @@ class CodeCommitProvider(GitProvider):
         return re.match(r"^[a-z]{2}-(gov-)?[a-z]+-\d\.console\.aws\.amazon\.com$", hostname) is not None
 
     def _get_pr(self):
-        response = self.codecommit_client.get_pr(self.repo_name, self.pr_num)  # pyright: ignore
+        response = self.codecommit_client.get_pr(self.repo_name, self.pr_num)  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
 
         if len(response.targets) == 0:
             raise ValueError(f"No files found in CodeCommit PR: {self.pr_num}")
@@ -376,7 +376,7 @@ class CodeCommitProvider(GitProvider):
 
         # Return our object that mimics PullRequest class from the PyGithub library
         # (This strategy was copied from the LocalGitProvider)
-        mimic = PullRequestCCMimic(response.title, self.diff_files)  # pyright: ignore
+        mimic = PullRequestCCMimic(response.title, self.diff_files)  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
         mimic.description = response.description
         mimic.source_commit = response.targets[0].source_commit
         mimic.source_branch = response.targets[0].source_branch
@@ -449,7 +449,7 @@ class CodeCommitProvider(GitProvider):
         return edit_type
 
     @staticmethod
-    def _get_file_extensions(filenames):  # pyright: ignore
+    def _get_file_extensions(filenames):  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]
         """
         Return a list of file extensions from a list of filenames.
         The returned extensions will include the dot "." prefix,
@@ -472,7 +472,7 @@ class CodeCommitProvider(GitProvider):
         return extensions
 
     @staticmethod
-    def _get_language_percentages(extensions):  # pyright: ignore
+    def _get_language_percentages(extensions):  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]
         """
         Return a dictionary containing the programming language name (as the key),
         and the percentage that language is used (as the value),

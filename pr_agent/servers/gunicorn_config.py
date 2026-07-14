@@ -73,7 +73,7 @@ backlog = 2048
 #
 
 if os.getenv('GUNICORN_WORKERS', None):
-    workers = int(os.getenv('GUNICORN_WORKERS'))  # pyright: ignore
+    workers = int(os.getenv('GUNICORN_WORKERS'))  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
 else:
     cores = multiprocessing.cpu_count()
     workers = cores * 2 + 1

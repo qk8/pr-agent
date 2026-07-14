@@ -62,7 +62,7 @@ def apply_mosaico_env() -> None:
         get_logger().info("MOSAICO: Langfuse env not fully set; LLM-call tracing disabled.")
 
 
-def _register_langfuse_callback(settings) -> None:  # pyright: ignore
+def _register_langfuse_callback(settings) -> None:  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]
     for key in ("LITELLM.SUCCESS_CALLBACK", "LITELLM.FAILURE_CALLBACK"):
         # Drop the legacy 'langfuse' callback (incompatible with langfuse 3.x -> sdk_integration
         # TypeError) and ensure exactly one 'langfuse_otel'.

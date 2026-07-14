@@ -20,7 +20,7 @@ from pr_agent.git_providers.local_git_provider import PullRequestMimic
 from pr_agent.log import get_logger
 
 
-def _call(*command, **kwargs) -> (int, str, str):  # pyright: ignore
+def _call(*command, **kwargs) -> (int, str, str):  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]
     res = subprocess.run(
         command,
         stdout=subprocess.PIPE,
@@ -31,13 +31,13 @@ def _call(*command, **kwargs) -> (int, str, str):  # pyright: ignore
     return res.stdout.decode()
 
 
-def clone(url, directory):  # pyright: ignore
+def clone(url, directory):  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]
     get_logger().info("Cloning %s to %s", url, directory)
     stdout = _call('git', 'clone', "--depth", "1", url, directory)
     get_logger().info(stdout)
 
 
-def fetch(url, refspec, cwd):  # pyright: ignore
+def fetch(url, refspec, cwd):  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]
     get_logger().info("Fetching %s %s", url, refspec)
     stdout = _call(
         'git', 'fetch', '--depth', '2', url, refspec,
@@ -46,18 +46,18 @@ def fetch(url, refspec, cwd):  # pyright: ignore
     get_logger().info(stdout)
 
 
-def checkout(cwd):  # pyright: ignore
+def checkout(cwd):  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]
     get_logger().info("Checking out")
     stdout = _call('git', 'checkout', "FETCH_HEAD", cwd=cwd)
     get_logger().info(stdout)
 
 
-def show(*args, cwd=None):  # pyright: ignore
+def show(*args, cwd=None):  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]
     get_logger().info("Show")
     return _call('git', 'show', *args, cwd=cwd)
 
 
-def diff(*args, cwd=None):  # pyright: ignore
+def diff(*args, cwd=None):  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]
     get_logger().info("Diff")
     patch = _call('git', 'diff', *args, cwd=cwd)
     if not patch:
@@ -66,12 +66,12 @@ def diff(*args, cwd=None):  # pyright: ignore
     return patch
 
 
-def reset_local_changes(cwd):  # pyright: ignore
+def reset_local_changes(cwd):  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]
     get_logger().info("Reset local changes")
     _call('git', 'checkout', "--force", cwd=cwd)
 
 
-def add_comment(url: urllib3.util.Url, refspec, message):  # pyright: ignore
+def add_comment(url: urllib3.util.Url, refspec, message):  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]
     *_, patchset, changenum = refspec.rsplit("/")
     message = "'" + message.replace("'", "'\"'\"'") + "'"
     return _call(
@@ -85,7 +85,7 @@ def add_comment(url: urllib3.util.Url, refspec, message):  # pyright: ignore
     )
 
 
-def list_comments(url: urllib3.util.Url, refspec):  # pyright: ignore
+def list_comments(url: urllib3.util.Url, refspec):  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]
     *_, patchset, _ = refspec.rsplit("/")
     stdout = _call(
         "ssh",
@@ -100,7 +100,7 @@ def list_comments(url: urllib3.util.Url, refspec):  # pyright: ignore
     return json.loads(change_set)["currentPatchSet"]["comments"]
 
 
-def prepare_repo(url: urllib3.util.Url, project, refspec):  # pyright: ignore
+def prepare_repo(url: urllib3.util.Url, project, refspec):  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]
     repo_url = (f"{url.scheme}://{url.auth}@{url.host}:{url.port}/{project}")
 
     directory = pathlib.Path(mkdtemp())
@@ -110,7 +110,7 @@ def prepare_repo(url: urllib3.util.Url, project, refspec):  # pyright: ignore
     return directory
 
 
-def adopt_to_gerrit_message(message):  # pyright: ignore
+def adopt_to_gerrit_message(message):  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]
     lines = message.splitlines()
     buf = []
     for line in lines:
@@ -136,7 +136,7 @@ def adopt_to_gerrit_message(message):  # pyright: ignore
     return "\n".join(buf).strip()
 
 
-def add_suggestion(src_filename, context: str, start, end: int):  # pyright: ignore
+def add_suggestion(src_filename, context: str, start, end: int):  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]
     with (
         NamedTemporaryFile("w", delete=False) as tmp,
         open(src_filename, "r") as src
@@ -151,7 +151,7 @@ def add_suggestion(src_filename, context: str, start, end: int):  # pyright: ign
     os.remove(tmp.name)
 
 
-def upload_patch(patch, path):  # pyright: ignore
+def upload_patch(patch, path):  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]
     patch_server_endpoint = get_settings().get(
         'gerrit.patch_server_endpoint')
     patch_server_token = get_settings().get(
@@ -175,7 +175,7 @@ def upload_patch(patch, path):  # pyright: ignore
 
 class GerritProvider(GitProvider):
 
-    def __init__(self, key: str, incremental=False):  # pyright: ignore
+    def __init__(self, key: str, incremental=False):  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]
         self.project, self.refspec = key.split(':')
         assert self.project, "Project name is required"
         assert self.refspec, "Refspec is required"
@@ -205,11 +205,11 @@ class GerritProvider(GitProvider):
 
     def get_issue_comments(self):
         comments = list_comments(self.parsed_url, self.refspec)
-        Comments = namedtuple('Comments', ['reversed'])  # pyright: ignore
-        Comment = namedtuple('Comment', ['body'])  # pyright: ignore
+        Comments = namedtuple('Comments', ['reversed'])  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
+        Comment = namedtuple('Comment', ['body'])  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
         return Comments([Comment(c['message']) for c in reversed(comments)])
 
-    def get_pr_labels(self, update=False):  # pyright: ignore
+    def get_pr_labels(self, update=False):  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]
         raise NotImplementedError(
             'Getting labels is not implemented for the gerrit provider')
 
@@ -318,7 +318,7 @@ class GerritProvider(GitProvider):
             return False
         return True
 
-    def split_suggestion(self, msg) -> tuple[str, str]:  # pyright: ignore
+    def split_suggestion(self, msg) -> tuple[str, str]:  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]
         is_code_context = False
         description = []
         context = []
@@ -346,10 +346,10 @@ class GerritProvider(GitProvider):
         for suggestion in code_suggestions:
             description, code = self.split_suggestion(suggestion['body'])
             add_suggestion(
-                pathlib.Path(self.repo_path) / suggestion["relevant_file"],  # pyright: ignore
+                pathlib.Path(self.repo_path) / suggestion["relevant_file"],  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
                 code,
                 suggestion["relevant_lines_start"],
-                suggestion["relevant_lines_end"],  # pyright: ignore
+                suggestion["relevant_lines_end"],  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
             )
             patch = diff(cwd=self.repo_path)
             patch_id = uuid.uuid4().hex[0:4]
@@ -378,13 +378,13 @@ class GerritProvider(GitProvider):
             'provider')
 
     def publish_inline_comment(self, body: str, relevant_file: str,
-                               relevant_line_in_file: str, original_suggestion=None):  # pyright: ignore
+                               relevant_line_in_file: str, original_suggestion=None):  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
         raise NotImplementedError(
             'Publishing inline comments is not implemented for the gerrit '
             'provider')
 
 
-    def publish_labels(self, labels):  # pyright: ignore
+    def publish_labels(self, labels):  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]
         # Not applicable to the local git provider,
         # but required by the interface
         pass
@@ -394,7 +394,7 @@ class GerritProvider(GitProvider):
         # shutil.rmtree(self.repo_path)
         pass
 
-    def remove_comment(self, comment):  # pyright: ignore
+    def remove_comment(self, comment):  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]
         pass
 
     def get_pr_branch(self):

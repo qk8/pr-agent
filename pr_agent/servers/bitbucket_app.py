@@ -72,7 +72,7 @@ async def handle_manifest(request: Request, response: Response):
     return JSONResponse(manifest_obj)
 
 
-def _get_username(data):  # pyright: ignore
+def _get_username(data):  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]
     actor = data.get("data", {}).get("actor", {})
     if actor:
         if "username" in actor:
@@ -171,7 +171,7 @@ async def _perform_commands_bitbucket(commands_conf: str, agent: PRAgent, api_ur
             get_logger().error(f"Failed to perform command {command}: {e}")
 
 
-def is_bot_user(data) -> bool:  # pyright: ignore
+def is_bot_user(data) -> bool:  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]
     try:
         actor = data.get("data", {}).get("actor", {})
         # allow actor type: user . if it's "AppUser" or "team" then it is a bot user
@@ -184,7 +184,7 @@ def is_bot_user(data) -> bool:  # pyright: ignore
     return False
 
 
-def should_process_pr_logic(data) -> bool:  # pyright: ignore
+def should_process_pr_logic(data) -> bool:  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]
     try:
         pr_data = data.get("data", {}).get("pullrequest", {})
         title = pr_data.get("title", "")
@@ -233,7 +233,7 @@ def should_process_pr_logic(data) -> bool:  # pyright: ignore
 
 
 @router.post("/webhook")
-async def handle_github_webhooks(background_tasks: BackgroundTasks, request: Request):  # pyright: ignore
+async def handle_github_webhooks(background_tasks: BackgroundTasks, request: Request):  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]
     app_name = get_settings().get("CONFIG.APP_NAME", "Unknown")
     log_context = {"server_type": "bitbucket_app", "app_name": app_name}
     get_logger().debug(request.headers)
@@ -282,7 +282,7 @@ async def handle_github_webhooks(background_tasks: BackgroundTasks, request: Req
                         if get_identity_provider().verify_eligibility("bitbucket",
                                                         sender_id, pr_url) is not Eligibility.NOT_ELIGIBLE:
                             if get_settings().get("bitbucket_app.pr_commands"):
-                                await _perform_commands_bitbucket("pr_commands", agent, pr_url, log_context, data)  # pyright: ignore
+                                await _perform_commands_bitbucket("pr_commands", agent, pr_url, log_context, data)  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
             elif event == "pullrequest:updated": # PR updated, might be from a push (we will validate this later)
                 pr_url = data["data"]["pullrequest"]["links"]["html"]["href"]
                 log_context["api_url"] = pr_url
@@ -293,7 +293,7 @@ async def handle_github_webhooks(background_tasks: BackgroundTasks, request: Req
                                                         sender_id, pr_url) is not Eligibility.NOT_ELIGIBLE:
 
                             if get_settings().get("bitbucket_app.push_commands"):
-                                await _perform_commands_bitbucket("push_commands", agent, pr_url, log_context, data)  # pyright: ignore
+                                await _perform_commands_bitbucket("push_commands", agent, pr_url, log_context, data)  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
             elif event == "pullrequest:comment_created":
                 pr_url = data["data"]["pullrequest"]["links"]["html"]["href"]
                 log_context["api_url"] = pr_url

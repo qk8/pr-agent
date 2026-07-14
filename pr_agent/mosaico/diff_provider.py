@@ -155,7 +155,7 @@ class DiffInputProvider(GitProvider):
     def publish_comment(self, pr_comment: str, is_temporary: bool = False):
         pass
 
-    def publish_inline_comment(self, body: str, relevant_file: str, relevant_line_in_file: str, original_suggestion=None):  # pyright: ignore
+    def publish_inline_comment(self, body: str, relevant_file: str, relevant_line_in_file: str, original_suggestion=None):  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]
         pass
 
     def publish_inline_comments(self, comments: list[dict[str, object]]):
@@ -164,16 +164,16 @@ class DiffInputProvider(GitProvider):
     def remove_initial_comment(self):
         pass
 
-    def remove_comment(self, comment):  # pyright: ignore
+    def remove_comment(self, comment):  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]
         pass
 
     def get_issue_comments(self):
         return []
 
-    def publish_labels(self, labels):  # pyright: ignore
+    def publish_labels(self, labels):  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]
         pass
 
-    def get_pr_labels(self, update=False):  # pyright: ignore
+    def get_pr_labels(self, update=False):  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]
         return []
 
     def add_eyes_reaction(self, issue_comment_id: int, disable_eyes: bool = False):

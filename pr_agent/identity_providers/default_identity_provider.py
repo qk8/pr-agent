@@ -4,8 +4,8 @@ from pr_agent.identity_providers.identity_provider import (Eligibility,
 
 
 class DefaultIdentityProvider(IdentityProvider):
-    def verify_eligibility(self, git_provider, git_provider_id, pr_url):  # pyright: ignore
+    def verify_eligibility(self, git_provider, git_provider_id, pr_url):  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]
         return Eligibility.ELIGIBLE
 
-    def inc_invocation_count(self, git_provider, git_provider_id):  # pyright: ignore
+    def inc_invocation_count(self, git_provider, git_provider_id):  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]
         pass

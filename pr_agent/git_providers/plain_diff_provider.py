@@ -25,7 +25,7 @@ class PlainDiffGitProvider(GitProvider):
     sentinel.
     """
 
-    def __init__(self, pr_url=None, incremental=False):  # pyright: ignore
+    def __init__(self, pr_url=None, incremental=False):  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]
         diff_text = get_settings().get("plain_diff.content", None)
         if not diff_text or not str(diff_text).strip():
             raise ValueError("No diff content provided for the 'plain-diff' git provider")
@@ -89,7 +89,7 @@ class PlainDiffGitProvider(GitProvider):
     def get_files(self) -> list[str]:
         return [f.filename for f in self.get_diff_files()]
 
-    def get_incremental_commits(self, incremental):  # pyright: ignore
+    def get_incremental_commits(self, incremental):  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]
         # A standalone diff has no commit history, so incremental review (-i) is
         # not applicable. Disable it explicitly to avoid a TypeError downstream
         # (PRReviewer would otherwise call len() on an unpopulated commits_range).
@@ -184,33 +184,33 @@ class PlainDiffGitProvider(GitProvider):
             location = f"{relevant_file}:{start}-{end}".strip(":-")
             if location:
                 sections.append(f"### {location}")
-            sections.append(s.get("body", ""))  # pyright: ignore
+            sections.append(s.get("body", ""))  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
             sections.append("")
         self._write_output("\n".join(sections).rstrip() + "\n")
         return True
 
     # ---- unsupported publish operations (no-op or NotImplementedError) ----
     def publish_inline_comment(self, body: str, relevant_file: str,
-                               relevant_line_in_file: str, original_suggestion=None):  # pyright: ignore
+                               relevant_line_in_file: str, original_suggestion=None):  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
         raise NotImplementedError("Inline comments are not supported by the plain-diff provider")
 
     def publish_inline_comments(self, comments: list[dict[str, object]]):
         raise NotImplementedError("Inline comments are not supported by the plain-diff provider")
 
-    def publish_labels(self, labels):  # pyright: ignore
+    def publish_labels(self, labels):  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]
         pass
 
     def remove_initial_comment(self):
         pass
 
-    def remove_comment(self, comment):  # pyright: ignore
+    def remove_comment(self, comment):  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]
         pass
 
     def add_eyes_reaction(self, issue_comment_id: int, disable_eyes: bool = False) -> int | None:
         pass
 
-    def remove_reaction(self, issue_comment_id: int, reaction_id: int) -> bool:  # pyright: ignore
-        pass
+    def remove_reaction(self, issue_comment_id: int, reaction_id: int) -> bool:  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]
+        return True
 
     def get_commit_messages(self):
         return ""
@@ -226,5 +226,5 @@ class PlainDiffGitProvider(GitProvider):
         # traceback in the log.
         return []
 
-    def get_pr_labels(self, update=False):  # pyright: ignore
+    def get_pr_labels(self, update=False):  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]
         return []

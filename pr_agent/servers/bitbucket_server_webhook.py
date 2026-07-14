@@ -41,7 +41,7 @@ def handle_request(
 
     background_tasks.add_task(inner)
 
-def should_process_pr_logic(data) -> bool:  # pyright: ignore
+def should_process_pr_logic(data) -> bool:  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]
     try:
         pr_data = data.get("pullRequest", {})
         title = pr_data.get("title", "")
@@ -189,7 +189,7 @@ async def handle_webhook(background_tasks: BackgroundTasks, request: Request):
 
     async def inner():
         try:
-            await _run_commands_sequentially(commands_to_run, pr_url, log_context)  # pyright: ignore
+            await _run_commands_sequentially(commands_to_run, pr_url, log_context)  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
         except Exception as e:
             get_logger().error(f"Failed to handle webhook: {e}")
 
@@ -217,7 +217,7 @@ async def _run_commands_sequentially(commands: list[str], url: str, log_context:
         except Exception as e:
             get_logger().error(f"Failed to handle command: {command} , error: {e}")
 
-def _process_command(command: str, url) -> str:  # pyright: ignore
+def _process_command(command: str, url) -> str:  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]
     # don't think we need this
     apply_repo_settings(url)
     # Process the command string
@@ -230,7 +230,7 @@ def _process_command(command: str, url) -> str:  # pyright: ignore
     return new_command
 
 
-def _to_list(command_string: str) -> list[str]:  # pyright: ignore
+def _to_list(command_string: str) -> list[str]:  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]
     try:
         # Use ast.literal_eval to safely parse the string into a list
         commands = ast.literal_eval(command_string)

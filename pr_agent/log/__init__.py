@@ -32,16 +32,16 @@ def inv_analytics_filter(record: dict[str, object]) -> bool:
     return not record.get("extra", {}).get("analytics", False)  # type: ignore[return-value]
 
 
-def setup_logger(level: str = "INFO", fmt: LoggingFormat = LoggingFormat.CONSOLE) -> "Logger":  # pyright: ignore
-    level: int = logging.getLevelName(level.upper())  # pyright: ignore
+def setup_logger(level: str = "INFO", fmt: LoggingFormat = LoggingFormat.CONSOLE) -> "Logger":  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]
+    level: int = logging.getLevelName(level.upper())  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
     if type(level) is not int:
         level = logging.INFO
 
     if fmt == LoggingFormat.JSON and os.getenv("LOG_SANE", "0").lower() == "0":  # better debugging github_app
         logger.remove(None)
-        logger.add(  # pyright: ignore
+        logger.add(  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
             sys.stdout,
-            filter=inv_analytics_filter,  # pyright: ignore
+            filter=inv_analytics_filter,  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
             level=level,
             format="{message}",
             colorize=False,
@@ -49,22 +49,22 @@ def setup_logger(level: str = "INFO", fmt: LoggingFormat = LoggingFormat.CONSOLE
         )
     elif fmt == LoggingFormat.CONSOLE:  # does not print the 'extra' fields
         logger.remove(None)
-        logger.add(sys.stdout, level=level, colorize=True, filter=inv_analytics_filter)  # pyright: ignore
+        logger.add(sys.stdout, level=level, colorize=True, filter=inv_analytics_filter)  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
 
     log_folder: str = get_settings().get("CONFIG.ANALYTICS_FOLDER", "")  # type: ignore[union-attr]
     if log_folder:
         pid = os.getpid()
         log_file = os.path.join(log_folder, f"pr-agent.{pid}.log")
-        logger.add(  # pyright: ignore
+        logger.add(  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
             log_file,
-            filter=analytics_filter,  # pyright: ignore
+            filter=analytics_filter,  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
             level=level,
             format="{message}",
             colorize=False,
             serialize=True,
         )
 
-    return logger  # pyright: ignore
+    return logger  # type: ignore[return-value]
 
 
 def get_logger(*args: object, **kwargs: object) -> "Logger":

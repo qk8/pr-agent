@@ -33,8 +33,8 @@ from pr_agent.tools.progress_comment import build_progress_comment
 
 
 class PRCodeSuggestions:
-    def __init__(self, pr_url: str, cli_mode=False, args: list[str] | None = None,  # pyright: ignore
-                 ai_handler: partial | type[BaseAiHandler] = LiteLLMAIHandler):  # pyright: ignore
+    def __init__(self, pr_url: str, cli_mode=False, args: list[str] | None = None,  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]
+                 ai_handler: partial | type[BaseAiHandler] = LiteLLMAIHandler):  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType,reportMissingTypeArgument]
 
         self.git_provider = get_git_provider_with_context(pr_url)
         self.main_language = get_main_pr_language(
@@ -86,7 +86,7 @@ class PRCodeSuggestions:
             self.pr_code_suggestions_prompt_user = get_settings().pr_code_suggestions_prompt_not_decoupled.user
 
         self.token_handler = TokenHandler(self.git_provider.pr,
-                                          self.vars,  # pyright: ignore
+                                          self.vars,  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
                                           self.pr_code_suggestions_prompt_system,
                                           self.pr_code_suggestions_prompt_user)
 
@@ -136,7 +136,7 @@ class PRCodeSuggestions:
                         self.git_provider.is_supported("gfm_markdown")):
 
                     # generate summarized suggestions
-                    pr_body = self.generate_summarized_suggestions(data)  # pyright: ignore
+                    pr_body = self.generate_summarized_suggestions(data)  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
                     get_logger().debug(f"PR output", artifact=pr_body)
 
                     # require self-review
@@ -181,7 +181,7 @@ class PRCodeSuggestions:
                         self.git_provider.remove_comment(self.progress_response)
             else:
                 get_logger().info('Code suggestions generated for PR, but not published since publish_output is False.')
-                pr_body = self.generate_summarized_suggestions(data)  # pyright: ignore
+                pr_body = self.generate_summarized_suggestions(data)  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
                 get_settings().data = {"artifact": pr_body}
                 return
         except Exception as e:
@@ -197,7 +197,7 @@ class PRCodeSuggestions:
                     except Exception as e:
                         get_logger().exception(f"Failed to update persistent review, error: {e}")
 
-    async def add_self_review_text(self, pr_body):  # pyright: ignore
+    async def add_self_review_text(self, pr_body):  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]
         text = get_settings().pr_code_suggestions.code_suggestions_self_review_text
         pr_body += f"\n\n- [ ]  {text}"
         approve_pr_on_self_review = get_settings().pr_code_suggestions.approve_pr_on_self_review
@@ -223,7 +223,7 @@ class PRCodeSuggestions:
         else:
             get_settings().data = {"artifact": ""}
 
-    async def dual_publishing(self, data):  # pyright: ignore
+    async def dual_publishing(self, data):  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]
         data_above_threshold = {'code_suggestions': []}
         try:
             for suggestion in data['code_suggestions']:
@@ -247,11 +247,11 @@ class PRCodeSuggestions:
                                                 pr_comment: str,
                                                 initial_header: str,
                                                 update_header: bool = True,
-                                                name='review',  # pyright: ignore
-                                                final_update_message=True,  # pyright: ignore
-                                                max_previous_comments=4,  # pyright: ignore
-                                                progress_response=None,  # pyright: ignore
-                                                only_fold=False):  # pyright: ignore
+                                                name='review',  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
+                                                final_update_message=True,  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
+                                                max_previous_comments=4,  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
+                                                progress_response=None,  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
+                                                only_fold=False):  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
         if hasattr(git_provider, '_publish_check_run') and get_settings().github.publish_as_check_run:
             if git_provider._publish_check_run(pr_comment, name):
                 return
@@ -361,7 +361,7 @@ class PRCodeSuggestions:
         return new_comment
 
 
-    def extract_link(self, s):  # pyright: ignore
+    def extract_link(self, s):  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]
         r = re.compile(r"<!--.*?-->")
         match = r.search(s)
 
@@ -377,17 +377,17 @@ class PRCodeSuggestions:
                                         add_line_numbers_to_hunks=True,
                                         disable_extra_lines=False)
         self.patches_diff_list = [self.patches_diff]
-        self.patches_diff_no_line_number = self.remove_line_numbers([self.patches_diff])[0]  # pyright: ignore
+        self.patches_diff_no_line_number = self.remove_line_numbers([self.patches_diff])[0]  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
 
         if self.patches_diff:
             get_logger().debug(f"PR diff", artifact=self.patches_diff)
-            self.prediction = await self._get_prediction(model, self.patches_diff, self.patches_diff_no_line_number)  # pyright: ignore
+            self.prediction = await self._get_prediction(model, self.patches_diff, self.patches_diff_no_line_number)  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
         else:
             get_logger().warning(f"Empty PR diff")
             self.prediction = None
 
-        data = self.prediction
-        return data  # pyright: ignore
+        data = self.prediction if self.prediction is not None else {"code_suggestions": []}
+        return data  # type: ignore[return-value]
 
     async def _get_prediction(self, model: str, patches_diff: str, patches_diff_no_line_number: str) -> dict[str, object]:
         variables = copy.deepcopy(self.vars)
@@ -396,7 +396,7 @@ class PRCodeSuggestions:
         environment = Environment(undefined=StrictUndefined)
         system_prompt = environment.from_string(self.pr_code_suggestions_prompt_system).render(variables)
         user_prompt = environment.from_string(self.pr_code_suggestions_prompt_user).render(variables)
-        response, finish_reason = await self.ai_handler.chat_completion(  # pyright: ignore
+        response, finish_reason = await self.ai_handler.chat_completion(  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
             model=model, temperature=get_settings().config.temperature, system=system_prompt, user=user_prompt)
         if not get_settings().config.publish_output:
             get_settings().system_prompt = system_prompt
@@ -413,22 +413,22 @@ class PRCodeSuggestions:
             # we are using a fallback model (should not happen on regular conditions)
             get_logger().warning(f"Using the same model for self-reflection as the one used for suggestions")
             model_reflect_with_reasoning = model
-        response_reflect = await self.self_reflect_on_suggestions(data["code_suggestions"],  # pyright: ignore
+        response_reflect = await self.self_reflect_on_suggestions(data["code_suggestions"],  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
                                                                   patches_diff, model=model_reflect_with_reasoning)
         if response_reflect:
             await self.analyze_self_reflection_response(data, response_reflect)
         else:
             # get_logger().error(f"Could not self-reflect on suggestions. using default score 7")
-            for i, suggestion in enumerate(data["code_suggestions"]):  # pyright: ignore
+            for i, suggestion in enumerate(data["code_suggestions"]):  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
                 suggestion["score"] = 7
                 suggestion["score_why"] = ""
 
         return data
 
-    async def analyze_self_reflection_response(self, data, response_reflect):  # pyright: ignore
+    async def analyze_self_reflection_response(self, data, response_reflect):  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]
         response_reflect_yaml = load_yaml(response_reflect)
         code_suggestions_feedback = response_reflect_yaml.get("code_suggestions", [])
-        if code_suggestions_feedback and len(code_suggestions_feedback) == len(data["code_suggestions"]):  # pyright: ignore
+        if code_suggestions_feedback and len(code_suggestions_feedback) == len(data["code_suggestions"]):  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
             for i, suggestion in enumerate(data["code_suggestions"]):
                 try:
                     suggestion["score"] = code_suggestions_feedback[i]["suggestion_score"]
@@ -480,7 +480,7 @@ class PRCodeSuggestions:
                     get_logger().error(f"Error processing suggestion {i + 1}, error: {e}")
 
     @staticmethod
-    def _truncate_if_needed(suggestion):  # pyright: ignore
+    def _truncate_if_needed(suggestion):  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]
         max_code_suggestion_length = get_settings().get("PR_CODE_SUGGESTIONS.MAX_CODE_SUGGESTION_LENGTH", 0)
         suggestion_truncation_message = get_settings().get("PR_CODE_SUGGESTIONS.SUGGESTION_TRUNCATION_MESSAGE", "")
         if max_code_suggestion_length > 0:
@@ -497,11 +497,12 @@ class PRCodeSuggestions:
                          first_key="code_suggestions", last_key="label")
         if isinstance(data, list):
             data = {'code_suggestions': data}
-
+        elif not isinstance(data, dict):
+            data = {'code_suggestions': []}
         # remove or edit invalid suggestions
         suggestion_list = []
         one_sentence_summary_list = []
-        for i, suggestion in enumerate(data['code_suggestions']):  # pyright: ignore
+        for i, suggestion in enumerate(data['code_suggestions']):  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
             try:
                 needed_keys = ['one_sentence_summary', 'label', 'relevant_file']
                 is_valid_keys = True
@@ -516,15 +517,15 @@ class PRCodeSuggestions:
 
                 if get_settings().get("pr_code_suggestions.focus_only_on_problems", False):
                     CRITICAL_LABEL = 'critical'
-                    if CRITICAL_LABEL in suggestion['label'].lower(): # we want the published labels to be less declarative  # pyright: ignore
+                    if CRITICAL_LABEL in suggestion['label'].lower(): # we want the published labels to be less declarative  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
                         suggestion['label'] = 'possible issue'
 
-                if suggestion['one_sentence_summary'] in one_sentence_summary_list:  # pyright: ignore
+                if suggestion['one_sentence_summary'] in one_sentence_summary_list:  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
                     get_logger().debug(f"Skipping suggestion {i + 1}, because it is a duplicate: {suggestion}")
                     continue
 
-                if 'const' in suggestion['suggestion_content'] and 'instead' in suggestion[  # pyright: ignore
-                    'suggestion_content'] and 'let' in suggestion['suggestion_content']:  # pyright: ignore
+                if 'const' in suggestion['suggestion_content'] and 'instead' in suggestion[  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
+                    'suggestion_content'] and 'let' in suggestion['suggestion_content']:  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
                     get_logger().debug(
                         f"Skipping suggestion {i + 1}, because it uses 'const instead let': {suggestion}")
                     continue
@@ -538,11 +539,11 @@ class PRCodeSuggestions:
                         f"Skipping suggestion {i + 1}, because it does not contain 'existing_code' or 'improved_code': {suggestion}")
             except Exception as e:
                 get_logger().error(f"Error processing suggestion {i + 1}: {suggestion}, error: {e}")
-        data['code_suggestions'] = suggestion_list  # pyright: ignore
+        data['code_suggestions'] = suggestion_list  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
 
-        return data  # pyright: ignore
+        return data  # type: ignore[return-value]
 
-    async def push_inline_code_suggestions(self, data):  # pyright: ignore
+    async def push_inline_code_suggestions(self, data):  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]
         code_suggestions = []
 
         if not data['code_suggestions']:
@@ -584,7 +585,7 @@ class PRCodeSuggestions:
             for code_suggestion in code_suggestions:
                 self.git_provider.publish_code_suggestions([code_suggestion])
 
-    def dedent_code(self, relevant_file, relevant_lines_start, new_code_snippet):  # pyright: ignore
+    def dedent_code(self, relevant_file, relevant_lines_start, new_code_snippet):  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]
         try:  # dedent code snippet
             self.diff_files = self.git_provider.diff_files if self.git_provider.diff_files \
                 else self.git_provider.get_diff_files()
@@ -624,7 +625,7 @@ class PRCodeSuggestions:
 
         return new_code_snippet
 
-    def validate_one_liner_suggestion_not_repeating_code(self, suggestion):  # pyright: ignore
+    def validate_one_liner_suggestion_not_repeating_code(self, suggestion):  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]
         try:
             existing_code = suggestion.get('existing_code', '').strip()
             if '...' in existing_code:
@@ -721,7 +722,7 @@ class PRCodeSuggestions:
             for j, predictions in enumerate(prediction_list):  # each call adds an element to the list
                 if "code_suggestions" in predictions:
                     score_threshold = max(1, int(get_settings().pr_code_suggestions.suggestions_score_threshold))
-                    for i, prediction in enumerate(predictions["code_suggestions"]):  # pyright: ignore
+                    for i, prediction in enumerate(predictions["code_suggestions"]):  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
                         try:
                             score = int(prediction.get("score", 1))
                             if score >= score_threshold:
@@ -736,10 +737,10 @@ class PRCodeSuggestions:
             self.data = data
         else:
             get_logger().warning(f"Empty PR diff list")
-            self.data = data = None
-        return data  # pyright: ignore
+            self.data = data = {"code_suggestions": []}
+        return data  # type: ignore[return-value]
 
-    async def convert_to_decoupled_with_line_numbers(self, patches_diff_list_no_line_numbers, model) -> list[str]:  # pyright: ignore
+    async def convert_to_decoupled_with_line_numbers(self, patches_diff_list_no_line_numbers, model) -> list[str]:  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]
         with get_logger().contextualize(sub_feature='convert_to_decoupled_with_line_numbers'):
             try:
                 patches_diff_list = []
@@ -779,7 +780,7 @@ class PRCodeSuggestions:
         try:
             pr_body = "## PR Code Suggestions ✨\n\n"
 
-            if len(data.get('code_suggestions', [])) == 0:  # pyright: ignore
+            if len(data.get('code_suggestions', [])) == 0:  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
                 pr_body += "No suggestions found to improve this PR."
                 return pr_body
 
@@ -800,7 +801,7 @@ class PRCodeSuggestions:
             pr_body += """<tbody>"""
             suggestions_labels = dict()
             # add all suggestions related to each label
-            for suggestion in data['code_suggestions']:  # pyright: ignore
+            for suggestion in data['code_suggestions']:  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
                 label = suggestion['label'].strip().strip("'").strip('"')
                 if label not in suggestions_labels:
                     suggestions_labels[label] = []
@@ -940,7 +941,7 @@ class PRCodeSuggestions:
                     get_settings().pr_code_suggestions_reflect_prompt.user).render(variables)
 
             with get_logger().contextualize(command="self_reflect_on_suggestions"):
-                response_reflect, finish_reason_reflect = await self.ai_handler.chat_completion(model=model,  # pyright: ignore
+                response_reflect, finish_reason_reflect = await self.ai_handler.chat_completion(model=model,  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
                                                                                                 system=system_prompt_reflect,
                                                                                                 temperature=get_settings().config.temperature,
                                                                                                 user=user_prompt_reflect)

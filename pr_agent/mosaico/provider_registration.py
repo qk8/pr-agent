@@ -7,4 +7,4 @@ untouched on every other code path."""
 from pr_agent.git_providers import _GIT_PROVIDERS
 from pr_agent.mosaico.diff_provider import DiffInputProvider
 
-_GIT_PROVIDERS.setdefault("mosaico_diff", DiffInputProvider)  # pyright: ignore
+_GIT_PROVIDERS.setdefault("mosaico_diff", DiffInputProvider)  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]

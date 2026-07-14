@@ -17,7 +17,7 @@ class BaseAiHandler(ABC):
         pass
 
     @abstractmethod
-    async def chat_completion(self, model: str, system: str, user: str, temperature: float = 0.2, img_path: str = None):  # pyright: ignore
+    async def chat_completion(self, model: str, system: str, user: str, temperature: float = 0.2, img_path: str = None):  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]
         """
         This method should be implemented to return a chat completion from the AI model.
         Args:
