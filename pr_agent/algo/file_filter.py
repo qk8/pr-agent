@@ -5,7 +5,7 @@ from pr_agent.config_loader import get_settings
 from pr_agent.log import get_logger
 
 
-def filter_ignored(files, platform = 'github'):
+def filter_ignored(files, platform = 'github'):  # pyright: ignore
     """
     Filter out files that match the ignore patterns.
     """

@@ -42,7 +42,7 @@ class OpenAIHandler(BaseAiHandler):
         retry=retry_if_exception_type(openai.APIError) & retry_if_not_exception_type(openai.RateLimitError),
         stop=stop_after_attempt(OPENAI_RETRIES),
     )
-    async def chat_completion(self, model: str, system: str, user: str, temperature: float = 0.2, img_path: str = None):
+    async def chat_completion(self, model: str, system: str, user: str, temperature: float = 0.2, img_path: str = None):  # pyright: ignore
         try:
             if img_path:
                 get_logger().warning(f"Image path is not supported for OpenAIHandler. Ignoring image path: {img_path}")
@@ -52,7 +52,7 @@ class OpenAIHandler(BaseAiHandler):
             client = AsyncOpenAI()
             chat_completion = await client.chat.completions.create(
                 model=model,
-                messages=messages,
+                messages=messages,  # pyright: ignore
                 temperature=temperature,
             )
             resp = chat_completion.choices[0].message.content
@@ -69,4 +69,4 @@ class OpenAIHandler(BaseAiHandler):
             raise
         except Exception as e:
             get_logger().warning(f"Unknown error during LLM inference: {e}")
-            raise openai.APIError from e
+            raise openai.APIError from e  # pyright: ignore

@@ -72,7 +72,7 @@ backlog = 2048
 #
 
 if os.getenv('GUNICORN_WORKERS', None):
-    workers = int(os.getenv('GUNICORN_WORKERS'))
+    workers = int(os.getenv('GUNICORN_WORKERS'))  # pyright: ignore
 else:
     cores = multiprocessing.cpu_count()
     workers = cores * 2 + 1

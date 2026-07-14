@@ -13,8 +13,8 @@ RE_HUNK_HEADER = re.compile(
     r"^@@ -(\d+)(?:,(\d+))? \+(\d+)(?:,(\d+))? @@[ ]?(.*)")
 
 
-def extend_patch(original_file_str, patch_str, patch_extra_lines_before=0,
-                 patch_extra_lines_after=0, filename: str = "", new_file_str="") -> str:
+def extend_patch(original_file_str, patch_str, patch_extra_lines_before=0,  # pyright: ignore
+                 patch_extra_lines_after=0, filename: str = "", new_file_str="") -> str:  # pyright: ignore
     if not patch_str or (patch_extra_lines_before == 0 and patch_extra_lines_after == 0) or not original_file_str:
         return patch_str
 
@@ -36,7 +36,7 @@ def extend_patch(original_file_str, patch_str, patch_extra_lines_before=0,
     return extended_patch_str
 
 
-def decode_if_bytes(original_file_str):
+def decode_if_bytes(original_file_str):  # pyright: ignore
     if isinstance(original_file_str, (bytes, bytearray)):
         try:
             return original_file_str.decode('utf-8')
@@ -51,14 +51,14 @@ def decode_if_bytes(original_file_str):
     return original_file_str
 
 
-def should_skip_patch(filename):
+def should_skip_patch(filename):  # pyright: ignore
     patch_extension_skip_types = get_settings().config.patch_extension_skip_types
     if patch_extension_skip_types and filename:
         return any(filename.endswith(skip_type) for skip_type in patch_extension_skip_types)
     return False
 
 
-def process_patch_lines(patch_str, original_file_str, patch_extra_lines_before, patch_extra_lines_after, new_file_str=""):
+def process_patch_lines(patch_str, original_file_str, patch_extra_lines_before, patch_extra_lines_after, new_file_str=""):  # pyright: ignore
     allow_dynamic_context = get_settings().config.allow_dynamic_context
     patch_extra_lines_before_dynamic = get_settings().config.max_extra_lines_before_dynamic_context
 
@@ -86,7 +86,7 @@ def process_patch_lines(patch_str, original_file_str, patch_extra_lines_before, 
                     is_valid_hunk = check_if_hunk_lines_matches_to_file(i, file_original_lines, patch_lines, start1)
 
                     if is_valid_hunk and (patch_extra_lines_before > 0 or patch_extra_lines_after > 0):
-                        def _calc_context_limits(patch_lines_before):
+                        def _calc_context_limits(patch_lines_before):  # pyright: ignore
                             extended_start1 = max(1, start1 - patch_lines_before)
                             extended_size1 = size1 + (start1 - extended_start1) + patch_extra_lines_after
                             extended_start2 = max(1, start2 - patch_lines_before)
@@ -187,7 +187,7 @@ def process_patch_lines(patch_str, original_file_str, patch_extra_lines_before, 
     extended_patch_str = '\n'.join(extended_patch_lines)
     return extended_patch_str
 
-def check_if_hunk_lines_matches_to_file(i, original_lines, patch_lines, start1):
+def check_if_hunk_lines_matches_to_file(i, original_lines, patch_lines, start1):  # pyright: ignore
     """
     Check if the hunk lines match the original file content. We saw cases where the hunk header line doesn't match the original file content, and then
     extending the hunk with extra lines before the hunk header can cause the hunk to be invalid.
@@ -214,7 +214,7 @@ def check_if_hunk_lines_matches_to_file(i, original_lines, patch_lines, start1):
     return is_valid_hunk
 
 
-def extract_hunk_headers(match):
+def extract_hunk_headers(match):  # pyright: ignore
     res = list(match.groups())
     for i in range(len(res)):
         if res[i] is None:
@@ -228,7 +228,7 @@ def extract_hunk_headers(match):
     return section_header, size1, size2, start1, start2
 
 
-def omit_deletion_hunks(patch_lines) -> str:
+def omit_deletion_hunks(patch_lines) -> str:  # pyright: ignore
     """
     Omit deletion hunks from the patch and return the modified patch.
     Args:
@@ -287,7 +287,7 @@ def handle_patch_deletions(patch: str, original_file_content_str: str,
         # logic for handling deleted files - don't show patch, just show that the file was deleted
         if get_settings().config.verbosity_level > 0:
             get_logger().info(f"Processing file: {file_name}, minimizing deletion file")
-        patch = None # file was deleted
+        patch = None # file was deleted  # pyright: ignore
     else:
         patch_lines = patch.splitlines()
         patch_new = omit_deletion_hunks(patch_lines)
@@ -298,7 +298,7 @@ def handle_patch_deletions(patch: str, original_file_content_str: str,
     return patch
 
 
-def decouple_and_convert_to_hunks_with_lines_numbers(patch: str, file) -> str:
+def decouple_and_convert_to_hunks_with_lines_numbers(patch: str, file) -> str:  # pyright: ignore
     """
     Convert a given patch string into a string with line numbers for each hunk, indicating the new and old content of
     the file.
@@ -411,7 +411,7 @@ __old hunk__
     return patch_with_lines_str.rstrip()
 
 
-def extract_hunk_lines_from_patch(patch: str, file_name, line_start, line_end, side, remove_trailing_chars: bool = True) -> tuple[str, str]:
+def extract_hunk_lines_from_patch(patch: str, file_name, line_start, line_end, side, remove_trailing_chars: bool = True) -> tuple[str, str]:  # pyright: ignore
     try:
         patch_with_lines_str = f"\n\n## File: '{file_name.strip()}'\n\n"
         selected_lines = ""

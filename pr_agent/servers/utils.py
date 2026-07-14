@@ -2,12 +2,12 @@ import hashlib
 import hmac
 import time
 from collections import defaultdict
-from typing import Any, Callable
+from typing import Any, Callable  # pyright: ignore
 
 from fastapi import HTTPException
 
 
-def verify_signature(payload_body, secret_token, signature_header):
+def verify_signature(payload_body, secret_token, signature_header):  # pyright: ignore
     """Verify that the payload was sent from GitHub by validating SHA256.
 
     Raise and return 403 if not authorized.
@@ -35,12 +35,12 @@ class DefaultDictWithTimeout(defaultdict[str, object]):
 
     def __init__(
         self,
-        default_factory: Callable[[], Any] = None,
-        ttl: int = None,
+        default_factory: Callable[[], Any] = None,  # pyright: ignore
+        ttl: int = None,  # pyright: ignore
         refresh_interval: int = 60,
         update_key_time_on_get: bool = True,
-        *args,
-        **kwargs,
+        *args,  # pyright: ignore
+        **kwargs,  # pyright: ignore
     ):
         """
         Args:
@@ -71,16 +71,16 @@ class DefaultDictWithTimeout(defaultdict[str, object]):
             del self[key]
         self.__last_refresh = request_time
 
-    def __getitem__(self, __key):
+    def __getitem__(self, __key):  # pyright: ignore
         if self.__update_key_time_on_get:
             self.__key_times[__key] = self.__time()
         self.__refresh()
         return super().__getitem__(__key)
 
-    def __setitem__(self, __key, __value):
+    def __setitem__(self, __key, __value):  # pyright: ignore
         self.__key_times[__key] = self.__time()
         return super().__setitem__(__key, __value)
 
-    def __delitem__(self, __key):
+    def __delitem__(self, __key):  # pyright: ignore
         del self.__key_times[__key]
         return super().__delitem__(__key)

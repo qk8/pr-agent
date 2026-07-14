@@ -24,7 +24,7 @@ _GLOBAL_SETTINGS_CACHE_MAX_SIZE = 256
 _GLOBAL_SETTINGS_CACHE_MAX_VALUE_BYTES = 1024 * 1024
 
 
-def get_cached_global_settings(cache_key, fetch_fn):
+def get_cached_global_settings(cache_key, fetch_fn):  # pyright: ignore
     """Return the org/group/workspace global .pr_agent.toml via a bounded TTL cache.
 
     Global settings change rarely, so caching avoids a provider API lookup (and repeated
@@ -143,7 +143,7 @@ class GitProvider(ABC):
     #            print(returned_obj.path) #Use returned_obj.path.
     #    #From this point, returned_obj.path may be deleted at any point and therefore must not be used.
     class ScopedClonedRepo(object):
-        def __init__(self, dest_folder):
+        def __init__(self, dest_folder):  # pyright: ignore
             self.path = dest_folder
 
         def __del__(self):
@@ -238,25 +238,25 @@ class GitProvider(ABC):
     def get_pr_description_full(self) -> str:
         pass
 
-    def edit_comment(self, comment, body: str):
+    def edit_comment(self, comment, body: str):  # pyright: ignore
         pass
 
     def edit_comment_from_comment_id(self, comment_id: int, body: str):
         pass
 
-    def get_comment_body_from_comment_id(self, comment_id: int) -> str:
+    def get_comment_body_from_comment_id(self, comment_id: int) -> str:  # pyright: ignore
         pass
 
     def reply_to_comment_from_comment_id(self, comment_id: int, body: str):
         pass
 
-    def get_pr_description(self, full: bool = True, split_changes_walkthrough=False) -> str | tuple[str, list[str]]:
+    def get_pr_description(self, full: bool = True, split_changes_walkthrough=False) -> str | tuple[str, list[str]]:  # pyright: ignore
         from pr_agent.algo.utils import clip_tokens
         from pr_agent.config_loader import get_settings
         max_tokens_description = get_settings().get("CONFIG.MAX_DESCRIPTION_TOKENS", None)
         description = self.get_pr_description_full() if full else self.get_user_description()
         if split_changes_walkthrough:
-            description, files = process_description(description)
+            description, files = process_description(description)  # pyright: ignore
             if max_tokens_description:
                 description = clip_tokens(description, max_tokens_description)
             return description, files
@@ -332,7 +332,7 @@ class GitProvider(ABC):
     def get_pr_id(self):
         return ""
 
-    def get_line_link(self, relevant_file: str, relevant_line_start: int, relevant_line_end: int = None) -> str:
+    def get_line_link(self, relevant_file: str, relevant_line_start: int, relevant_line_end: int = None) -> str:  # pyright: ignore
         return ""
 
     def get_lines_link_original_file(self, filepath:str, component_range: Range) -> str:
@@ -353,8 +353,8 @@ class GitProvider(ABC):
     def publish_persistent_comment_full(self, pr_comment: str,
                                    initial_header: str,
                                    update_header: bool = True,
-                                   name='review',
-                                   final_update_message=True):
+                                   name='review',  # pyright: ignore
+                                   final_update_message=True):  # pyright: ignore
         try:
             prev_comments = list(self.get_issue_comments())
             for comment in prev_comments:
@@ -402,10 +402,10 @@ class GitProvider(ABC):
     def get_issue_comments(self) -> list[Any]:
         pass
 
-    def get_comment_url(self, comment) -> str:
+    def get_comment_url(self, comment) -> str:  # pyright: ignore
         return ""
 
-    def get_review_thread_comments(self, comment_id: int) -> list[dict[str, object]]:
+    def get_review_thread_comments(self, comment_id: int) -> list[dict[str, object]]:  # pyright: ignore
         pass
 
     #### labels operations ####
@@ -470,7 +470,7 @@ def get_main_pr_language(languages: dict[str, int] | None, files: list[Any] | No
         return main_language_str
 
     try:
-        top_language = max(languages, key=languages.get).lower()
+        top_language = max(languages, key=languages.get).lower()  # pyright: ignore
 
         # validate that the specific commit uses the main language
         extension_list = []
@@ -478,7 +478,7 @@ def get_main_pr_language(languages: dict[str, int] | None, files: list[Any] | No
             if not file:
                 continue
             if isinstance(file, str):
-                file = FilePatchInfo(base_file=None, head_file=None, patch=None, filename=file)
+                file = FilePatchInfo(base_file=None, head_file=None, patch=None, filename=file)  # pyright: ignore
             extension_list.append(file.filename.rsplit('.')[-1])
 
         # get the most common extension

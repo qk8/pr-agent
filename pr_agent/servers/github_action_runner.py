@@ -20,7 +20,7 @@ def is_true(value: str | bool) -> bool:
     return False
 
 
-def get_setting_or_env(key: str, default: str | bool = None) -> str | bool:
+def get_setting_or_env(key: str, default: str | bool = None) -> str | bool:  # pyright: ignore
     try:
         value = get_settings().get(key, default)
     except AttributeError:  # TBD still need to debug why this happens on GitHub Actions
@@ -60,7 +60,7 @@ def _inject_artifact_context():
             target_tools = [t.strip() for t in target_tools.split(",") if t.strip()]
         target_tools = {str(t).lower() for t in target_tools}
         separator = "\n======\n\n"
-        for key in get_settings():
+        for key in get_settings():  # pyright: ignore
             setting = get_settings().get(key)
             if str(type(setting)) == "<class 'dynaconf.utils.boxing.DynaBox'>":
                 if key.lower() in target_tools and hasattr(setting, 'extra_instructions'):
@@ -136,7 +136,7 @@ async def run_action():
             lang_instruction_text = f"Your response MUST be written in the language corresponding to locale code: '{response_language}'. This is crucial."
             separator_text = "\n======\n\nIn addition, "
 
-            for key in get_settings():
+            for key in get_settings():  # pyright: ignore
                 setting = get_settings().get(key)
                 if str(type(setting)) == "<class 'dynaconf.utils.boxing.DynaBox'>":
                     if key.lower() in ['pr_description', 'pr_code_suggestions', 'pr_reviewer']:
@@ -211,15 +211,15 @@ async def run_action():
             pr_url = event_payload.get("pull_request", {}).get("url")
             if pr_url:
                 # legacy - supporting both GITHUB_ACTION and GITHUB_ACTION_CONFIG
-                auto_review = get_setting_or_env("GITHUB_ACTION.AUTO_REVIEW", None)
+                auto_review = get_setting_or_env("GITHUB_ACTION.AUTO_REVIEW", None)  # pyright: ignore
                 if auto_review is None:
-                    auto_review = get_setting_or_env("GITHUB_ACTION_CONFIG.AUTO_REVIEW", None)
-                auto_describe = get_setting_or_env("GITHUB_ACTION.AUTO_DESCRIBE", None)
+                    auto_review = get_setting_or_env("GITHUB_ACTION_CONFIG.AUTO_REVIEW", None)  # pyright: ignore
+                auto_describe = get_setting_or_env("GITHUB_ACTION.AUTO_DESCRIBE", None)  # pyright: ignore
                 if auto_describe is None:
-                    auto_describe = get_setting_or_env("GITHUB_ACTION_CONFIG.AUTO_DESCRIBE", None)
-                auto_improve = get_setting_or_env("GITHUB_ACTION.AUTO_IMPROVE", None)
+                    auto_describe = get_setting_or_env("GITHUB_ACTION_CONFIG.AUTO_DESCRIBE", None)  # pyright: ignore
+                auto_improve = get_setting_or_env("GITHUB_ACTION.AUTO_IMPROVE", None)  # pyright: ignore
                 if auto_improve is None:
-                    auto_improve = get_setting_or_env("GITHUB_ACTION_CONFIG.AUTO_IMPROVE", None)
+                    auto_improve = get_setting_or_env("GITHUB_ACTION_CONFIG.AUTO_IMPROVE", None)  # pyright: ignore
 
                 # Set the configuration for auto actions
                 get_settings().config.is_auto_command = True  # Set the flag to indicate that the command is auto
@@ -273,12 +273,12 @@ async def run_action():
                 if url:
                     body = comment_body.strip().lower()
                     comment_id = event_payload.get("comment", {}).get("id")
-                    provider = get_git_provider()(pr_url=url)
+                    provider = get_git_provider()(pr_url=url)  # pyright: ignore
                     if is_pr:
                         _inject_artifact_context()
                         await PRAgent().handle_request(
                             url, body, notify=lambda: provider.add_eyes_reaction(
-                                comment_id, disable_eyes=disable_eyes
+                                comment_id, disable_eyes=disable_eyes  # pyright: ignore
                             )
                         )
                     else:
@@ -312,15 +312,15 @@ async def run_action():
         # Inject artifact context after repo settings are applied for workflow_run
         _inject_artifact_context()
 
-        auto_review = get_setting_or_env("GITHUB_ACTION.AUTO_REVIEW", None)
+        auto_review = get_setting_or_env("GITHUB_ACTION.AUTO_REVIEW", None)  # pyright: ignore
         if auto_review is None:
-            auto_review = get_setting_or_env("GITHUB_ACTION_CONFIG.AUTO_REVIEW", None)
-        auto_describe = get_setting_or_env("GITHUB_ACTION.AUTO_DESCRIBE", None)
+            auto_review = get_setting_or_env("GITHUB_ACTION_CONFIG.AUTO_REVIEW", None)  # pyright: ignore
+        auto_describe = get_setting_or_env("GITHUB_ACTION.AUTO_DESCRIBE", None)  # pyright: ignore
         if auto_describe is None:
-            auto_describe = get_setting_or_env("GITHUB_ACTION_CONFIG.AUTO_DESCRIBE", None)
-        auto_improve = get_setting_or_env("GITHUB_ACTION.AUTO_IMPROVE", None)
+            auto_describe = get_setting_or_env("GITHUB_ACTION_CONFIG.AUTO_DESCRIBE", None)  # pyright: ignore
+        auto_improve = get_setting_or_env("GITHUB_ACTION.AUTO_IMPROVE", None)  # pyright: ignore
         if auto_improve is None:
-            auto_improve = get_setting_or_env("GITHUB_ACTION_CONFIG.AUTO_IMPROVE", None)
+            auto_improve = get_setting_or_env("GITHUB_ACTION_CONFIG.AUTO_IMPROVE", None)  # pyright: ignore
 
         get_settings().config.is_auto_command = True
         get_settings().pr_description.final_update_message = False

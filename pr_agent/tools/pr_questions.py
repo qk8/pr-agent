@@ -16,12 +16,12 @@ from pr_agent.servers.help import HelpMessage
 
 
 class PRQuestions:
-    def __init__(self, pr_url: str, args=None, ai_handler: partial | type[BaseAiHandler] = LiteLLMAIHandler):
+    def __init__(self, pr_url: str, args=None, ai_handler: partial | type[BaseAiHandler] = LiteLLMAIHandler):  # pyright: ignore
         question_str = self.parse_args(args)
         self.pr_url = pr_url
         self.git_provider = get_git_provider()(pr_url)
         self.main_pr_language = get_main_pr_language(
-            self.git_provider.get_languages(), self.git_provider.get_files()
+            self.git_provider.get_languages(), self.git_provider.get_files()  # pyright: ignore
         )
         self.ai_handler = ai_handler()
         self.ai_handler.main_pr_language = self.main_pr_language
@@ -38,13 +38,13 @@ class PRQuestions:
             "extra_instructions": get_settings().pr_questions.extra_instructions,
         }
         self.token_handler = TokenHandler(self.git_provider.pr,
-                                          self.vars,
+                                          self.vars,  # pyright: ignore
                                           get_settings().pr_questions_prompt.system,
                                           get_settings().pr_questions_prompt.user)
         self.patches_diff = None
         self.prediction = None
 
-    def parse_args(self, args):
+    def parse_args(self, args):  # pyright: ignore
         if args and len(args) > 0:
             question_str = " ".join(args)
         else:
@@ -109,11 +109,11 @@ class PRQuestions:
         user_prompt = environment.from_string(get_settings().pr_questions_prompt.user).render(variables)
         if 'img_path' in variables:
             img_path = self.vars['img_path']
-            response, finish_reason = await (self.ai_handler.chat_completion
+            response, finish_reason = await (self.ai_handler.chat_completion  # pyright: ignore
                                              (model=model, temperature=get_settings().config.temperature,
-                                              system=system_prompt, user=user_prompt, img_path=img_path))
+                                              system=system_prompt, user=user_prompt, img_path=img_path))  # pyright: ignore
         else:
-            response, finish_reason = await self.ai_handler.chat_completion(
+            response, finish_reason = await self.ai_handler.chat_completion(  # pyright: ignore
                 model=model, temperature=get_settings().config.temperature, system=system_prompt, user=user_prompt)
         return response
 

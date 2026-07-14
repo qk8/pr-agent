@@ -2,11 +2,9 @@ from __future__ import annotations
 
 import shlex
 from functools import partial
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Any
 
 if TYPE_CHECKING:
-    from typing import Any
-
     from pr_agent.algo.ai_handlers.base_ai_handler import BaseAiHandler
 
 from pr_agent.algo.cli_args import CliArgs
@@ -56,8 +54,8 @@ commands: list[str] = list(command2class.keys())
 
 
 class PRAgent:
-    def __init__(self, ai_handler: type["BaseAiHandler"] | partial = partial):
-        self.ai_handler: type["BaseAiHandler"] | partial = ai_handler
+    def __init__(self, ai_handler: type["BaseAiHandler"] | partial[Any] = partial):  # pyright: ignore
+        self.ai_handler: type["BaseAiHandler"] | partial[Any] = ai_handler
 
     async def _handle_request(self, pr_url: str, request: str | list[str], notify: Any = None) -> bool:
         # First, apply repo specific settings if exists

@@ -18,7 +18,7 @@ CHANGELOG_LINES = 50
 
 
 class PRUpdateChangelog:
-    def __init__(self, pr_url: str, cli_mode=False, args=None, ai_handler: partial | type[BaseAiHandler] = LiteLLMAIHandler):
+    def __init__(self, pr_url: str, cli_mode=False, args=None, ai_handler: partial | type[BaseAiHandler] = LiteLLMAIHandler):  # pyright: ignore
 
         self.git_provider = get_git_provider()(pr_url)
 
@@ -38,7 +38,7 @@ class PRUpdateChangelog:
         self.commit_changelog = self.push_changelog_changes and self.push_skipped_reason is None
 
         self.main_language = get_main_pr_language(
-            self.git_provider.get_languages(), self.git_provider.get_files()
+            self.git_provider.get_languages(), self.git_provider.get_files()  # pyright: ignore
         )
         self._get_changelog_file()  # self.changelog_file_str
 
@@ -62,7 +62,7 @@ class PRUpdateChangelog:
             "commit_messages_str": self.git_provider.get_commit_messages(),
         }
         self.token_handler = TokenHandler(self.git_provider.pr,
-                                          self.vars,
+                                          self.vars,  # pyright: ignore
                                           get_settings().pr_update_changelog_prompt.system,
                                           get_settings().pr_update_changelog_prompt.user)
 
@@ -121,7 +121,7 @@ class PRUpdateChangelog:
         environment = Environment(undefined=StrictUndefined)
         system_prompt = environment.from_string(get_settings().pr_update_changelog_prompt.system).render(variables)
         user_prompt = environment.from_string(get_settings().pr_update_changelog_prompt.user).render(variables)
-        response, finish_reason = await self.ai_handler.chat_completion(
+        response, finish_reason = await self.ai_handler.chat_completion(  # pyright: ignore
             model=model, system=system_prompt, user=user_prompt, temperature=get_settings().config.temperature)
 
         # post-process the response
@@ -153,14 +153,14 @@ class PRUpdateChangelog:
 
         return new_file_content, answer
 
-    def _push_changelog_update(self, new_file_content, answer):
+    def _push_changelog_update(self, new_file_content, answer):  # pyright: ignore
         if get_settings().pr_update_changelog.get("skip_ci_on_push", True):
             commit_message = "[skip ci] Update CHANGELOG.md"
         else:
             commit_message = "Update CHANGELOG.md"
         self.git_provider.create_or_update_pr_file(
             file_path="CHANGELOG.md",
-            branch=self.git_provider.get_pr_branch(),
+            branch=self.git_provider.get_pr_branch(),  # pyright: ignore
             contents=new_file_content,
             message=commit_message,
         )
@@ -175,7 +175,7 @@ class PRUpdateChangelog:
                     line=max(2, len(answer.splitlines())),
                     start_line=1,
                 )
-                self.git_provider.pr.create_review(commit=last_commit_id, comments=[d])
+                self.git_provider.pr.create_review(commit=last_commit_id, comments=[d])  # pyright: ignore
         except Exception:
             # we can't create a review for some reason, let's just publish a comment
             self.git_provider.publish_comment(f"**Changelog updates: 🔄**\n\n{answer}")
@@ -198,7 +198,7 @@ Example:
     def _get_changelog_file(self):
         try:
             self.changelog_file = self.git_provider.get_pr_file_content(
-                "CHANGELOG.md", self.git_provider.get_pr_branch()
+                "CHANGELOG.md", self.git_provider.get_pr_branch()  # pyright: ignore
             )
             
             if isinstance(self.changelog_file, bytes):

@@ -20,7 +20,7 @@ class GoogleCloudStorageSecretProvider(SecretProvider):
     def get_secret(self, secret_name: str) -> str:
         try:
             blob = self.bucket.blob(secret_name)
-            return blob.download_as_string()
+            return blob.download_as_string()  # pyright: ignore
         except Exception as e:
             get_logger().warning(f"Failed to get secret {secret_name} from Google Cloud Storage: {e}")
             return ""

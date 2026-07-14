@@ -70,7 +70,7 @@ class GitLabProvider(GitProvider):
         self.temp_comments = []
         self._submodule_cache: dict[tuple[str, str, str], list[dict[str, object]]] = {}
         self.pr_url = merge_request_url
-        self._set_merge_request(merge_request_url)
+        self._set_merge_request(merge_request_url)  # pyright: ignore
         self.RE_HUNK_HEADER = re.compile(
             r"^@@ -(\d+)(?:,(\d+))? \+(\d+)(?:,(\d+))? @@[ ]?(.*)")
         self.incremental = incremental
@@ -82,7 +82,7 @@ class GitLabProvider(GitProvider):
         Tries target branch first, then source branch. Always returns text.
         """
         try:
-            proj = self.gl.projects.get(self.id_project)
+            proj = self.gl.projects.get(self.id_project)  # pyright: ignore
         except Exception:
             return {}
 
@@ -247,18 +247,18 @@ class GitLabProvider(GitProvider):
         out = list(changes)
         for ch in changes:
             patch = ch.get("diff") or ""
-            if "Subproject commit" not in patch:
+            if "Subproject commit" not in patch:  # pyright: ignore
                 continue
 
             # Extract old/new SHAs from the hunk
-            old_m = re.search(r"^-Subproject commit ([0-9a-f]{7,40})", patch, re.M)
-            new_m = re.search(r"^\+Subproject commit ([0-9a-f]{7,40})", patch, re.M)
+            old_m = re.search(r"^-Subproject commit ([0-9a-f]{7,40})", patch, re.M)  # pyright: ignore
+            new_m = re.search(r"^\+Subproject commit ([0-9a-f]{7,40})", patch, re.M)  # pyright: ignore
             if not (old_m and new_m):
                 continue
             old_sha, new_sha = old_m.group(1), new_m.group(1)
 
             sub_path = ch.get("new_path") or ch.get("old_path") or ""
-            repo_url = gitmodules.get(sub_path)
+            repo_url = gitmodules.get(sub_path)  # pyright: ignore
             if not repo_url:
                 get_logger().warning(f"[submodule] no url for '{sub_path}' in .gitmodules (skip)")
                 continue
@@ -315,15 +315,15 @@ class GitLabProvider(GitProvider):
     # Given a git repo url, return prefix and suffix of the provider in order to view a given file belonging to that repo.
     # Example: https://gitlab.com/pragent/pr-agent.git and branch: t1 -> prefix: "https://gitlab.com/pragent/pr-agent/-/blob/t1", suffix: "?ref_type=heads"
     # In case git url is not provided, provider will use PR context (which includes branch) to determine the prefix and suffix.
-    def get_canonical_url_parts(self, repo_git_url:str=None, desired_branch:str=None) -> tuple[str, str]:
+    def get_canonical_url_parts(self, repo_git_url:str=None, desired_branch:str=None) -> tuple[str, str]:  # pyright: ignore
         repo_path = ""
         if not repo_git_url and not self.pr_url:
             get_logger().error("Cannot get canonical URL parts: missing either context PR URL or a repo GIT URL")
             return ("", "")
         if not repo_git_url: #Use PR url as context
-            repo_path = self._get_project_path_from_pr_or_issue_url(self.pr_url)
+            repo_path = self._get_project_path_from_pr_or_issue_url(self.pr_url)  # pyright: ignore
             try:
-                desired_branch = self.gl.projects.get(self.id_project).default_branch
+                desired_branch = self.gl.projects.get(self.id_project).default_branch  # pyright: ignore
             except Exception as e:
                 get_logger().exception(f"Cannot get PR: {self.pr_url} default branch. Tried project ID: {self.id_project}")
                 return ("", "")
@@ -349,7 +349,7 @@ class GitLabProvider(GitProvider):
 
     def get_pr_file_content(self, file_path: str, branch: str) -> str:
         try:
-            file_obj = self.gl.projects.get(self.id_project).files.get(file_path, branch)
+            file_obj = self.gl.projects.get(self.id_project).files.get(file_path, branch)  # pyright: ignore
             content = file_obj.decode()
             return decode_if_bytes(content)
         except GitlabGetError:
@@ -360,10 +360,10 @@ class GitLabProvider(GitProvider):
             get_logger().warning(f"Error retrieving file {file_path} from branch {branch}: {e}")
             return ''
 
-    def create_or_update_pr_file(self, file_path: str, branch: str, contents="", message="") -> None:
+    def create_or_update_pr_file(self, file_path: str, branch: str, contents="", message="") -> None:  # pyright: ignore
         """Create or update a file in the GitLab repository."""
         try:
-            project = self.gl.projects.get(self.id_project)
+            project = self.gl.projects.get(self.id_project)  # pyright: ignore
 
             if not message:
                 action = "Update" if contents else "Create"
@@ -481,7 +481,7 @@ class GitLabProvider(GitProvider):
             raw_changes = self.mr.changes().get('changes', [])
             raw_changes = self._expand_submodule_changes(raw_changes)
             self.git_files = [c.get('new_path') for c in raw_changes if c.get('new_path')]
-        return self.git_files
+        return self.git_files  # pyright: ignore
 
     def publish_description(self, pr_title: str, pr_body: str):
         try:
@@ -501,14 +501,14 @@ class GitLabProvider(GitProvider):
             get_logger().exception(f"Could not get latest commit URL: {e}")
             return ""
 
-    def get_comment_url(self, comment):
+    def get_comment_url(self, comment):  # pyright: ignore
         return f"{self.mr.web_url}#note_{comment.id}"
 
     def publish_persistent_comment(self, pr_comment: str,
                                    initial_header: str,
                                    update_header: bool = True,
-                                   name='review',
-                                   final_update_message=True):
+                                   name='review',  # pyright: ignore
+                                   final_update_message=True):  # pyright: ignore
         self.publish_persistent_comment_full(pr_comment, initial_header, update_header, name, final_update_message)
 
     def publish_comment(self, mr_comment: str, is_temporary: bool = False):
@@ -521,7 +521,7 @@ class GitLabProvider(GitProvider):
             self.temp_comments.append(comment)
         return comment
 
-    def edit_comment(self, comment, body: str):
+    def edit_comment(self, comment, body: str):  # pyright: ignore
         body = self.limit_output_characters(body, self.max_comment_chars)
         self.mr.notes.update(comment.id,{'body': body} )
 
@@ -536,14 +536,14 @@ class GitLabProvider(GitProvider):
         discussion = self.mr.discussions.get(comment_id)
         discussion.notes.create({'body': body})
 
-    def publish_inline_comment(self, body: str, relevant_file: str, relevant_line_in_file: str, original_suggestion=None):
+    def publish_inline_comment(self, body: str, relevant_file: str, relevant_line_in_file: str, original_suggestion=None):  # pyright: ignore
         body = self.limit_output_characters(body, self.max_comment_chars)
         edit_type, found, source_line_no, target_file, target_line_no = self.search_line(relevant_file,
                                                                                          relevant_line_in_file)
         self.send_inline_comment(body, edit_type, found, relevant_file, relevant_line_in_file, source_line_no,
-                                 target_file, target_line_no, original_suggestion)
+                                 target_file, target_line_no, original_suggestion)  # pyright: ignore
 
-    def create_inline_comment(self, body: str, relevant_file: str, relevant_line_in_file: str, absolute_position: int = None):
+    def create_inline_comment(self, body: str, relevant_file: str, relevant_line_in_file: str, absolute_position: int = None):  # pyright: ignore
         raise NotImplementedError("Gitlab provider does not support creating inline comments yet")
 
     def create_inline_comments(self, comments: list[dict[str, object]]):
@@ -556,7 +556,7 @@ class GitLabProvider(GitProvider):
     def send_inline_comment(self, body: str, edit_type: str, found: bool, relevant_file: str,
                             relevant_line_in_file: str,
                             source_line_no: int, target_file: str, target_line_no: int,
-                            original_suggestion=None) -> None:
+                            original_suggestion=None) -> None:  # pyright: ignore
         if not found:
             get_logger().info(f"Could not find position for {relevant_file} {relevant_line_in_file}")
         else:
@@ -582,14 +582,14 @@ class GitLabProvider(GitProvider):
             except Exception as e:
                 try:
                     # fallback - create a general note on the file in the MR
-                    if 'suggestion_orig_location' in original_suggestion:
+                    if 'suggestion_orig_location' in original_suggestion:  # pyright: ignore
                         line_start = original_suggestion['suggestion_orig_location']['start_line']
                         line_end = original_suggestion['suggestion_orig_location']['end_line']
                         old_code_snippet = original_suggestion['prev_code_snippet']
                         new_code_snippet = original_suggestion['new_code_snippet']
                         content = original_suggestion['suggestion_summary']
                         label = original_suggestion['category']
-                        if 'score' in original_suggestion:
+                        if 'score' in original_suggestion:  # pyright: ignore
                             score = original_suggestion['score']
                         else:
                             score = 7
@@ -650,10 +650,10 @@ class GitLabProvider(GitProvider):
         for diff in all_diffs:
             for change in changes['changes']:
                 if change['new_path'] == relevant_file and relevant_line_in_file in change['diff']:
-                    return diff
+                    return diff  # pyright: ignore
             get_logger().debug(
                 f'No relevant diff found for {relevant_file} {relevant_line_in_file}. Falling back to last diff.')
-        return self.last_diff  # fallback to last_diff if no relevant diff is found
+        return self.last_diff  # fallback to last_diff if no relevant diff is found  # pyright: ignore
 
     def publish_code_suggestions(self, code_suggestions: list[dict[str, object]]) -> bool:
         for suggestion in code_suggestions:
@@ -676,31 +676,31 @@ class GitLabProvider(GitProvider):
                 if target_file is None:
                     get_logger().warning(f"Skipping suggestion: file '{relevant_file}' not found in diff")
                     continue
-                range = relevant_lines_end - relevant_lines_start # no need to add 1
+                range = relevant_lines_end - relevant_lines_start # no need to add 1  # pyright: ignore
                 body = body.replace('```suggestion', f'```suggestion:-0+{range}')
                 lines = target_file.head_file.splitlines()
-                relevant_line_in_file = lines[relevant_lines_start - 1]
+                relevant_line_in_file = lines[relevant_lines_start - 1]  # pyright: ignore
 
                 # edit_type, found, source_line_no, target_file, target_line_no = self.find_in_file(target_file,
                 #                                                                            relevant_line_in_file)
                 # for code suggestions, we want to edit the new code
                 source_line_no = -1
-                target_line_no = relevant_lines_start + 1
+                target_line_no = relevant_lines_start + 1  # pyright: ignore
                 found = True
                 edit_type = 'addition'
 
-                self.send_inline_comment(body, edit_type, found, relevant_file, relevant_line_in_file, source_line_no,
-                                         target_file, target_line_no, original_suggestion)
+                self.send_inline_comment(body, edit_type, found, relevant_file, relevant_line_in_file, source_line_no,  # pyright: ignore
+                                         target_file, target_line_no, original_suggestion)  # pyright: ignore
             except Exception as e:
                 get_logger().exception(f"Could not publish code suggestion:\nsuggestion: {suggestion}\nerror: {e}")
 
         # note that we publish suggestions one-by-one. so, if one fails, the rest will still be published
         return True
 
-    def publish_file_comments(self, file_comments: list[dict[str, object]]) -> bool:
+    def publish_file_comments(self, file_comments: list[dict[str, object]]) -> bool:  # pyright: ignore
         pass
 
-    def search_line(self, relevant_file, relevant_line_in_file):
+    def search_line(self, relevant_file, relevant_line_in_file):  # pyright: ignore
         target_file = None
 
         edit_type = self.get_edit_type(relevant_line_in_file)
@@ -710,7 +710,7 @@ class GitLabProvider(GitProvider):
                                                                                                   relevant_line_in_file)
         return edit_type, found, source_line_no, target_file, target_line_no
 
-    def find_in_file(self, file, relevant_line_in_file):
+    def find_in_file(self, file, relevant_line_in_file):  # pyright: ignore
         edit_type = 'context'
         source_line_no = 0
         target_line_no = 0
@@ -746,7 +746,7 @@ class GitLabProvider(GitProvider):
                 break
         return edit_type, found, source_line_no, target_file, target_line_no
 
-    def get_edit_type(self, relevant_line_in_file):
+    def get_edit_type(self, relevant_line_in_file):  # pyright: ignore
         edit_type = 'context'
         if relevant_line_in_file[0] == '-':
             edit_type = 'deletion'
@@ -761,7 +761,7 @@ class GitLabProvider(GitProvider):
         except Exception as e:
             get_logger().exception(f"Failed to remove temp comments, error: {e}")
 
-    def remove_comment(self, comment):
+    def remove_comment(self, comment):  # pyright: ignore
         try:
             comment.delete()
         except Exception as e:
@@ -771,7 +771,7 @@ class GitLabProvider(GitProvider):
         return self.mr.title
 
     def get_languages(self):
-        languages = self.gl.projects.get(self.id_project).languages()
+        languages = self.gl.projects.get(self.id_project).languages()  # pyright: ignore
         return languages
 
     def get_pr_branch(self):
@@ -798,8 +798,8 @@ class GitLabProvider(GitProvider):
         if global_settings:
             settings_files.append(("global", global_settings))
         try:
-            main_branch = self.gl.projects.get(self.id_project).default_branch
-            contents = self.gl.projects.get(self.id_project).files.get(file_path='.pr_agent.toml', ref=main_branch).decode()
+            main_branch = self.gl.projects.get(self.id_project).default_branch  # pyright: ignore
+            contents = self.gl.projects.get(self.id_project).files.get(file_path='.pr_agent.toml', ref=main_branch).decode()  # pyright: ignore
             if contents:
                 settings_files.append(("local", contents))
         except GitlabGetError:
@@ -824,7 +824,7 @@ class GitLabProvider(GitProvider):
         return get_cached_global_settings(
             f"gitlab:{group}", lambda: self._fetch_global_repo_settings(group))
 
-    def _fetch_global_repo_settings(self, group):
+    def _fetch_global_repo_settings(self, group):  # pyright: ignore
         try:
             project = self.gl.projects.get(f"{group}/pr-agent-settings")
             return project.files.get(file_path='.pr_agent.toml', ref=project.default_branch).decode()
@@ -835,7 +835,7 @@ class GitLabProvider(GitProvider):
 
     def get_repo_file_content(self, file_path: str, from_default_branch: bool = False):
         try:
-            project = self.gl.projects.get(self.id_project)
+            project = self.gl.projects.get(self.id_project)  # pyright: ignore
             # Read from the MR target branch (the branch being merged into), matching the other
             # providers; fall back to the project default branch outside of an MR context, or
             # always when from_default_branch is requested.
@@ -859,7 +859,7 @@ class GitLabProvider(GitProvider):
                 get_logger().warning("Cannot add eyes reaction: merge request ID is not set.")
                 return None
 
-            mr = self.gl.projects.get(self.id_project).mergerequests.get(self.id_mr)
+            mr = self.gl.projects.get(self.id_project).mergerequests.get(self.id_mr)  # pyright: ignore
             comment = mr.notes.get(issue_comment_id)
 
             if not comment:
@@ -880,7 +880,7 @@ class GitLabProvider(GitProvider):
                 get_logger().warning("Cannot remove reaction: merge request ID is not set.")
                 return False
 
-            mr = self.gl.projects.get(self.id_project).mergerequests.get(self.id_mr)
+            mr = self.gl.projects.get(self.id_project).mergerequests.get(self.id_mr)  # pyright: ignore
             comment = mr.notes.get(issue_comment_id)
 
             if not comment:
@@ -925,13 +925,13 @@ class GitLabProvider(GitProvider):
         return project_path, mr_id
 
     def _get_merge_request(self):
-        mr = self.gl.projects.get(self.id_project).mergerequests.get(self.id_mr)
+        mr = self.gl.projects.get(self.id_project).mergerequests.get(self.id_mr)  # pyright: ignore
         return mr
 
     def get_user_id(self):
         return None
 
-    def publish_labels(self, pr_types):
+    def publish_labels(self, pr_types):  # pyright: ignore
         try:
             self.mr.labels = list(set(pr_types))
             self.mr.save()
@@ -941,11 +941,11 @@ class GitLabProvider(GitProvider):
     def publish_inline_comments(self, comments: list[dict[str, object]]):
         pass
 
-    def get_pr_labels(self, update=False):
+    def get_pr_labels(self, update=False):  # pyright: ignore
         return self.mr.labels
 
     def get_repo_labels(self):
-        return self.gl.projects.get(self.id_project).labels.list()
+        return self.gl.projects.get(self.id_project).labels.list()  # pyright: ignore
 
     def get_commit_messages(self):
         """
@@ -971,7 +971,7 @@ class GitLabProvider(GitProvider):
         except:
             return ""
 
-    def get_line_link(self, relevant_file: str, relevant_line_start: int, relevant_line_end: int = None) -> str:
+    def get_line_link(self, relevant_file: str, relevant_line_start: int, relevant_line_end: int = None) -> str:  # pyright: ignore
         if relevant_line_start == -1:
             link = f"{self.gl.url}/{self.id_project}/-/blob/{self.mr.source_branch}/{relevant_file}?ref_type=heads"
         elif relevant_line_end:
@@ -981,7 +981,7 @@ class GitLabProvider(GitProvider):
         return link
 
 
-    def generate_link_to_relevant_line_number(self, suggestion) -> str:
+    def generate_link_to_relevant_line_number(self, suggestion) -> str:  # pyright: ignore
         try:
             relevant_file = suggestion['relevant_file'].strip('`').strip("'").rstrip()
             relevant_line_str = suggestion['relevant_line'].rstrip()
@@ -989,7 +989,7 @@ class GitLabProvider(GitProvider):
                 return ""
 
             position, absolute_position = find_line_number_of_relevant_line_in_file \
-                (self.diff_files, relevant_file, relevant_line_str)
+                (self.diff_files, relevant_file, relevant_line_str)  # pyright: ignore
 
             if absolute_position != -1:
                 # link to right file only

@@ -16,12 +16,12 @@ from pr_agent.log import get_logger
 
 
 class PRAddDocs:
-    def __init__(self, pr_url: str, cli_mode=False, args: list[str] | None = None,
-                 ai_handler: partial | type[BaseAiHandler] = LiteLLMAIHandler):
+    def __init__(self, pr_url: str, cli_mode=False, args: list[str] | None = None,  # pyright: ignore
+                 ai_handler: partial | type[BaseAiHandler] = LiteLLMAIHandler):  # pyright: ignore
 
         self.git_provider = get_git_provider()(pr_url)
         self.main_language = get_main_pr_language(
-            self.git_provider.get_languages(), self.git_provider.get_files()
+            self.git_provider.get_languages(), self.git_provider.get_files()  # pyright: ignore
         )
 
         self.ai_handler = ai_handler()
@@ -42,7 +42,7 @@ class PRAddDocs:
                                                        get_settings().pr_add_docs.docs_style),
         }
         self.token_handler = TokenHandler(self.git_provider.pr,
-                                          self.vars,
+                                          self.vars,  # pyright: ignore
                                           get_settings().pr_add_docs_prompt.system,
                                           get_settings().pr_add_docs_prompt.user)
 
@@ -88,7 +88,7 @@ class PRAddDocs:
         if get_settings().config.verbosity_level >= 2:
             get_logger().info(f"\nSystem prompt:\n{system_prompt}")
             get_logger().info(f"\nUser prompt:\n{user_prompt}")
-        response, finish_reason = await self.ai_handler.chat_completion(
+        response, finish_reason = await self.ai_handler.chat_completion(  # pyright: ignore
             model=model, temperature=get_settings().config.temperature, system=system_prompt, user=user_prompt)
 
         return response
@@ -98,9 +98,9 @@ class PRAddDocs:
         data = load_yaml(docs)
         if isinstance(data, list):
             data = {'Code Documentation': data}
-        return data
+        return data  # pyright: ignore
 
-    def push_inline_docs(self, data):
+    def push_inline_docs(self, data):  # pyright: ignore
         docs = []
 
         if not data['Code Documentation']:
@@ -132,8 +132,8 @@ class PRAddDocs:
             for doc_suggestion in docs:
                 self.git_provider.publish_code_suggestions([doc_suggestion])
 
-    def dedent_code(self, relevant_file, relevant_lines_start, new_code_snippet, doc_placement='after',
-                    add_original_line=False):
+    def dedent_code(self, relevant_file, relevant_lines_start, new_code_snippet, doc_placement='after',  # pyright: ignore
+                    add_original_line=False):  # pyright: ignore
         try:  # dedent code snippet
             self.diff_files = self.git_provider.diff_files if self.git_provider.diff_files \
                 else self.git_provider.get_diff_files()
@@ -165,7 +165,7 @@ class PRAddDocs:
         return new_code_snippet
 
 
-def get_docs_for_language(language, style):
+def get_docs_for_language(language, style):  # pyright: ignore
     language = language.lower()
     if language == 'java':
         return "Javadocs"

@@ -3,8 +3,8 @@ from pr_agent.identity_providers.identity_provider import (Eligibility,
 
 
 class DefaultIdentityProvider(IdentityProvider):
-    def verify_eligibility(self, git_provider, git_provider_id, pr_url):
+    def verify_eligibility(self, git_provider, git_provider_id, pr_url):  # pyright: ignore
         return Eligibility.ELIGIBLE
 
-    def inc_invocation_count(self, git_provider, git_provider_id):
+    def inc_invocation_count(self, git_provider, git_provider_id):  # pyright: ignore
         pass

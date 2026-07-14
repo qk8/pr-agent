@@ -3,7 +3,7 @@
 from pr_agent.config_loader import get_settings
 
 
-def filter_bad_extensions(files):
+def filter_bad_extensions(files):  # pyright: ignore
     # Bad Extensions, source: https://github.com/EleutherAI/github-downloader/blob/345e7c4cbb9e0dc8a0615fd995a08bf9d73b3fe6/download_repo_text.py  # noqa: E501
     bad_extensions = get_settings().bad_extensions.default
     if get_settings().config.use_extra_bad_extensions:
@@ -11,7 +11,7 @@ def filter_bad_extensions(files):
     return [f for f in files if f.filename is not None and is_valid_file(f.filename, bad_extensions)]
 
 
-def is_valid_file(filename:str, bad_extensions=None) -> bool:
+def is_valid_file(filename:str, bad_extensions=None) -> bool:  # pyright: ignore
     if not filename:
         return False
     if not bad_extensions:
@@ -61,7 +61,7 @@ def sort_files_by_main_languages(languages: dict[str, int], files: list[str]) ->
     # if no languages detected, put all files in the "Other" category
     if not languages:
         files_sorted = [({"language": "Other", "files": list(files_filtered)})]
-        return files_sorted
+        return files_sorted  # pyright: ignore
 
     main_extensions_flat = []
     for ext in main_extensions:

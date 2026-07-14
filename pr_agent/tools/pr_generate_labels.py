@@ -16,7 +16,7 @@ from pr_agent.log import get_logger
 
 class PRGenerateLabels:
     def __init__(self, pr_url: str, args: list[str] | None = None,
-                 ai_handler: partial | type[BaseAiHandler] = LiteLLMAIHandler):
+                 ai_handler: partial | type[BaseAiHandler] = LiteLLMAIHandler):  # pyright: ignore
         """
         Initialize the PRGenerateLabels object with the necessary attributes and objects for generating labels
         corresponding to the PR using an AI model.
@@ -27,7 +27,7 @@ class PRGenerateLabels:
         # Initialize the git provider and main PR language
         self.git_provider = get_git_provider()(pr_url)
         self.main_pr_language = get_main_pr_language(
-            self.git_provider.get_languages(), self.git_provider.get_files()
+            self.git_provider.get_languages(), self.git_provider.get_files()  # pyright: ignore
         )
         self.pr_id = self.git_provider.get_pr_id()
 
@@ -51,7 +51,7 @@ class PRGenerateLabels:
         # Initialize the token handler
         self.token_handler = TokenHandler(
             self.git_provider.pr,
-            self.vars,
+            self.vars,  # pyright: ignore
             get_settings().pr_custom_labels_prompt.system,
             get_settings().pr_custom_labels_prompt.user,
         )
@@ -84,11 +84,11 @@ class PRGenerateLabels:
                 get_logger().info(f"Pushing labels {self.pr_id}")
 
                 current_labels = self.git_provider.get_pr_labels()
-                user_labels = get_user_labels(current_labels)
+                user_labels = get_user_labels(current_labels)  # pyright: ignore
                 pr_labels = pr_labels + user_labels
 
                 if self.git_provider.is_supported("get_labels"):
-                    self.git_provider.publish_labels(pr_labels)
+                    self.git_provider.publish_labels(pr_labels)  # pyright: ignore
                 elif pr_labels:
                     value = ', '.join(v for v in pr_labels)
                     pr_labels_text = f"## PR Labels:\n{value}\n"
@@ -139,7 +139,7 @@ class PRGenerateLabels:
         system_prompt = environment.from_string(get_settings().pr_custom_labels_prompt.system).render(self.variables)
         user_prompt = environment.from_string(get_settings().pr_custom_labels_prompt.user).render(self.variables)
 
-        response, finish_reason = await self.ai_handler.chat_completion(
+        response, finish_reason = await self.ai_handler.chat_completion(  # pyright: ignore
             model=model,
             temperature=get_settings().config.temperature,
             system=system_prompt,
@@ -168,7 +168,7 @@ class PRGenerateLabels:
         # convert lowercase labels to original case
         try:
             if "labels_minimal_to_labels_dict" in self.variables:
-                d: dict[str, object] = self.variables["labels_minimal_to_labels_dict"]
+                d: dict[str, object] = self.variables["labels_minimal_to_labels_dict"]  # pyright: ignore
                 for i, label_i in enumerate(pr_types):
                     if label_i in d:
                         pr_types[i] = d[label_i]

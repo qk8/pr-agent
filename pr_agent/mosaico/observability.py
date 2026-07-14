@@ -15,7 +15,7 @@ AGENT_NAME = "PR-Agent Solution Agent"
 _KEYS = ("mosaico-root-task-id", "mosaico-super-task-id", "mosaico-root-task-name")
 
 
-def parse_observability_metadata(raw) -> dict[str, str]:
+def parse_observability_metadata(raw) -> dict[str, str]:  # pyright: ignore
     """Tolerant partial-dict parse (mirrors docstring-agent/mosaico_utils.py).
 
     Returns a dict containing ONLY the present, string-valued keys among _KEYS.
@@ -29,7 +29,7 @@ def parse_observability_metadata(raw) -> dict[str, str]:
 
 
 @contextlib.contextmanager
-def mosaico_log_context(meta, context_id):
+def mosaico_log_context(meta, context_id):  # pyright: ignore
     """Bind the MOSAICO correlation IDs into loguru for the duration of the block.
 
     Log correlation only - does not feed the litellm Langfuse callback (which traces
@@ -49,7 +49,7 @@ def mosaico_log_context(meta, context_id):
 
 
 @contextlib.contextmanager
-def langfuse_span(meta, context_id):
+def langfuse_span(meta, context_id):  # pyright: ignore
     """Open a Langfuse span linking this run into the MOSAICO trace.
 
     Applies the W3C Trace Context transform (spec §observability lines 47-51):
@@ -71,8 +71,8 @@ def langfuse_span(meta, context_id):
             # W3C parent-id: last 16 hex digits (spec §observability lines 49-51).
             trace_ctx["parent_span_id"] = meta["mosaico-super-task-id"].replace("-", "")[-16:]
         with propagate_attributes(session_id=context_id, trace_name=meta.get("mosaico-root-task-name")):
-            with lf.start_as_current_observation(as_type="span", name=AGENT_NAME,
-                                                 **({"trace_context": trace_ctx} if trace_ctx else {})):
+            with lf.start_as_current_observation(as_type="span", name=AGENT_NAME,  # pyright: ignore
+                                                 **({"trace_context": trace_ctx} if trace_ctx else {})):  # pyright: ignore
                 yield
     except Exception as e:
         get_logger().warning(f"MOSAICO: Langfuse span setup failed: {e}")

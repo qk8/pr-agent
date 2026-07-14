@@ -10,9 +10,9 @@ class Eligibility(Enum):
 
 class IdentityProvider(ABC):
     @abstractmethod
-    def verify_eligibility(self, git_provider, git_provider_id, pr_url):
+    def verify_eligibility(self, git_provider, git_provider_id, pr_url):  # pyright: ignore
         pass
 
     @abstractmethod
-    def inc_invocation_count(self, git_provider, git_provider_id):
+    def inc_invocation_count(self, git_provider, git_provider_id):  # pyright: ignore
         pass

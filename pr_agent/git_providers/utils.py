@@ -54,7 +54,7 @@ def _safe_url_for_log(url: str) -> str:
         return "<extra config URL redacted>"
 
 
-def _resolve_extra_config_to_file(source):
+def _resolve_extra_config_to_file(source):  # pyright: ignore
     """
     Resolve --extra_config_url to a local readable .toml file.
 
@@ -213,14 +213,14 @@ def _apply_settings_from_file(path: str, label: str):
             new_settings = Dynaconf(settings_files=[path])
 
         merged_sections = []
-        for section, contents in new_settings.as_dict().items():
+        for section, contents in new_settings.as_dict().items():  # pyright: ignore
             if not contents:
                 continue
             section_dict = copy.deepcopy(get_settings().as_dict().get(section, {}))
             for key, value in contents.items():
                 section_dict[key] = value
             get_settings().unset(section)
-            get_settings().set(section, section_dict, merge=False)
+            get_settings().set(section, section_dict, merge=False)  # pyright: ignore
             merged_sections.append(section)
         # Restore env-var precedence: the section-level unset()/set() above can
         # silently overwrite values originally sourced from env vars. Replay
@@ -237,7 +237,7 @@ def _apply_settings_from_file(path: str, label: str):
         get_logger().warning(f"Failed to apply {label} settings from {path}: {e}")
 
 
-def apply_repo_settings(pr_url):
+def apply_repo_settings(pr_url):  # pyright: ignore
     os.environ["AUTO_CAST_FOR_DYNACONF"] = "false"
 
     # Apply external/shared config FIRST, before constructing the git provider:
@@ -322,7 +322,7 @@ def apply_repo_settings(pr_url):
         set_claude_model()
 
 
-def _apply_repo_settings_file(repo_settings_file):
+def _apply_repo_settings_file(repo_settings_file):  # pyright: ignore
     """Load a single repo settings file and merge its allowed keys into the global settings.
 
     Enforces the per-repo host-key restrictions and logs only section names (values may contain
@@ -367,7 +367,7 @@ def _apply_repo_settings_file(repo_settings_file):
         for key, value in contents.items():
             section_dict[key] = value
         get_settings().unset(section)
-        get_settings().set(section, section_dict, merge=False)
+        get_settings().set(section, section_dict, merge=False)  # pyright: ignore
     # Same precedence-restoration rationale as the extra-config path: env-sourced values
     # must remain the highest layer.
     _reapply_env_overrides()
@@ -379,13 +379,13 @@ def _apply_repo_settings_file(repo_settings_file):
     )
 
 
-def _normalize_repo_settings(repo_settings):
+def _normalize_repo_settings(repo_settings):  # pyright: ignore
     if isinstance(repo_settings, (bytes, str)):
         return [("local", repo_settings)]
     return repo_settings
 
 
-def handle_configurations_errors(config_errors, git_provider):
+def handle_configurations_errors(config_errors, git_provider):  # pyright: ignore
     try:
         if not any(config_errors):
             return

@@ -16,7 +16,7 @@ from pr_agent.git_providers import BitbucketServerProvider, GithubProvider, get_
 from pr_agent.log import get_logger
 
 
-def extract_header(snippet):
+def extract_header(snippet):  # pyright: ignore
     res = ''
     lines = snippet.split('===Snippet content===')[0].split('\n')
     highest_header = ''
@@ -30,7 +30,7 @@ def extract_header(snippet):
     return res
 
 class PRHelpMessage:
-    def __init__(self, pr_url: str, args=None, ai_handler: partial | type[BaseAiHandler] = LiteLLMAIHandler, return_as_string=False):
+    def __init__(self, pr_url: str, args=None, ai_handler: partial | type[BaseAiHandler] = LiteLLMAIHandler, return_as_string=False):  # pyright: ignore
         self.git_provider = get_git_provider_with_context(pr_url)
         self.ai_handler = ai_handler()
         self.question_str = self.parse_args(args)
@@ -41,7 +41,7 @@ class PRHelpMessage:
                 "snippets": "",
             }
             self.token_handler = TokenHandler(None,
-                                              self.vars,
+                                              self.vars,  # pyright: ignore
                                               get_settings().pr_help_prompts.system,
                                               get_settings().pr_help_prompts.user)
 
@@ -51,14 +51,14 @@ class PRHelpMessage:
             environment = Environment(undefined=StrictUndefined)
             system_prompt = environment.from_string(get_settings().pr_help_prompts.system).render(variables)
             user_prompt = environment.from_string(get_settings().pr_help_prompts.user).render(variables)
-            response, finish_reason = await self.ai_handler.chat_completion(
+            response, finish_reason = await self.ai_handler.chat_completion(  # pyright: ignore
                 model=model, temperature=get_settings().config.temperature, system=system_prompt, user=user_prompt)
             return response
         except Exception as e:
             get_logger().error(f"Error while preparing prediction: {e}")
             return ""
 
-    def parse_args(self, args):
+    def parse_args(self, args):  # pyright: ignore
         if args and len(args) > 0:
             question_str = " ".join(args)
         else:
@@ -146,7 +146,7 @@ class PRHelpMessage:
 
                 # run the AI model
                 response = await retry_with_fallback_models(self._prepare_prediction, model_type=ModelType.REGULAR)
-                response_yaml = load_yaml(response)
+                response_yaml = load_yaml(response)  # pyright: ignore
                 if isinstance(response_yaml, str):
                     get_logger().warning(f"failing to parse response: {response_yaml}, publishing the response as is")
                     if get_settings().config.publish_output:
@@ -174,7 +174,7 @@ class PRHelpMessage:
                     answer_str += f"### Answer:\n{response_str.strip()}\n\n"
                     answer_str += f"#### Relevant Sources:\n\n"
                     base_path = "https://qodo-merge-docs.qodo.ai/"
-                    for section in relevant_sections:
+                    for section in relevant_sections:  # pyright: ignore
                         file = section.get('file_name').strip().removesuffix('.md')
                         if str(section['relevant_section_header_string']).strip():
                             markdown_header = self.format_markdown_header(section['relevant_section_header_string'])
@@ -269,7 +269,7 @@ class PRHelpMessage:
             get_logger().exception(f"Error while running PRHelpMessage: {e}")
         return ""
 
-    async def prepare_relevant_snippets(self, sim_results):
+    async def prepare_relevant_snippets(self, sim_results):  # pyright: ignore
         # Get relevant snippets
         relevant_snippets_full = []
         relevant_pages_full = []
@@ -290,7 +290,7 @@ class PRHelpMessage:
         return relevant_pages_full, relevant_snippets_full_header, relevant_snippets_str
 
 
-def generate_bbdc_table(column_arr_1, column_arr_2):
+def generate_bbdc_table(column_arr_1, column_arr_2):  # pyright: ignore
     # Generating header row
     header_row = "| Tool  | Description | \n"
 

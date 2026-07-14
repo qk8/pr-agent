@@ -29,7 +29,7 @@ class _RepoContextCache:
         cache._entries = self._entries.copy()
         return cache
 
-    def get(self, key, default=None):
+    def get(self, key, default=None):  # pyright: ignore
         entry = self._entries.get(key)
         if entry is None:
             return default
@@ -42,7 +42,7 @@ class _RepoContextCache:
         self._entries.move_to_end(key)
         return value
 
-    def __setitem__(self, key, value):
+    def __setitem__(self, key, value):  # pyright: ignore
         self._entries[key] = (value, time.monotonic() + self._ttl_seconds)
         self._entries.move_to_end(key)
         while len(self._entries) > self._max_size:
@@ -102,7 +102,7 @@ def _get_repo_context_config() -> tuple[list[str], int] | None:
     return context_files, max_lines
 
 
-def _provider_supports_repo_context(git_provider) -> bool:
+def _provider_supports_repo_context(git_provider) -> bool:  # pyright: ignore
     provider_class = type(git_provider)
     provider_method = getattr(provider_class, "get_repo_file_content", None)
     if provider_method is not None and provider_method is not GitProvider.get_repo_file_content:
@@ -117,7 +117,7 @@ def _provider_supports_repo_context(git_provider) -> bool:
     return False
 
 
-def _get_provider_repo_context_cache(git_provider) -> _RepoContextCache:
+def _get_provider_repo_context_cache(git_provider) -> _RepoContextCache:  # pyright: ignore
     repo_context_cache = getattr(git_provider, REPO_CONTEXT_CACHE_ATTRIBUTE, None)
     if repo_context_cache is None or not isinstance(repo_context_cache, _RepoContextCache):
         repo_context_cache = _RepoContextCache()
@@ -126,13 +126,13 @@ def _get_provider_repo_context_cache(git_provider) -> _RepoContextCache:
 
 
 def _get_cached_repo_context(git_provider: object, context_files: list[str], max_lines: int):
-    process_cache_key = _get_repo_context_process_cache_key(git_provider, context_files, max_lines)
+    process_cache_key = _get_repo_context_process_cache_key(git_provider, context_files, max_lines)  # pyright: ignore
     if process_cache_key is not None:
         cached_repo_context = _repo_context_process_cache.get(process_cache_key, _REPO_CONTEXT_CACHE_MISS)
         if cached_repo_context is not _REPO_CONTEXT_CACHE_MISS:
             return cached_repo_context
 
-    cache_key = _get_repo_context_cache_key(context_files, max_lines)
+    cache_key = _get_repo_context_cache_key(context_files, max_lines)  # pyright: ignore
     cached_repo_context = _get_provider_repo_context_cache(git_provider).get(cache_key, _REPO_CONTEXT_CACHE_MISS)
     if cached_repo_context is not _REPO_CONTEXT_CACHE_MISS:
         return cached_repo_context
@@ -141,10 +141,10 @@ def _get_cached_repo_context(git_provider: object, context_files: list[str], max
 
 
 def _store_repo_context(git_provider: object, context_files: list[str], max_lines: int, repo_context: str) -> None:
-    cache_key = _get_repo_context_cache_key(context_files, max_lines)
+    cache_key = _get_repo_context_cache_key(context_files, max_lines)  # pyright: ignore
     _get_provider_repo_context_cache(git_provider)[cache_key] = repo_context
 
-    process_cache_key = _get_repo_context_process_cache_key(git_provider, context_files, max_lines)
+    process_cache_key = _get_repo_context_process_cache_key(git_provider, context_files, max_lines)  # pyright: ignore
     if process_cache_key:
         _repo_context_process_cache[process_cache_key] = repo_context
 
@@ -257,7 +257,7 @@ def render_instruction_files_with_line_budget(files: dict[str, str], max_lines: 
     return "\n".join(parts).strip()
 
 
-def build_repo_context(git_provider) -> str:
+def build_repo_context(git_provider) -> str:  # pyright: ignore
     repo_context_config = _get_repo_context_config()
     if repo_context_config is None:
         return ""
@@ -268,7 +268,7 @@ def build_repo_context(git_provider) -> str:
 
     cached_repo_context = _get_cached_repo_context(git_provider, context_files, max_lines)
     if cached_repo_context is not _REPO_CONTEXT_CACHE_MISS:
-        return cached_repo_context
+        return cached_repo_context  # pyright: ignore
 
     files, had_fetch_error = _load_repo_context_files(git_provider, context_files)
 

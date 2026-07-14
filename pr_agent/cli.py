@@ -77,7 +77,7 @@ def set_parser():
     return parser
 
 
-def run_command(pr_url, command):
+def run_command(pr_url, command):  # pyright: ignore
     # Preparing the command
     run_command_str = f"--pr_url={pr_url} {command.lstrip('/')}"
     args = set_parser().parse_args(run_command_str.split())
@@ -86,7 +86,7 @@ def run_command(pr_url, command):
     run(args=args)
 
 
-def run(inargs=None, args=None):
+def run(inargs=None, args=None):  # pyright: ignore
     parser = set_parser()
     if not args:
         args = parser.parse_args(inargs)

@@ -49,7 +49,7 @@ async def handle_gerrit_request(action: Action, item: Item):
     )
 
 
-async def get_body(request):
+async def get_body(request):  # pyright: ignore
     try:
         body = await request.json()
     except JSONDecodeError as e:

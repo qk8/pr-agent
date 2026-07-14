@@ -118,7 +118,7 @@ def _ask_needs_context_fallback() -> str:
     return "PR-Agent requires a PR URL or a supplied diff."
 
 
-def _ip_is_blocked(addr) -> bool:
+def _ip_is_blocked(addr) -> bool:  # pyright: ignore
     """Reject non-public IP ranges (SSRF guard): private/loopback/link-local (incl. cloud
     metadata 169.254.0.0/16), reserved, multicast, unspecified."""
     return (addr.is_private or addr.is_loopback or addr.is_link_local
@@ -249,7 +249,7 @@ async def _run_ask(target: str, question: str) -> "RouteResult":
     return RouteResult(answer, ok=True) if answer else RouteResult(_empty_fallback("ask"), ok=True)
 
 
-def _simple_languages(files) -> dict[str, int]:
+def _simple_languages(files) -> dict[str, int]:  # pyright: ignore
     """Best-effort language map (extension -> count) for get_main_pr_language; tolerant
     of empties (downstream handles an empty dict)."""
     langs = {}

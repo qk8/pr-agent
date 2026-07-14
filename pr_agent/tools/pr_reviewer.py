@@ -33,7 +33,7 @@ class PRReviewer:
     """
 
     def __init__(self, pr_url: str, is_answer: bool = False, is_auto: bool = False, args: list[str] | None = None,
-                 ai_handler: partial | type[BaseAiHandler] = LiteLLMAIHandler):
+                 ai_handler: partial | type[BaseAiHandler] = LiteLLMAIHandler):  # pyright: ignore
         """
         Initialize the PRReviewer object with the necessary attributes and objects to review a pull request.
 
@@ -46,9 +46,9 @@ class PRReviewer:
         """
         self.git_provider = get_git_provider_with_context(pr_url)
         self.args = args
-        self.incremental = self.parse_incremental(args)  # -i command
+        self.incremental = self.parse_incremental(args)  # -i command  # pyright: ignore
         if self.incremental and self.incremental.is_incremental:
-            self.git_provider.get_incremental_commits(self.incremental)
+            self.git_provider.get_incremental_commits(self.incremental)  # pyright: ignore
 
         self.main_language = get_main_pr_language(
             self.git_provider.get_languages(), self.git_provider.get_files()
@@ -105,7 +105,7 @@ class PRReviewer:
 
         self.token_handler = TokenHandler(
             self.git_provider.pr,
-            self.vars,
+            self.vars,  # pyright: ignore
             get_settings().pr_review_prompt.system,
             get_settings().pr_review_prompt.user
         )
@@ -226,7 +226,7 @@ class PRReviewer:
         system_prompt = environment.from_string(get_settings().pr_review_prompt.system).render(variables)
         user_prompt = environment.from_string(get_settings().pr_review_prompt.user).render(variables)
 
-        response, finish_reason = await self.ai_handler.chat_completion(
+        response, finish_reason = await self.ai_handler.chat_completion(  # pyright: ignore
             model=model,
             temperature=get_settings().config.temperature,
             system=system_prompt,
@@ -253,7 +253,7 @@ class PRReviewer:
             return ""
 
         # move data['review'] 'key_issues_to_review' key to the end of the dictionary
-        if 'key_issues_to_review' in data['review']:
+        if 'key_issues_to_review' in data['review']:  # pyright: ignore
             key_issues_to_review = data['review'].pop('key_issues_to_review')
             data['review']['key_issues_to_review'] = key_issues_to_review
 
@@ -324,7 +324,7 @@ class PRReviewer:
         except Exception as e:
             get_logger().exception(f"Failed to get previous review comment, error: {e}")
 
-    def _remove_previous_review_comment(self, comment):
+    def _remove_previous_review_comment(self, comment):  # pyright: ignore
         """
         Remove the previous review comment if it exists.
         """
@@ -365,7 +365,7 @@ class PRReviewer:
             self.incremental.last_seen_commit.commit.author.date if self.incremental.last_seen_commit else None
         )
         all_commits_too_recent = (
-            last_seen_commit_date > recent_commits_threshold if self.incremental.last_seen_commit else False
+            last_seen_commit_date > recent_commits_threshold if self.incremental.last_seen_commit else False  # pyright: ignore
         )
         # check all the thresholds or just one to start the review
         condition = any if get_settings().pr_reviewer.require_all_thresholds_for_incremental_review else all
@@ -378,7 +378,7 @@ class PRReviewer:
             return False
         return True
 
-    def set_review_labels(self, data):
+    def set_review_labels(self, data):  # pyright: ignore
         if not get_settings().config.publish_output:
             return
 

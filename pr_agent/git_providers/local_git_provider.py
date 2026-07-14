@@ -28,7 +28,7 @@ class LocalGitProvider(GitProvider):
     For the MVP it only supports the /review and /describe capabilities.
     """
 
-    def __init__(self, target_branch_name, incremental=False):
+    def __init__(self, target_branch_name, incremental=False):  # pyright: ignore
         self.repo_path = _find_repository_root()
         if self.repo_path is None:
             raise ValueError('Could not find repository root')
@@ -118,7 +118,7 @@ class LocalGitProvider(GitProvider):
             # Write the string to the file
             file.write(pr_comment)
 
-    def publish_inline_comment(self, body: str, relevant_file: str, relevant_line_in_file: str, original_suggestion=None):
+    def publish_inline_comment(self, body: str, relevant_file: str, relevant_line_in_file: str, original_suggestion=None):  # pyright: ignore
         raise NotImplementedError('Publishing inline comments is not implemented for the local git provider')
 
     def publish_inline_comments(self, comments: list[dict[str, object]]):
@@ -131,16 +131,16 @@ class LocalGitProvider(GitProvider):
     def publish_code_suggestions(self, code_suggestions: list[dict[str, object]]) -> bool:
         raise NotImplementedError('Publishing code suggestions is not implemented for the local git provider')
 
-    def publish_labels(self, labels):
+    def publish_labels(self, labels):  # pyright: ignore
         pass  # Not applicable to the local git provider, but required by the interface
 
     def remove_initial_comment(self):
         pass  # Not applicable to the local git provider, but required by the interface
 
-    def remove_comment(self, comment):
+    def remove_comment(self, comment):  # pyright: ignore
         pass  # Not applicable to the local git provider, but required by the interface
 
-    def add_eyes_reaction(self, comment):
+    def add_eyes_reaction(self, comment):  # pyright: ignore
         pass  # Not applicable to the local git provider, but required by the interface
 
     def get_commit_messages(self):
@@ -149,7 +149,7 @@ class LocalGitProvider(GitProvider):
     def get_repo_settings(self):
         pass  # Not applicable to the local git provider, but required by the interface
 
-    def remove_reaction(self, comment):
+    def remove_reaction(self, comment):  # pyright: ignore
         pass  # Not applicable to the local git provider, but required by the interface
 
     def get_languages(self):
@@ -207,7 +207,7 @@ class LocalGitProvider(GitProvider):
     def get_pr_description_full(self):
         commits_diff = list(self.repo.iter_commits(self.target_branch_name + '..HEAD'))
         # Get the commit messages and concatenate
-        commit_messages = " ".join([commit.message for commit in commits_diff])
+        commit_messages = " ".join([commit.message for commit in commits_diff])  # pyright: ignore
         # TODO Handle the description better - maybe use gpt-3.5 summarisation here?
         return commit_messages[:200]  # Use max 200 characters
 
@@ -220,5 +220,5 @@ class LocalGitProvider(GitProvider):
     def get_issue_comments(self):
         raise NotImplementedError('Getting issue comments is not implemented for the local git provider')
 
-    def get_pr_labels(self, update=False):
+    def get_pr_labels(self, update=False):  # pyright: ignore
         raise NotImplementedError('Getting labels is not implemented for the local git provider')

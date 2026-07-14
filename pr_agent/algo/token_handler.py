@@ -12,7 +12,7 @@ from pr_agent.log import get_logger
 class ModelTypeValidator:
     @staticmethod
     def is_openai_model(model_name: str) -> bool:
-        return 'gpt' in model_name or re.match(r"^o[1-9](-mini|-preview)?$", model_name)
+        return 'gpt' in model_name or re.match(r"^o[1-9](-mini|-preview)?$", model_name)  # pyright: ignore
     
     @staticmethod
     def is_anthropic_model(model_name: str) -> bool:

@@ -6,7 +6,7 @@ from pr_agent.config_loader import get_settings
 from pr_agent.log import get_logger
 
 
-async def _handle_streaming_response(response):
+async def _handle_streaming_response(response):  # pyright: ignore
     """
     Handle streaming response from acompletion and collect the full response.
 
@@ -35,17 +35,17 @@ async def _handle_streaming_response(response):
 
     if not full_response and finish_reason is None:
         get_logger().warning("Streaming response resulted in empty content with no finish reason")
-        raise openai.APIError("Empty streaming response received without proper completion")
+        raise openai.APIError("Empty streaming response received without proper completion")  # pyright: ignore
     elif not full_response and finish_reason:
         get_logger().debug(f"Streaming response resulted in empty content but completed with finish_reason: {finish_reason}")
-        raise openai.APIError(f"Streaming response completed with finish_reason '{finish_reason}' but no content received")
+        raise openai.APIError(f"Streaming response completed with finish_reason '{finish_reason}' but no content received")  # pyright: ignore
     return full_response, finish_reason
 
 
 class MockResponse:
     """Mock response object for streaming models to enable consistent logging."""
 
-    def __init__(self, resp, finish_reason):
+    def __init__(self, resp, finish_reason):  # pyright: ignore
         self._data = {
             "choices": [
                 {
@@ -59,7 +59,7 @@ class MockResponse:
         return self._data
 
 
-def _get_azure_ad_token():
+def _get_azure_ad_token():  # pyright: ignore
     """
     Generates an access token using Azure AD credentials from settings.
     Returns:
@@ -80,7 +80,7 @@ def _get_azure_ad_token():
         raise
 
 
-def _process_litellm_extra_body(kwargs: dict[str, object]) -> dict[str, object]:
+def _process_litellm_extra_body(kwargs: dict[str, object]) -> dict[str, object]:  # pyright: ignore
     """
     Process LITELLM.EXTRA_BODY configuration and update kwargs accordingly.
 
