@@ -3,7 +3,8 @@ import hashlib
 import hmac
 import time
 from collections import defaultdict
-from typing import Any, Callable  # pyright: ignore[reportImport,reportUnknownMemberType]  # pyright: ignore[reportDeprecated]
+from collections.abc import Callable
+from typing import Any  # pyright: ignore[reportImport,reportUnknownMemberType]
 from fastapi import HTTPException
 
 

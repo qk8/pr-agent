@@ -214,7 +214,7 @@ def _apply_settings_from_file(path: str, label: str):
             new_settings = Dynaconf(settings_files=[path])
 
         merged_sections = []
-        for section, contents in new_settings.as_dict().items():  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]  # pyright: ignore[reportOptionalCall]
+        for section, contents in new_settings.as_dict().items():  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType,reportOptionalCall]
             if not contents:
                 continue
             section_dict = copy.deepcopy(get_settings().as_dict().get(section, {}))

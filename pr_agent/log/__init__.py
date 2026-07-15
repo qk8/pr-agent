@@ -32,8 +32,8 @@ def inv_analytics_filter(record: dict[str, object]) -> bool:
     return not record.get("extra", {}).get("analytics", False)  # type: ignore[return-value]
 
 
-def setup_logger(level: str = "INFO", fmt: LoggingFormat = LoggingFormat.CONSOLE) -> "Logger":  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]  # pyright: ignore[reportRedeclaration]
-    level: int = logging.getLevelName(level.upper())  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
+def setup_logger(level: str = "INFO", fmt: LoggingFormat = LoggingFormat.CONSOLE) -> "Logger":  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportRedeclaration]
+    level: int = logging.getLevelName(level.upper())  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType,reportDeprecated]
     if type(level) is not int:
         level = logging.INFO
 

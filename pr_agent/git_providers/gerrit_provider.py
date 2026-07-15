@@ -20,7 +20,7 @@ from pr_agent.git_providers.local_git_provider import PullRequestMimic
 from pr_agent.log import get_logger
 
 
-def _call(*command, **kwargs) -> (int, str, str):  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]
+def _call(*command, **kwargs) -> tuple[int, str, str]:  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]
     res = subprocess.run(
         command,
         stdout=subprocess.PIPE,
@@ -205,8 +205,8 @@ class GerritProvider(GitProvider):
 
     def get_issue_comments(self):  # pyright: ignore[reportIncompatibleMethodOverride]
         comments = list_comments(self.parsed_url, self.refspec)
-        Comments = namedtuple('Comments', ['reversed'])  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]  # pyright: ignore[reportUntypedNamedTuple]
-        Comment = namedtuple('Comment', ['body'])  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]  # pyright: ignore[reportUntypedNamedTuple]
+        Comments = namedtuple('Comments', ['reversed'])  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType,reportUntypedNamedTuple]
+        Comment = namedtuple('Comment', ['body'])  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType,reportUntypedNamedTuple]
         return Comments([Comment(c['message']) for c in reversed(comments)])
 
     def get_pr_labels(self, update=False):  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]

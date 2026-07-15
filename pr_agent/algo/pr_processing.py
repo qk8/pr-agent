@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import traceback
-from typing import Callable  # pyright: ignore[reportImport,reportUnknownMemberType]  # pyright: ignore[reportDeprecated]
+from collections.abc import Callable
 from github import RateLimitExceededException
 
 from pr_agent.algo.git_patch_processing import (
@@ -210,7 +210,7 @@ def pr_generate_compressed_diff(top_langs: list[dict[str, object]], token_handle
     # sort each one of the languages in top_langs by the number of tokens in the diff
     sorted_files = []
     for lang in top_langs:
-        sorted_files.extend(sorted(lang['files'], key=lambda x: x.tokens, reverse=True))  # pyright: ignore[reportUnknownVariableType,reportUnknownMemberType]  # pyright: ignore[reportCallIssue]
+        sorted_files.extend(sorted(lang['files'], key=lambda x: x.tokens, reverse=True))  # pyright: ignore[reportUnknownVariableType,reportUnknownMemberType,reportCallIssue]
     # generate patches for each file, and count tokens
     file_dict = {}
     for file in sorted_files:

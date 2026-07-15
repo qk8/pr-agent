@@ -88,7 +88,7 @@ class BitbucketServerProvider(GitProvider):
             project_name = self.repo_slug
             default_branch_dict = self.bitbucket_client.get_default_branch(workspace_name, project_name)
             if 'displayId' in default_branch_dict:  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
-                desired_branch = default_branch_dict['displayId']  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]  # pyright: ignore[reportIndexIssue,reportOptionalSubscript]
+                desired_branch = default_branch_dict['displayId']  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType,reportIndexIssue,reportOptionalSubscript]
             else:
                 get_logger().error(f"Cannot obtain default branch for workspace_name={workspace_name}, "  # pyright: ignore[reportImplicitStringConcatenation]
                                    f"project_name={project_name}, default_branch_dict={default_branch_dict}")
@@ -249,7 +249,7 @@ class BitbucketServerProvider(GitProvider):
         # if Bitbucket api version is >= 8.16 then use the merge-base api for 2-way diff calculation
         if self.bitbucket_api_version is not None and self.bitbucket_api_version >= parse_version("8.16"):
             try:
-                base_sha = self.bitbucket_client.get(self._get_merge_base())['id']  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]  # pyright: ignore[reportIndexIssue,reportOptionalSubscript]
+                base_sha = self.bitbucket_client.get(self._get_merge_base())['id']  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType,reportIndexIssue,reportOptionalSubscript]
             except Exception as e:
                 get_logger().error(f"Failed to get the best common ancestor for PR: {self.pr_url}, \nerror: {e}")
                 raise e

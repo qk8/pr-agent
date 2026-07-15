@@ -650,7 +650,7 @@ class LiteLLMAIHandler(BaseAiHandler):
             return resp, finish_reason, mock_response
         else:
             response = await acompletion(**kwargs)
-            if response is None or len(response["choices"]) == 0:  # pyright: ignore[reportUnnecessaryComparison]  # pyright: ignore[reportIndexIssue,reportOptionalSubscript]
+            if response is None or len(response["choices"]) == 0:  # pyright: ignore[reportUnnecessaryComparison,reportIndexIssue,reportOptionalSubscript]
                 raise openai.APIError  # pyright: ignore[reportGeneralTypeIssues,reportCallIssue]
             return (response["choices"][0]['message']['content'],  # pyright: ignore[reportIndexIssue,reportOptionalSubscript]
                     response["choices"][0]["finish_reason"],  # pyright: ignore[reportIndexIssue,reportOptionalSubscript]

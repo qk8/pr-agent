@@ -233,7 +233,7 @@ def should_process_pr_logic(data) -> bool:  # pyright: ignore[reportUnknownParam
 
 
 @router.post("/webhook")
-async def handle_github_webhooks(background_tasks: BackgroundTasks, request: Request):  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]  # pyright: ignore[reportRedeclaration]
+async def handle_github_webhooks(background_tasks: BackgroundTasks, request: Request):  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportRedeclaration]
     app_name = get_settings().get("CONFIG.APP_NAME", "Unknown")
     log_context = {"server_type": "bitbucket_app", "app_name": app_name}
     get_logger().debug(request.headers)

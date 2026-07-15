@@ -49,7 +49,7 @@ class PRConfig:
             get_logger().error("Caught exception during Dynaconf loading. Returning empty dict",
                                artifact={"exception": e})
             conf_settings = {}
-        configuration_headers = [header.lower() for header in conf_settings.keys()]  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]  # pyright: ignore[reportOptionalCall]
+        configuration_headers = [header.lower() for header in conf_settings.keys()]  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType,reportOptionalCall]
         relevant_configs = {
             header: configs for header, configs in get_settings().to_dict().items()
             if (header.lower().startswith("pr_") or header.lower().startswith("config")) and header.lower() in configuration_headers

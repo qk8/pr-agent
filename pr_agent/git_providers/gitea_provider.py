@@ -359,7 +359,7 @@ class GiteaProvider(GitProvider):
                 index=self.pr_number if self.enabled_pr else self.issue_number  # pyright: ignore[reportUnknownArgumentType,reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess]
             )
 
-            comment_ids = [comment.id for comment in comments]  # pyright: ignore[reportUnknownArgumentType,reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess]  # pyright: ignore[reportOptionalIterable]
+            comment_ids = [comment.id for comment in comments]  # pyright: ignore[reportUnknownArgumentType,reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportOptionalIterable]
             if issue_comment_id not in comment_ids:
                 self.logger.error(f"Comment ID {issue_comment_id} not found. Available IDs: {comment_ids}")
                 return None

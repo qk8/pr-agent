@@ -381,7 +381,7 @@ class PRDescription:
                 get_logger().info(f"Adding {counter_extra_files} unprocessed extra files to table prediction")
                 prediction_extra_dict = load_yaml(prediction_extra, keys_fix_yaml=self.keys_fix)
                 if original_prediction_dict and isinstance(original_prediction_dict, dict) and \
-                        isinstance(prediction_extra_dict, dict) and "pr_files" in prediction_extra_dict:  # pyright: ignore[reportUnnecessaryIsInstance]
+                        isinstance(prediction_extra_dict, dict) and "pr_files" in prediction_extra_dict:  # pyright: ignore[reportUnnecessaryIsInstance,reportInvalidTypeForm]
                     if "pr_files" in original_prediction_dict:
                         original_prediction_dict["pr_files"].extend(prediction_extra_dict["pr_files"])  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
                     else:
@@ -594,7 +594,7 @@ class PRDescription:
             if 'walkthrough' in key.lower():
                 if self.git_provider.is_supported("gfm_markdown"):
                     pr_body += "<details> <summary>files:</summary>\n\n"
-                for file in value:  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]  # pyright: ignore[reportOptionalIterable]
+                for file in value:  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType,reportOptionalIterable]
                     filename = file['filename'].replace("'", "`")
                     description = file['changes_in_file']
                     pr_body += f'- `{filename}`: {description}\n'

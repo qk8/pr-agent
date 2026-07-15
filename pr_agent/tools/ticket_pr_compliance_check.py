@@ -143,7 +143,7 @@ async def extract_tickets(git_provider):  # pyright: ignore[reportUnknownParamet
             if tickets:
 
                 for ticket in tickets:
-                    repo_name, original_issue_number = git_provider._parse_issue_url(ticket)  # pyright: ignore[reportUnusedVariable]  # pyright: ignore[reportPrivateUsage]
+                    repo_name, original_issue_number = git_provider._parse_issue_url(ticket)  # pyright: ignore[reportUnusedVariable,reportPrivateUsage]
 
                     try:
                         issue_main = git_provider.repo_obj.get_issue(original_issue_number)  # pyright: ignore[reportOptionalMemberAccess]
@@ -162,7 +162,7 @@ async def extract_tickets(git_provider):  # pyright: ignore[reportUnknownParamet
                         sub_issues = git_provider.fetch_sub_issues(ticket)
                         for sub_issue_url in sub_issues:
                             try:
-                                sub_repo, sub_issue_number = git_provider._parse_issue_url(sub_issue_url)  # pyright: ignore[reportUnusedVariable]  # pyright: ignore[reportPrivateUsage]
+                                sub_repo, sub_issue_number = git_provider._parse_issue_url(sub_issue_url)  # pyright: ignore[reportUnusedVariable,reportPrivateUsage]
                                 sub_issue = git_provider.repo_obj.get_issue(sub_issue_number)  # pyright: ignore[reportOptionalMemberAccess]
 
                                 sub_body = sub_issue.body or ""
