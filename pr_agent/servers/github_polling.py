@@ -42,7 +42,7 @@ async def async_handle_request(pr_url, rest_of_comment, comment_id, git_provider
     success = await agent.handle_request(
         pr_url,
         rest_of_comment,
-        notify=lambda: git_provider.add_eyes_reaction(comment_id)
+        notify=lambda: git_provider.add_eyes_reaction(comment_id)  # pyright: ignore[reportUnknownLambdaType]
     )
     return success
 

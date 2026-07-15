@@ -806,10 +806,10 @@ class PRCodeSuggestions:
 
             # sort suggestions_labels by the suggestion with the highest score
             suggestions_labels = dict(
-                sorted(suggestions_labels.items(), key=lambda x: max([s['score'] for s in x[1]]), reverse=True))
+                sorted(suggestions_labels.items(), key=lambda x: max([s['score'] for s in x[1]]), reverse=True))  # pyright: ignore[reportUnknownLambdaType]
             # sort the suggestions inside each label group by score
             for label, suggestions in suggestions_labels.items():
-                suggestions_labels[label] = sorted(suggestions, key=lambda x: x['score'], reverse=True)
+                suggestions_labels[label] = sorted(suggestions, key=lambda x: x['score'], reverse=True)  # pyright: ignore[reportUnknownLambdaType]
 
             counter_suggestions = 0
             for label, suggestions in suggestions_labels.items():

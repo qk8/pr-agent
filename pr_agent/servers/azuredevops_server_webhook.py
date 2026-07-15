@@ -44,7 +44,7 @@ async def handle_request_comment(url: str, body: str, thread_id: int, comment_id
             agent = PRAgent()
             provider = get_git_provider_with_context(pr_url=url)
             body = handle_line_comment(body, thread_id, provider)  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
-            handled = await agent.handle_request(url, body, notify=lambda: provider.reply_to_thread(thread_id, "On it! ⏳", True))
+            handled = await agent.handle_request(url, body, notify=lambda: provider.reply_to_thread(thread_id, "On it! ⏳", True))  # pyright: ignore[reportUnknownLambdaType]
             # mark command comment as closed
             if handled:
                 provider.set_thread_status(thread_id, "closed")

@@ -332,7 +332,7 @@ class AzureDevopsProvider(GitProvider):
             return None
         latest = max(
             matches,
-            key=lambda c: _to_naive_utc(getattr(c, "published_date", None)) or _dt.datetime.min,
+            key=lambda c: _to_naive_utc(getattr(c, "published_date", None)) or _dt.datetime.min,  # pyright: ignore[reportUnknownLambdaType]
         )
         latest.html_url = self.get_comment_url(latest)
         latest.created_at = _to_naive_utc(getattr(latest, "published_date", None))
