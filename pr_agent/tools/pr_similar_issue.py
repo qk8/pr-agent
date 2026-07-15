@@ -258,7 +258,7 @@ class PRSimilarIssue:
                     get_logger().info('No new issues to update')
 
 
-    async def run(self):
+    async def run(self) -> str:
         if not self.supported:
             message = "The /similar_issue tool is currently supported only for GitHub."
             if get_settings().config.publish_output:
@@ -387,8 +387,9 @@ class PRSimilarIssue:
             response = issue_main.create_comment(similar_issues_str)  # pyright: ignore[reportUnusedVariable]
         get_logger().info(similar_issues_str)
         get_logger().info('Done')
+        return similar_issues_str
 
-    def _process_issue(self, issue):  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]
+    def _process_issue(self, issue: object) -> tuple[str, list[object], int]:  # pyright: ignore[reportUnknownMemberType]
         header = issue.title
         body = issue.body
         number = issue.number
@@ -399,7 +400,7 @@ class PRSimilarIssue:
         issue_str = f"Issue Header: \"{header}\"\n\nIssue Body:\n{body}"
         return issue_str, comments, number
 
-    def _update_index_with_issues(self, issues_list, repo_name_for_index, upsert=False):  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]
+    def _update_index_with_issues(self, issues_list: list[object], repo_name_for_index: str, upsert: bool = False) -> None:  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]
         get_logger().info('Processing issues...')
         corpus = Corpus()
         example_issue_record = Record(
@@ -494,7 +495,7 @@ class PRSimilarIssue:
             time.sleep(5)  # wait for pinecone to finalize upserting before querying
         get_logger().info('Done')
 
-    def _update_table_with_issues(self, issues_list, repo_name_for_index, ingest=False):  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]
+    def _update_table_with_issues(self, issues_list: list[object], repo_name_for_index: str, ingest: bool = False) -> None:  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]
         get_logger().info('Processing issues...')
 
         corpus = Corpus()
@@ -585,7 +586,7 @@ class PRSimilarIssue:
         get_logger().info('Done')
 
 
-    def _update_qdrant_with_issues(self, issues_list, repo_name_for_index, ingest=False):  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]
+    def _update_qdrant_with_issues(self, issues_list: list[object], repo_name_for_index: str, ingest: bool = False) -> None:  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]
         try:
             import uuid
 
@@ -704,5 +705,5 @@ class Record(BaseModel):
 class Corpus(BaseModel):
     documents: list[Record] = Field(default=[])
 
-    def append(self, r: Record) -> Any:
+    def append(self, r: Record) -> None:
         self.documents.append(r)
