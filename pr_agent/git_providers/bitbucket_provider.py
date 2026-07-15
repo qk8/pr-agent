@@ -130,7 +130,7 @@ class BitbucketProvider(GitProvider):
         branch = self.get_repo_default_branch() if from_default_branch else self.pr.destination_branch  # pyright: ignore[reportOptionalMemberAccess]
         return self.get_pr_file_content(file_path, branch)
 
-    def get_git_repo_url(self, pr_url: str=None) -> str: #bitbucket does not support issue url, so ignore param  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]  # pyright: ignore[reportIncompatibleMethodOverride]
+    def get_git_repo_url(self, pr_url: str=None) -> str: #bitbucket does not support issue url, so ignore param  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportIncompatibleMethodOverride]
         try:
             parsed_url = urlparse(self.pr_url)
             return f"{parsed_url.scheme}://{parsed_url.netloc}/{self.workspace_slug}/{self.repo_slug}.git"
@@ -467,7 +467,7 @@ class BitbucketProvider(GitProvider):
         path = relevant_file.strip()
         return dict(body=body, path=path, position=absolute_position) if subject_type == "LINE" else {}
 
-    def publish_inline_comment(self, comment: str, from_line: int, file: str, original_suggestion=None):  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]  # pyright: ignore[reportIncompatibleMethodOverride]
+    def publish_inline_comment(self, comment: str, from_line: int, file: str, original_suggestion=None):  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportIncompatibleMethodOverride]
         comment = self.limit_output_characters(comment, self.max_comment_length)
         payload = json.dumps({
             "content": {
@@ -661,7 +661,7 @@ class BitbucketProvider(GitProvider):
         pass
 
     # bitbucket does not support labels
-    def get_pr_labels(self, update=False):  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]  # pyright: ignore[reportIncompatibleMethodOverride]
+    def get_pr_labels(self, update=False):  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportIncompatibleMethodOverride]
         pass
     #Clone related
     def _prepare_clone_url_with_token(self, repo_url_to_clone: str) -> str | None:

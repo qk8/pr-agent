@@ -1160,7 +1160,7 @@ def find_line_number_of_relevant_line_in_file(diff_files: list[FilePatchInfo],
                     if line.startswith('@@'):
                         delta = 0
                         match = re_hunk_header.match(line)
-                        start1, size1, start2, size2 = map(int, match.groups()[:4])  # pyright: ignore[reportUnusedVariable]  # pyright: ignore[reportOptionalMemberAccess]
+                        start1, size1, start2, size2 = map(int, match.groups()[:4])  # pyright: ignore[reportUnusedVariable,reportOptionalMemberAccess,reportIncompatibleMethodOverride]
                     elif not line.startswith('-'):
                         delta += 1
 
@@ -1182,7 +1182,7 @@ def find_line_number_of_relevant_line_in_file(diff_files: list[FilePatchInfo],
                     if line.startswith('@@'):
                         delta = 0
                         match = re_hunk_header.match(line)
-                        start1, size1, start2, size2 = map(int, match.groups()[:4])  # pyright: ignore[reportUnusedVariable]  # pyright: ignore[reportOptionalMemberAccess]
+                        start1, size1, start2, size2 = map(int, match.groups()[:4])  # pyright: ignore[reportUnusedVariable,reportOptionalMemberAccess,reportIncompatibleMethodOverride]
                     elif not line.startswith('-'):
                         delta += 1
 
@@ -1197,7 +1197,7 @@ def find_line_number_of_relevant_line_in_file(diff_files: list[FilePatchInfo],
                         if line.startswith('@@'):
                             delta = 0
                             match = re_hunk_header.match(line)
-                            start1, size1, start2, size2 = map(int, match.groups()[:4])  # pyright: ignore[reportUnusedVariable]  # pyright: ignore[reportOptionalMemberAccess]
+                            start1, size1, start2, size2 = map(int, match.groups()[:4])  # pyright: ignore[reportUnusedVariable,reportOptionalMemberAccess,reportIncompatibleMethodOverride]
                         elif not line.startswith('-'):
                             delta += 1
 

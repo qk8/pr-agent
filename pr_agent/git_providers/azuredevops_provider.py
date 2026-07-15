@@ -156,7 +156,7 @@ class AzureDevopsProvider(GitProvider):
         except Exception as e:
             get_logger().exception(f"Failed to remove comment, error: {e}")
 
-    def publish_labels(self, pr_types):  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]  # pyright: ignore[reportIncompatibleMethodOverride]
+    def publish_labels(self, pr_types):  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportIncompatibleMethodOverride]
         try:
             for pr_type in pr_types:
                 self.azure_devops_client.create_pull_request_label(
@@ -188,7 +188,7 @@ class AzureDevopsProvider(GitProvider):
         self.workspace_slug, self.repo_slug, self.pr_num = self._parse_pr_url(pr_url)
         self.pr = self._get_pr()
 
-    def get_incremental_commits(self, incremental=None):  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]  # pyright: ignore[reportIncompatibleMethodOverride]
+    def get_incremental_commits(self, incremental=None):  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportIncompatibleMethodOverride]
         if incremental is None:
             incremental = IncrementalPR(False)
         self.incremental = incremental
@@ -601,7 +601,7 @@ class AzureDevopsProvider(GitProvider):
             get_logger().exception(f"Failed to get diff files, error: {e}")
             return []
 
-    def publish_comment(self, pr_comment: str, is_temporary: bool = False, thread_context=None) -> Comment | None:  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]  # pyright: ignore[reportIncompatibleMethodOverride]
+    def publish_comment(self, pr_comment: str, is_temporary: bool = False, thread_context=None) -> Comment | None:  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportIncompatibleMethodOverride]
         if is_temporary and not get_settings().config.publish_output_progress:
             get_logger().debug(f"Skipping publish_comment for temporary comment: {pr_comment}")
             return None

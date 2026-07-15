@@ -90,7 +90,7 @@ class PlainDiffGitProvider(GitProvider):
     def get_files(self) -> list[str]:
         return [f.filename for f in self.get_diff_files()]
 
-    def get_incremental_commits(self, incremental):  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]  # pyright: ignore[reportIncompatibleMethodOverride]
+    def get_incremental_commits(self, incremental):  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportIncompatibleMethodOverride]
         # A standalone diff has no commit history, so incremental review (-i) is
         # not applicable. Disable it explicitly to avoid a TypeError downstream
         # (PRReviewer would otherwise call len() on an unpopulated commits_range).

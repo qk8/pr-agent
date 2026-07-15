@@ -432,8 +432,8 @@ class GitLabProvider(GitProvider):
             # allow only a limited number of files to be fully loaded. We can manage the rest with diffs only
             counter_valid += 1
             if counter_valid < MAX_FILES_ALLOWED_FULL or not diff['diff']:  # pyright: ignore[reportIndexIssue,reportOptionalSubscript]
-                original_file_content_str = self.get_pr_file_content(diff['old_path'], self.mr.diff_refs['base_sha'])  # pyright: ignore[reportIndexIssue,reportOptionalSubscript]  # pyright: ignore[reportOptionalMemberAccess]
-                new_file_content_str = self.get_pr_file_content(diff['new_path'], self.mr.diff_refs['head_sha'])  # pyright: ignore[reportIndexIssue,reportOptionalSubscript]  # pyright: ignore[reportOptionalMemberAccess]
+                original_file_content_str = self.get_pr_file_content(diff['old_path'], self.mr.diff_refs['base_sha'])  # pyright: ignore[reportIndexIssue,reportOptionalSubscript,reportOptionalMemberAccess,reportIncompatibleMethodOverride]
+                new_file_content_str = self.get_pr_file_content(diff['new_path'], self.mr.diff_refs['head_sha'])  # pyright: ignore[reportIndexIssue,reportOptionalSubscript,reportOptionalMemberAccess,reportIncompatibleMethodOverride]
             else:
                 if counter_valid == MAX_FILES_ALLOWED_FULL:
                     get_logger().info(f"Too many files in PR, will avoid loading full content for rest of files")
@@ -541,7 +541,7 @@ class GitLabProvider(GitProvider):
                                                                                          relevant_line_in_file)
         self.send_inline_comment(body, edit_type, found, relevant_file, relevant_line_in_file, source_line_no,
                                  target_file, target_line_no, original_suggestion)  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
-    def create_inline_comment(self, body: str, relevant_file: str, relevant_line_in_file: str, absolute_position: int = None):  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]  # pyright: ignore[reportIncompatibleMethodOverride]
+    def create_inline_comment(self, body: str, relevant_file: str, relevant_line_in_file: str, absolute_position: int = None):  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportOptionalMemberAccess,reportIncompatibleMethodOverride]
         raise NotImplementedError("Gitlab provider does not support creating inline comments yet")
 
     def create_inline_comments(self, comments: list[dict[str, object]]):
@@ -931,7 +931,7 @@ class GitLabProvider(GitProvider):
     def get_user_id(self):  # pyright: ignore[reportIncompatibleMethodOverride]
         return None
 
-    def publish_labels(self, pr_types):  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]  # pyright: ignore[reportIncompatibleMethodOverride]
+    def publish_labels(self, pr_types):  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportOptionalMemberAccess,reportIncompatibleMethodOverride]
         try:
             self.mr.labels = list(set(pr_types))  # pyright: ignore[reportOptionalMemberAccess]
             self.mr.save()  # pyright: ignore[reportOptionalMemberAccess]
@@ -955,7 +955,7 @@ class GitLabProvider(GitProvider):
         """
         max_tokens = get_settings().get("CONFIG.MAX_COMMITS_TOKENS", None)
         try:
-            commit_messages_list = [commit['message'] for commit in self.mr.commits()._list]  # pyright: ignore[reportPrivateUsage]  # pyright: ignore[reportOptionalMemberAccess]
+            commit_messages_list = [commit['message'] for commit in self.mr.commits()._list]  # pyright: ignore[reportPrivateUsage,reportOptionalMemberAccess,reportIncompatibleMethodOverride]
             commit_messages_str = "\n".join([f"{i + 1}. {message}" for i, message in enumerate(commit_messages_list)])
         except Exception:
             commit_messages_str = ""

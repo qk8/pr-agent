@@ -158,7 +158,7 @@ class PRSimilarIssue:
                     issue_str, comments, number = self._process_issue(issue)  # pyright: ignore[reportUnusedVariable]
                     issue_key = f"issue_{number}"
                     issue_id = issue_key + "." + "issue"
-                    res = self.table.search().limit(len(self.table)).where(f"id='{issue_id}'").to_list()  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]  # pyright: ignore[reportOptionalMemberAccess]
+                    res = self.table.search().limit(len(self.table)).where(f"id='{issue_id}'").to_list()  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType,reportOptionalMemberAccess,reportIncompatibleMethodOverride]
                     is_new_issue = True
                     for r in res:
                         if r['metadata']['repo'] == repo_name_for_index:

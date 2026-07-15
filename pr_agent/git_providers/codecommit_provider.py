@@ -92,7 +92,7 @@ class CodeCommitProvider(GitProvider):
             return self.git_files
 
         self.git_files = []
-        differences = self.codecommit_client.get_differences(self.repo_name, self.pr.destination_commit, self.pr.source_commit)  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]  # pyright: ignore[reportOptionalMemberAccess]
+        differences = self.codecommit_client.get_differences(self.repo_name, self.pr.destination_commit, self.pr.source_commit)  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType,reportOptionalMemberAccess,reportIncompatibleMethodOverride]
         for item in differences:
             self.git_files.append(CodeCommitFile(item.before_blob_path,
                                                  item.before_blob_id,
@@ -122,7 +122,7 @@ class CodeCommitProvider(GitProvider):
             if diff_item.a_blob_id is not None:  # pyright: ignore[reportUnnecessaryComparison]
                 patch_filename = diff_item.a_path
                 original_file_content_str = self.codecommit_client.get_file(
-                    self.repo_name, diff_item.a_path, self.pr.destination_commit)  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]  # pyright: ignore[reportOptionalMemberAccess]
+                    self.repo_name, diff_item.a_path, self.pr.destination_commit)  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType,reportOptionalMemberAccess,reportIncompatibleMethodOverride]
                 if isinstance(original_file_content_str, (bytes, bytearray)):
                     original_file_content_str = original_file_content_str.decode("utf-8")
             else:
@@ -130,7 +130,7 @@ class CodeCommitProvider(GitProvider):
 
             if diff_item.b_blob_id is not None:  # pyright: ignore[reportUnnecessaryComparison]
                 patch_filename = diff_item.b_path
-                new_file_content_str = self.codecommit_client.get_file(self.repo_name, diff_item.b_path, self.pr.source_commit)  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]  # pyright: ignore[reportOptionalMemberAccess]
+                new_file_content_str = self.codecommit_client.get_file(self.repo_name, diff_item.b_path, self.pr.source_commit)  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType,reportOptionalMemberAccess,reportIncompatibleMethodOverride]
                 if isinstance(new_file_content_str, (bytes, bytearray)):
                     new_file_content_str = new_file_content_str.decode("utf-8")
             else:
@@ -179,8 +179,8 @@ class CodeCommitProvider(GitProvider):
             self.codecommit_client.publish_comment(
                 repo_name=self.repo_name,  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
                 pr_number=self.pr_num,  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
-                destination_commit=self.pr.destination_commit,  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]  # pyright: ignore[reportOptionalMemberAccess]
-                source_commit=self.pr.source_commit,  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]  # pyright: ignore[reportOptionalMemberAccess]
+                destination_commit=self.pr.destination_commit,  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType,reportOptionalMemberAccess,reportIncompatibleMethodOverride]
+                source_commit=self.pr.source_commit,  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType,reportOptionalMemberAccess,reportIncompatibleMethodOverride]
                 comment=pr_comment,
             )
         except Exception as e:
@@ -200,8 +200,8 @@ class CodeCommitProvider(GitProvider):
                 self.codecommit_client.publish_comment(
                     repo_name=self.repo_name,  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
                     pr_number=self.pr_num,  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
-                    destination_commit=self.pr.destination_commit,  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]  # pyright: ignore[reportOptionalMemberAccess]
-                    source_commit=self.pr.source_commit,  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]  # pyright: ignore[reportOptionalMemberAccess]
+                    destination_commit=self.pr.destination_commit,  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType,reportOptionalMemberAccess,reportIncompatibleMethodOverride]
+                    source_commit=self.pr.source_commit,  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType,reportOptionalMemberAccess,reportIncompatibleMethodOverride]
                     comment=suggestion["body"],  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
                     annotation_file=suggestion["relevant_file"],  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
                     annotation_line=suggestion["relevant_lines_start"],  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
@@ -216,7 +216,7 @@ class CodeCommitProvider(GitProvider):
         # Since this function publishes the suggestions one at a time anyway, we always return True here to avoid the retry.
         return True
 
-    def publish_labels(self, labels):  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]  # pyright: ignore[reportIncompatibleMethodOverride]
+    def publish_labels(self, labels):  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportOptionalMemberAccess,reportIncompatibleMethodOverride]
         return [""]  # not implemented yet
 
     def get_pr_labels(self, update=False):  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]
@@ -225,7 +225,7 @@ class CodeCommitProvider(GitProvider):
     def remove_initial_comment(self):  # pyright: ignore[reportIncompatibleMethodOverride]
         return ""  # not implemented yet
 
-    def remove_comment(self, comment):  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]  # pyright: ignore[reportIncompatibleMethodOverride]
+    def remove_comment(self, comment):  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportOptionalMemberAccess,reportIncompatibleMethodOverride]
         return ""  # not implemented yet
 
     def publish_inline_comment(self, body: str, relevant_file: str, relevant_line_in_file: str, original_suggestion=None):  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]
@@ -298,7 +298,7 @@ class CodeCommitProvider(GitProvider):
     def get_repo_settings(self):  # pyright: ignore[reportIncompatibleMethodOverride]
         # a local ".pr_agent.toml" settings file is optional
         settings_filename = ".pr_agent.toml"
-        return self.codecommit_client.get_file(self.repo_name, settings_filename, self.pr.source_commit, optional=True)  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]  # pyright: ignore[reportOptionalMemberAccess]
+        return self.codecommit_client.get_file(self.repo_name, settings_filename, self.pr.source_commit, optional=True)  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType,reportOptionalMemberAccess,reportIncompatibleMethodOverride]
     def add_eyes_reaction(self, issue_comment_id: int, disable_eyes: bool = False) -> int | None:
         get_logger().info("CodeCommit provider does not support eyes reaction yet")
         return True

@@ -90,7 +90,7 @@ class GithubProvider(GitProvider):
             get_logger().exception(f"Failed to get an issue object for issue: {issue_url}, belonging to owner/repo: {repo_name}")
             return None
 
-    def get_incremental_commits(self, incremental=IncrementalPR(False)):  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]  # pyright: ignore[reportIncompatibleMethodOverride]
+    def get_incremental_commits(self, incremental=IncrementalPR(False)):  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportOptionalMemberAccess,reportIncompatibleMethodOverride]
         self.incremental = incremental
         if self.incremental.is_incremental:
             self.unreviewed_files_map = dict()
@@ -432,7 +432,7 @@ class GithubProvider(GitProvider):
             existing_id = self._find_existing_check_run(check_run_name, self.last_commit_id.sha)
         if existing_id:
             try:
-                self.pr._requester.requestJsonAndCheck(  # pyright: ignore[reportPrivateUsage]  # pyright: ignore[reportOptionalMemberAccess]
+                self.pr._requester.requestJsonAndCheck(  # pyright: ignore[reportPrivateUsage,reportOptionalMemberAccess,reportIncompatibleMethodOverride]
                     "PATCH",
                     f"{self.base_url}/repos/{self.repo}/check-runs/{existing_id}",
                     input=update_body,
@@ -442,7 +442,7 @@ class GithubProvider(GitProvider):
             except Exception:
                 get_logger().warning(f"Failed to update check run {existing_id}, creating new one")
         try:
-            _headers, _data = self.pr._requester.requestJsonAndCheck(  # pyright: ignore[reportPrivateUsage]  # pyright: ignore[reportOptionalMemberAccess]
+            _headers, _data = self.pr._requester.requestJsonAndCheck(  # pyright: ignore[reportPrivateUsage,reportOptionalMemberAccess,reportIncompatibleMethodOverride]
                 "POST",
                 f"{self.base_url}/repos/{self.repo}/check-runs",
                 input=create_body,
@@ -513,7 +513,7 @@ class GithubProvider(GitProvider):
     def publish_inline_comments(self, comments: list[dict[str, object]], disable_fallback: bool = False):
         try:
             # publish all comments in a single message
-            self.pr.create_review(commit=self.last_commit_id, comments=comments)  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]  # pyright: ignore[reportOptionalMemberAccess]
+            self.pr.create_review(commit=self.last_commit_id, comments=comments)  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType,reportOptionalMemberAccess,reportIncompatibleMethodOverride]
         except Exception as e:
             get_logger().info(f"Initially failed to publish inline comments as committable")
 
@@ -573,7 +573,7 @@ class GithubProvider(GitProvider):
         # publish as a group the verified comments
         if verified_comments:
             try:
-                self.pr.create_review(commit=self.last_commit_id, comments=verified_comments)  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]  # pyright: ignore[reportOptionalMemberAccess]
+                self.pr.create_review(commit=self.last_commit_id, comments=verified_comments)  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType,reportOptionalMemberAccess,reportIncompatibleMethodOverride]
             except:
                 pass
 
@@ -594,7 +594,7 @@ class GithubProvider(GitProvider):
         try:
             # event ="" # By leaving this blank, you set the review action state to PENDING
             input = dict(commit_id=self.last_commit_id.sha, comments=[comment])
-            _headers, data = self.pr._requester.requestJsonAndCheck(  # pyright: ignore[reportPrivateUsage]  # pyright: ignore[reportOptionalMemberAccess]
+            _headers, data = self.pr._requester.requestJsonAndCheck(  # pyright: ignore[reportPrivateUsage,reportOptionalMemberAccess,reportIncompatibleMethodOverride]
                 "POST", f"{self.pr.url}/reviews", input=input)  # pyright: ignore[reportOptionalMemberAccess]
             pending_review_id = data["id"]
             is_verified = True
@@ -604,7 +604,7 @@ class GithubProvider(GitProvider):
             e = err
         if pending_review_id is not None:
             try:
-                self.pr._requester.requestJsonAndCheck("DELETE", f"{self.pr.url}/reviews/{pending_review_id}")  # pyright: ignore[reportPrivateUsage]  # pyright: ignore[reportOptionalMemberAccess]
+                self.pr._requester.requestJsonAndCheck("DELETE", f"{self.pr.url}/reviews/{pending_review_id}")  # pyright: ignore[reportPrivateUsage,reportOptionalMemberAccess,reportIncompatibleMethodOverride]
             except Exception:
                 pass
         return is_verified, e
@@ -713,7 +713,7 @@ class GithubProvider(GitProvider):
         try:
             # self.pr.get_issue_comment(comment_id).edit(body)
             body = self.limit_output_characters(body, self.max_comment_chars)
-            _headers, _data_patch = self.pr._requester.requestJsonAndCheck(  # pyright: ignore[reportPrivateUsage]  # pyright: ignore[reportOptionalMemberAccess]
+            _headers, _data_patch = self.pr._requester.requestJsonAndCheck(  # pyright: ignore[reportPrivateUsage,reportOptionalMemberAccess,reportIncompatibleMethodOverride]
                 "PATCH", f"{self.base_url}/repos/{self.repo}/issues/comments/{comment_id}",
                 input={"body": body}
             )
@@ -724,7 +724,7 @@ class GithubProvider(GitProvider):
         try:
             # self.pr.get_issue_comment(comment_id).edit(body)
             body = self.limit_output_characters(body, self.max_comment_chars)
-            _headers, _data_patch = self.pr._requester.requestJsonAndCheck(  # pyright: ignore[reportPrivateUsage]  # pyright: ignore[reportOptionalMemberAccess]
+            _headers, _data_patch = self.pr._requester.requestJsonAndCheck(  # pyright: ignore[reportPrivateUsage,reportOptionalMemberAccess,reportIncompatibleMethodOverride]
                 "POST", f"{self.base_url}/repos/{self.repo}/pulls/{self.pr_num}/comments/{comment_id}/replies",
                 input={"body": body}
             )
@@ -734,7 +734,7 @@ class GithubProvider(GitProvider):
     def get_comment_body_from_comment_id(self, comment_id: int):  # pyright: ignore[reportIncompatibleMethodOverride]
         try:
             # self.pr.get_issue_comment(comment_id).edit(body)
-            _headers, data_patch = self.pr._requester.requestJsonAndCheck(  # pyright: ignore[reportPrivateUsage]  # pyright: ignore[reportOptionalMemberAccess]
+            _headers, data_patch = self.pr._requester.requestJsonAndCheck(  # pyright: ignore[reportPrivateUsage,reportOptionalMemberAccess,reportIncompatibleMethodOverride]
                 "GET", f"{self.base_url}/repos/{self.repo}/issues/comments/{comment_id}"
             )
             return data_patch.get("body","")
@@ -744,7 +744,7 @@ class GithubProvider(GitProvider):
 
     def publish_file_comments(self, file_comments: list[dict[str, object]]) -> bool:
         try:
-            _headers, existing_comments = self.pr._requester.requestJsonAndCheck(  # pyright: ignore[reportPrivateUsage]  # pyright: ignore[reportOptionalMemberAccess]
+            _headers, existing_comments = self.pr._requester.requestJsonAndCheck(  # pyright: ignore[reportPrivateUsage,reportOptionalMemberAccess,reportIncompatibleMethodOverride]
                 "GET", f"{self.pr.url}/comments"  # pyright: ignore[reportOptionalMemberAccess]
             )
             for comment in file_comments:
@@ -761,13 +761,13 @@ class GithubProvider(GitProvider):
                         same_comment_creator = self.github_user_id == existing_comment['user']['login']
                     if existing_comment['subject_type'] == 'file' and comment['path'] == existing_comment['path'] and same_comment_creator:
 
-                        _headers, _data_patch = self.pr._requester.requestJsonAndCheck(  # pyright: ignore[reportPrivateUsage]  # pyright: ignore[reportOptionalMemberAccess]
+                        _headers, _data_patch = self.pr._requester.requestJsonAndCheck(  # pyright: ignore[reportPrivateUsage,reportOptionalMemberAccess,reportIncompatibleMethodOverride]
                             "PATCH", f"{self.base_url}/repos/{self.repo}/pulls/comments/{existing_comment['id']}", input={"body":comment['body']}
                         )
                         found = True
                         break
                 if not found:
-                    _headers, _data_post = self.pr._requester.requestJsonAndCheck(  # pyright: ignore[reportPrivateUsage]  # pyright: ignore[reportOptionalMemberAccess]
+                    _headers, _data_post = self.pr._requester.requestJsonAndCheck(  # pyright: ignore[reportPrivateUsage,reportOptionalMemberAccess,reportIncompatibleMethodOverride]
                         "POST", f"{self.pr.url}/comments", input=comment  # pyright: ignore[reportOptionalMemberAccess]
                     )
             return True
@@ -939,7 +939,7 @@ class GithubProvider(GitProvider):
         if disable_eyes:
             return None
         try:
-            _headers, data_patch = self.pr._requester.requestJsonAndCheck(  # pyright: ignore[reportPrivateUsage]  # pyright: ignore[reportOptionalMemberAccess]
+            _headers, data_patch = self.pr._requester.requestJsonAndCheck(  # pyright: ignore[reportPrivateUsage,reportOptionalMemberAccess,reportIncompatibleMethodOverride]
                 "POST", f"{self.base_url}/repos/{self.repo}/issues/comments/{issue_comment_id}/reactions",
                 input={"content": "eyes"}
             )
@@ -951,7 +951,7 @@ class GithubProvider(GitProvider):
     def remove_reaction(self, issue_comment_id: int, reaction_id: str) -> bool:  # pyright: ignore[reportIncompatibleMethodOverride]
         try:
             # self.pr.get_issue_comment(issue_comment_id).delete_reaction(reaction_id)
-            _headers, _data_patch = self.pr._requester.requestJsonAndCheck(  # pyright: ignore[reportPrivateUsage]  # pyright: ignore[reportOptionalMemberAccess]
+            _headers, _data_patch = self.pr._requester.requestJsonAndCheck(  # pyright: ignore[reportPrivateUsage,reportOptionalMemberAccess,reportIncompatibleMethodOverride]
                 "DELETE",
                 f"{self.base_url}/repos/{self.repo}/issues/comments/{issue_comment_id}/reactions/{reaction_id}"
             )
@@ -1054,7 +1054,7 @@ class GithubProvider(GitProvider):
 
 
     def _get_pr(self):
-        return self._get_repo().get_pull(self.pr_num)  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]  # pyright: ignore[reportOptionalMemberAccess]
+        return self._get_repo().get_pull(self.pr_num)  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType,reportOptionalMemberAccess,reportIncompatibleMethodOverride]
     def get_pr_file_content(self, file_path: str, branch: str) -> str:
         try:
             file_content_str = str(
@@ -1085,7 +1085,7 @@ class GithubProvider(GitProvider):
     def _get_pr_file_content(self, file: FilePatchInfo, sha: str) -> str:
         return self.get_pr_file_content(file.filename, sha)
 
-    def publish_labels(self, pr_types):  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]  # pyright: ignore[reportIncompatibleMethodOverride]
+    def publish_labels(self, pr_types):  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportOptionalMemberAccess,reportIncompatibleMethodOverride]
         try:
             label_color_map = {"Bug fix": "1d76db", "Tests": "e99695", "Bug fix with tests": "c5def5",
                                "Enhancement": "bfd4f2", "Documentation": "d4c5f9",
@@ -1094,7 +1094,7 @@ class GithubProvider(GitProvider):
             for p in pr_types:
                 color = label_color_map.get(p, "d1bcf9")  # default to "Other" color
                 post_parameters.append({"name": p, "color": color})
-            _headers, _data = self.pr._requester.requestJsonAndCheck(  # pyright: ignore[reportPrivateUsage]  # pyright: ignore[reportOptionalMemberAccess]
+            _headers, _data = self.pr._requester.requestJsonAndCheck(  # pyright: ignore[reportPrivateUsage,reportOptionalMemberAccess,reportIncompatibleMethodOverride]
                 "PUT", f"{self.pr.issue_url}/labels", input=post_parameters  # pyright: ignore[reportOptionalMemberAccess]
             )
         except Exception as e:
@@ -1106,7 +1106,7 @@ class GithubProvider(GitProvider):
                 labels =self.pr.labels  # pyright: ignore[reportOptionalMemberAccess]
                 return [label.name for label in labels]
             else: # obtain the latest labels. Maybe they changed while the AI was running
-                _headers, labels = self.pr._requester.requestJsonAndCheck(  # pyright: ignore[reportPrivateUsage]  # pyright: ignore[reportOptionalMemberAccess]
+                _headers, labels = self.pr._requester.requestJsonAndCheck(  # pyright: ignore[reportPrivateUsage,reportOptionalMemberAccess,reportIncompatibleMethodOverride]
                     "GET", f"{self.pr.issue_url}/labels")  # pyright: ignore[reportOptionalMemberAccess]
                 return [label['name'] for label in labels]
 
