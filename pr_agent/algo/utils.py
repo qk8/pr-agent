@@ -683,7 +683,7 @@ def fix_json_escape_char(
         return {}
 
     try:
-        result: object = json.loads(json_message)
+        result: dict[str, object] = json.loads(json_message)
     except Exception as e:
         # Find the offending character index:
         idx_to_replace = int(str(e).split(' ')[-1].replace(')', ''))
@@ -1030,7 +1030,7 @@ def get_user_labels(
             get_logger().debug(f"Keeping user labels: {user_labels}")
     except Exception as e:
         get_logger().exception(f"Failed to get user labels: {e}")
-        return current_labels
+        return current_labels or []
     return user_labels
 
 
