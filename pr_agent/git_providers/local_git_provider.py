@@ -151,7 +151,7 @@ class LocalGitProvider(GitProvider):
     def get_repo_settings(self):  # pyright: ignore[reportIncompatibleMethodOverride]
         pass  # Not applicable to the local git provider, but required by the interface
 
-    def remove_reaction(self, comment):  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]  # pyright: ignore[reportIncompatibleMethodOverride]
+    def remove_reaction(self, comment):  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportIncompatibleMethodOverride]
         pass  # Not applicable to the local git provider, but required by the interface
 
     def get_languages(self):  # pyright: ignore[reportIncompatibleMethodOverride]
