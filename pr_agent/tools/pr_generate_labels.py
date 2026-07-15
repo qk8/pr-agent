@@ -26,7 +26,7 @@ class PRGenerateLabels:
             args (list, optional): List of arguments passed to the PRGenerateLabels class. Defaults to None.
         """
         # Initialize the git provider and main PR language
-        self.git_provider = get_git_provider()(pr_url)
+        self.git_provider = get_git_provider()(pr_url)  # pyright: ignore[reportCallIssue]
         self.main_pr_language = get_main_pr_language(
             self.git_provider.get_languages(), self.git_provider.get_files()  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
         )

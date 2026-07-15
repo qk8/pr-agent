@@ -4,7 +4,7 @@ _LANGCHAIN_INSTALLED = False
 try:
     from langchain_core.messages import HumanMessage, SystemMessage  # pyright: ignore[reportMissingImports]
     from langchain_openai import AzureChatOpenAI, ChatOpenAI  # pyright: ignore[reportMissingImports]
-    _LANGCHAIN_INSTALLED = True
+    _LANGCHAIN_INSTALLED = True  # pyright: ignore[reportConstantRedefinition]
 except:  # we don't enforce langchain as a dependency, so if it's not installed, just move on
     pass
 

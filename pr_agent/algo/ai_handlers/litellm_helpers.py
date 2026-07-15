@@ -8,7 +8,7 @@ from pr_agent.config_loader import get_settings
 from pr_agent.log import get_logger
 
 
-async def _handle_streaming_response(response) -> tuple[str, str | None]:  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]
+async def _handle_streaming_response(response) -> tuple[str, str | None]:  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnusedFunction]
     """
     Handle streaming response from acompletion and collect the full response.
 
@@ -61,7 +61,7 @@ class MockResponse:
         return self._data
 
 
-def _get_azure_ad_token() -> str:  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]
+def _get_azure_ad_token() -> str:  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnusedFunction]
     """
     Generates an access token using Azure AD credentials from settings.
     Returns:
@@ -82,7 +82,7 @@ def _get_azure_ad_token() -> str:  # pyright: ignore[reportUnknownParameterType,
         raise
 
 
-def _process_litellm_extra_body(kwargs: dict[str, object]) -> dict[str, object]:  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]
+def _process_litellm_extra_body(kwargs: dict[str, object]) -> dict[str, object]:  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnusedFunction]
     """
     Process LITELLM.EXTRA_BODY configuration and update kwargs accordingly.
 

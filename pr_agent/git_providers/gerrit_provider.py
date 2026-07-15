@@ -205,8 +205,8 @@ class GerritProvider(GitProvider):
 
     def get_issue_comments(self):
         comments = list_comments(self.parsed_url, self.refspec)
-        Comments = namedtuple('Comments', ['reversed'])  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
-        Comment = namedtuple('Comment', ['body'])  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
+        Comments = namedtuple('Comments', ['reversed'])  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]  # pyright: ignore[reportUntypedNamedTuple]
+        Comment = namedtuple('Comment', ['body'])  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]  # pyright: ignore[reportUntypedNamedTuple]
         return Comments([Comment(c['message']) for c in reversed(comments)])
 
     def get_pr_labels(self, update=False):  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]

@@ -515,7 +515,7 @@ class PRHelpDocs(object):
                 get_logger().error("Failed to parse the AI response.", artifacts={'response': response})
                 return ""
             # else: Sanitize the output so that the file names match 1:1 dictionary keys. Do this via the file index and not its name, which may be altered by the model.
-            valid_indices = [int(entry['idx']) for entry in response_yaml.get('relevant_files_ranking')  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
+            valid_indices = [int(entry['idx']) for entry in response_yaml.get('relevant_files_ranking')  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]  # pyright: ignore[reportOptionalIterable]
                              if int(entry['idx']) >= 0 and int(entry['idx']) < len(docs_filepath_to_contents)]
             valid_file_paths = [list(docs_filepath_to_contents.keys())[idx] for idx in valid_indices]
             selected_docs_dict = {file_path: docs_filepath_to_contents[file_path] for file_path in valid_file_paths}

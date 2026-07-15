@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import traceback
-from typing import Callable  # pyright: ignore[reportImport,reportUnknownMemberType]
+from typing import Callable  # pyright: ignore[reportImport,reportUnknownMemberType]  # pyright: ignore[reportDeprecated]
 from github import RateLimitExceededException
 
 from pr_agent.algo.git_patch_processing import (
@@ -43,10 +43,10 @@ def get_pr_diff(git_provider: GitProvider, token_handler: TokenHandler,
         PATCH_EXTRA_LINES_BEFORE = 0
         PATCH_EXTRA_LINES_AFTER = 0
     else:
-        PATCH_EXTRA_LINES_BEFORE = get_settings().config.patch_extra_lines_before
-        PATCH_EXTRA_LINES_AFTER = get_settings().config.patch_extra_lines_after
-        PATCH_EXTRA_LINES_BEFORE = cap_and_log_extra_lines(PATCH_EXTRA_LINES_BEFORE, "before")
-        PATCH_EXTRA_LINES_AFTER = cap_and_log_extra_lines(PATCH_EXTRA_LINES_AFTER, "after")
+        PATCH_EXTRA_LINES_BEFORE = get_settings().config.patch_extra_lines_before  # pyright: ignore[reportConstantRedefinition]
+        PATCH_EXTRA_LINES_AFTER = get_settings().config.patch_extra_lines_after  # pyright: ignore[reportConstantRedefinition]
+        PATCH_EXTRA_LINES_BEFORE = cap_and_log_extra_lines(PATCH_EXTRA_LINES_BEFORE, "before")  # pyright: ignore[reportConstantRedefinition]
+        PATCH_EXTRA_LINES_AFTER = cap_and_log_extra_lines(PATCH_EXTRA_LINES_AFTER, "after")  # pyright: ignore[reportConstantRedefinition]
 
     try:
         diff_files = git_provider.get_diff_files()
@@ -76,7 +76,7 @@ def get_pr_diff(git_provider: GitProvider, token_handler: TokenHandler,
     get_logger().info(f"Tokens: {total_tokens}, total tokens over limit: {get_max_tokens(model)}, "  # pyright: ignore[reportImplicitStringConcatenation]
                       f"pruning diff.")
     patches_compressed_list, total_tokens_list, deleted_files_list, remaining_files_list, file_dict, files_in_patches_list = \
-        pr_generate_compressed_diff(pr_languages, token_handler, model, add_line_numbers_to_hunks, large_pr_handling)  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]  # pyright: ignore[reportUnusedVariable]
+        pr_generate_compressed_diff(pr_languages, token_handler, model, add_line_numbers_to_hunks, large_pr_handling)  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType,reportUnusedVariable]
     if large_pr_handling and len(patches_compressed_list) > 1:
         get_logger().info(f"Large PR handling mode, and found {len(patches_compressed_list)} patches with original diff.")
         return "" # return empty string, as we want to generate multiple patches with a different prompt
@@ -210,7 +210,7 @@ def pr_generate_compressed_diff(top_langs: list[dict[str, object]], token_handle
     # sort each one of the languages in top_langs by the number of tokens in the diff
     sorted_files = []
     for lang in top_langs:
-        sorted_files.extend(sorted(lang['files'], key=lambda x: x.tokens, reverse=True))  # pyright: ignore[reportUnknownVariableType,reportUnknownMemberType]
+        sorted_files.extend(sorted(lang['files'], key=lambda x: x.tokens, reverse=True))  # pyright: ignore[reportUnknownVariableType,reportUnknownMemberType]  # pyright: ignore[reportCallIssue]
     # generate patches for each file, and count tokens
     file_dict = {}
     for file in sorted_files:
@@ -395,8 +395,8 @@ def get_pr_multi_diffs(git_provider: GitProvider,
     # Get the maximum number of extra lines before and after the patch
     PATCH_EXTRA_LINES_BEFORE = get_settings().config.patch_extra_lines_before
     PATCH_EXTRA_LINES_AFTER = get_settings().config.patch_extra_lines_after
-    PATCH_EXTRA_LINES_BEFORE = cap_and_log_extra_lines(PATCH_EXTRA_LINES_BEFORE, "before")
-    PATCH_EXTRA_LINES_AFTER = cap_and_log_extra_lines(PATCH_EXTRA_LINES_AFTER, "after")
+    PATCH_EXTRA_LINES_BEFORE = cap_and_log_extra_lines(PATCH_EXTRA_LINES_BEFORE, "before")  # pyright: ignore[reportConstantRedefinition]
+    PATCH_EXTRA_LINES_AFTER = cap_and_log_extra_lines(PATCH_EXTRA_LINES_AFTER, "after")  # pyright: ignore[reportConstantRedefinition]
 
     # try first a single run with standard diff string, with patch extension, and no deletions
     patches_extended, total_tokens, _patches_extended_tokens = pr_generate_extended_diff(

@@ -230,7 +230,7 @@ def _process_command(command: str, url) -> str:  # pyright: ignore[reportUnknown
     return new_command
 
 
-def _to_list(command_string: str) -> list[str]:  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]
+def _to_list(command_string: str) -> list[str]:  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnusedFunction]
     try:
         # Use ast.literal_eval to safely parse the string into a list
         commands = ast.literal_eval(command_string)

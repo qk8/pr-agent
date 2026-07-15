@@ -30,7 +30,7 @@ try:
     from azure.identity import DefaultAzureCredential
     from msrest.authentication import BasicAuthentication
 except ImportError:
-    AZURE_DEVOPS_AVAILABLE = False
+    AZURE_DEVOPS_AVAILABLE = False  # pyright: ignore[reportConstantRedefinition]
 
 
 def _to_naive_utc(dt):  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]

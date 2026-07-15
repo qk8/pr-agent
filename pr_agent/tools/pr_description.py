@@ -594,7 +594,7 @@ class PRDescription:
             if 'walkthrough' in key.lower():
                 if self.git_provider.is_supported("gfm_markdown"):
                     pr_body += "<details> <summary>files:</summary>\n\n"
-                for file in value:  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
+                for file in value:  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]  # pyright: ignore[reportOptionalIterable]
                     filename = file['filename'].replace("'", "`")
                     description = file['changes_in_file']
                     pr_body += f'- `{filename}`: {description}\n'
