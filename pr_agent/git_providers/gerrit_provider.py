@@ -203,7 +203,7 @@ class GerritProvider(GitProvider):
         """
         return self.repo.branches[0].name
 
-    def get_issue_comments(self):
+    def get_issue_comments(self):  # pyright: ignore[reportIncompatibleMethodOverride]
         comments = list_comments(self.parsed_url, self.refspec)
         Comments = namedtuple('Comments', ['reversed'])  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]  # pyright: ignore[reportUntypedNamedTuple]
         Comment = namedtuple('Comment', ['body'])  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]  # pyright: ignore[reportUntypedNamedTuple]
@@ -221,10 +221,10 @@ class GerritProvider(GitProvider):
         raise NotImplementedError(
             'Removing reactions is not implemented for the gerrit provider')
 
-    def get_commit_messages(self):
+    def get_commit_messages(self):  # pyright: ignore[reportIncompatibleMethodOverride]
         return [self.repo.head.commit.message]
 
-    def get_repo_settings(self):
+    def get_repo_settings(self):  # pyright: ignore[reportIncompatibleMethodOverride]
         try:
             with open(self.repo_path / ".pr_agent.toml", 'rb') as f:
                 contents = f.read()
@@ -283,7 +283,7 @@ class GerritProvider(GitProvider):
         diff_files = [item.a_path for item in diff_index]
         return diff_files
 
-    def get_languages(self):
+    def get_languages(self):  # pyright: ignore[reportIncompatibleMethodOverride]
         """
         Calculate percentage of languages in repository. Used for hunk
         prioritisation.
@@ -301,10 +301,10 @@ class GerritProvider(GitProvider):
                            in lang_count.items()}
         return lang_percentage
 
-    def get_pr_description_full(self):
+    def get_pr_description_full(self):  # pyright: ignore[reportIncompatibleMethodOverride]
         return self.repo.head.commit.message
 
-    def get_user_id(self):
+    def get_user_id(self):  # pyright: ignore[reportIncompatibleMethodOverride]
         return self.repo.head.commit.author.email
 
     def is_supported(self, capability: str) -> bool:
@@ -341,7 +341,7 @@ class GerritProvider(GitProvider):
             '\n'.join(context) + '\n' if context else ''
         )
 
-    def publish_code_suggestions(self, code_suggestions: list[dict[str, object]]):
+    def publish_code_suggestions(self, code_suggestions: list[dict[str, object]]):  # pyright: ignore[reportIncompatibleMethodOverride]
         msg = []
         for suggestion in code_suggestions:
             description, code = self.split_suggestion(suggestion['body'])
@@ -397,7 +397,7 @@ class GerritProvider(GitProvider):
     def remove_comment(self, comment):  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]
         pass
 
-    def get_pr_branch(self) -> str | None:
+    def get_pr_branch(self) -> str | None:  # pyright: ignore[reportIncompatibleMethodOverride]
         try:
             return str(self.repo.head.commit)
         except Exception:

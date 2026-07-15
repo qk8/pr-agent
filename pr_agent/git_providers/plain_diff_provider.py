@@ -90,7 +90,7 @@ class PlainDiffGitProvider(GitProvider):
     def get_files(self) -> list[str]:
         return [f.filename for f in self.get_diff_files()]
 
-    def get_incremental_commits(self, incremental):  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]
+    def get_incremental_commits(self, incremental):  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]  # pyright: ignore[reportIncompatibleMethodOverride]
         # A standalone diff has no commit history, so incremental review (-i) is
         # not applicable. Disable it explicitly to avoid a TypeError downstream
         # (PRReviewer would otherwise call len() on an unpopulated commits_range).
@@ -128,7 +128,7 @@ class PlainDiffGitProvider(GitProvider):
             return False
         return True
 
-    def get_languages(self):
+    def get_languages(self):  # pyright: ignore[reportIncompatibleMethodOverride]
         # Return {language-name: percentage}, matching the hosted providers.
         # sort_files_by_main_languages() keys on language NAMES (it maps each
         # name back to its extensions), so returning raw extensions here would
@@ -159,7 +159,7 @@ class PlainDiffGitProvider(GitProvider):
     def get_pr_description_full(self):
         return ""
 
-    def get_user_id(self):
+    def get_user_id(self):  # pyright: ignore[reportIncompatibleMethodOverride]
         return -1
 
     def get_pr_branch(self):
@@ -213,10 +213,10 @@ class PlainDiffGitProvider(GitProvider):
     def remove_reaction(self, issue_comment_id: int, reaction_id: int) -> bool:  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]
         return True
 
-    def get_commit_messages(self):
+    def get_commit_messages(self):  # pyright: ignore[reportIncompatibleMethodOverride]
         return ""
 
-    def get_repo_settings(self):
+    def get_repo_settings(self):  # pyright: ignore[reportIncompatibleMethodOverride]
         return None
 
     def get_issue_comments(self):

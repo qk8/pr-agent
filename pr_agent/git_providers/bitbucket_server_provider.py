@@ -69,7 +69,7 @@ class BitbucketServerProvider(GitProvider):
         if pr_url:
             self.set_pr(pr_url)
 
-    def get_git_repo_url(self, pr_url: str=None) -> str: #bitbucket server does not support issue url, so ignore param  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]
+    def get_git_repo_url(self, pr_url: str=None) -> str: #bitbucket server does not support issue url, so ignore param  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]  # pyright: ignore[reportIncompatibleMethodOverride]
         try:
             parsed_url = urlparse(self.pr_url)
             return f"{parsed_url.scheme}://{parsed_url.netloc}/scm/{self.workspace_slug.lower()}/{self.repo_slug.lower()}.git"  # pyright: ignore[reportOptionalMemberAccess]
@@ -104,7 +104,7 @@ class BitbucketServerProvider(GitProvider):
         suffix = f"?at=refs%2Fheads%2F{desired_branch}"
         return (prefix, suffix)
 
-    def get_repo_settings(self):
+    def get_repo_settings(self):  # pyright: ignore[reportIncompatibleMethodOverride]
         try:
             content = self.bitbucket_client.get_content_of_file(self.workspace_slug, self.repo_slug, ".pr_agent.toml")
 
@@ -120,7 +120,7 @@ class BitbucketServerProvider(GitProvider):
             get_logger().info(f"Failed to load .pr_agent.toml file, error: {e}")
             return ""
 
-    def get_repo_file_content(self, file_path: str, from_default_branch: bool = False):
+    def get_repo_file_content(self, file_path: str, from_default_branch: bool = False):  # pyright: ignore[reportIncompatibleMethodOverride]
         # Read from the PR target ref (the branch being merged into), matching the other providers,
         # or from the repository default branch when from_default_branch is requested.
         if from_default_branch:
@@ -130,7 +130,7 @@ class BitbucketServerProvider(GitProvider):
             ref = self.pr.toRef['latestCommit']  # pyright: ignore[reportOptionalMemberAccess]
         return self.get_file(file_path, ref)
 
-    def get_pr_id(self):
+    def get_pr_id(self):  # pyright: ignore[reportIncompatibleMethodOverride]
         return self.pr_num
 
     def publish_code_suggestions(self, code_suggestions: list[dict[str, object]]) -> bool:
@@ -334,7 +334,7 @@ class BitbucketServerProvider(GitProvider):
         pass
 
     # function to create_inline_comment
-    def create_inline_comment(self, body: str, relevant_file: str, relevant_line_in_file: str,
+    def create_inline_comment(self, body: str, relevant_file: str, relevant_line_in_file: str,  # pyright: ignore[reportIncompatibleMethodOverride]
                               absolute_position: int = None):  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
         position, absolute_position = find_line_number_of_relevant_line_in_file(
             self.get_diff_files(),
@@ -351,7 +351,7 @@ class BitbucketServerProvider(GitProvider):
         path = relevant_file.strip()
         return dict(body=body, path=path, position=absolute_position) if subject_type == "LINE" else {}
 
-    def publish_inline_comment(self, comment: str, from_line: int, file: str, original_suggestion=None):  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]
+    def publish_inline_comment(self, comment: str, from_line: int, file: str, original_suggestion=None):  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]  # pyright: ignore[reportIncompatibleMethodOverride]
         payload = {
             "text": comment,
             "severity": "NORMAL",
@@ -432,13 +432,13 @@ class BitbucketServerProvider(GitProvider):
     def get_pr_owner_id(self) -> str | None:
         return self.workspace_slug
 
-    def get_pr_description_full(self):
+    def get_pr_description_full(self):  # pyright: ignore[reportIncompatibleMethodOverride]
         if hasattr(self.pr, "description"):
             return self.pr.description  # pyright: ignore[reportOptionalMemberAccess]
         else:
             return None
 
-    def get_user_id(self):
+    def get_user_id(self):  # pyright: ignore[reportIncompatibleMethodOverride]
         return 0
 
     def get_issue_comments(self):
@@ -520,11 +520,11 @@ class BitbucketServerProvider(GitProvider):
     def _get_pr_file_content(self, remote_link: str):
         return ""
 
-    def get_commit_messages(self):
+    def get_commit_messages(self):  # pyright: ignore[reportIncompatibleMethodOverride]
         return ""
 
     # bitbucket does not support labels
-    def publish_description(self, pr_title: str, description: str):
+    def publish_description(self, pr_title: str, description: str):  # pyright: ignore[reportIncompatibleMethodOverride]
         pr = self.pr
         if pr_title is None:  # pyright: ignore[reportUnnecessaryComparison]
             # Replace-style update: an omitted/stale title would be lost, so
@@ -544,11 +544,11 @@ class BitbucketServerProvider(GitProvider):
             raise e
 
     # bitbucket does not support labels
-    def publish_labels(self, pr_types: list[str]):
+    def publish_labels(self, pr_types: list[str]):  # pyright: ignore[reportIncompatibleMethodOverride]
         pass
 
     # bitbucket does not support labels
-    def get_pr_labels(self, update=False):  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]
+    def get_pr_labels(self, update=False):  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]  # pyright: ignore[reportIncompatibleMethodOverride]
         pass
 
     def _get_pr_comments_path(self):
@@ -570,7 +570,7 @@ class BitbucketServerProvider(GitProvider):
 
     #Overriding the shell command, since for some reason usage of x-token-auth doesn't work, as mentioned here:
     # https://stackoverflow.com/questions/56760396/cloning-bitbucket-server-repo-with-access-tokens
-    def _clone_inner(self, repo_url: str, dest_folder: str, operation_timeout_in_seconds: int=None) -> Any:  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]
+    def _clone_inner(self, repo_url: str, dest_folder: str, operation_timeout_in_seconds: int=None) -> Any:  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]  # pyright: ignore[reportIncompatibleMethodOverride]
         bearer_token = self.bearer_token
         if not bearer_token:
             #Shouldn't happen since this is checked in _prepare_clone, therefore - throwing an exception.

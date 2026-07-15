@@ -133,16 +133,16 @@ class DiffInputProvider(GitProvider):
     def get_pr_branch(self):
         return ""
 
-    def get_commit_messages(self):
+    def get_commit_messages(self):  # pyright: ignore[reportIncompatibleMethodOverride]
         return ""
 
     def get_pr_description_full(self) -> str:
         return ""
 
-    def get_user_id(self):
+    def get_user_id(self):  # pyright: ignore[reportIncompatibleMethodOverride]
         return -1
 
-    def get_repo_settings(self):
+    def get_repo_settings(self):  # pyright: ignore[reportIncompatibleMethodOverride]
         return ""
 
     # ---- publish / label / comment / reaction (safe no-op stubs) ----

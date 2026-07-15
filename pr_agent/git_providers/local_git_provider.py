@@ -142,19 +142,19 @@ class LocalGitProvider(GitProvider):
     def remove_comment(self, comment):  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]
         pass  # Not applicable to the local git provider, but required by the interface
 
-    def add_eyes_reaction(self, comment):  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]
+    def add_eyes_reaction(self, comment):  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]  # pyright: ignore[reportIncompatibleMethodOverride]
         pass  # Not applicable to the local git provider, but required by the interface
 
-    def get_commit_messages(self):
+    def get_commit_messages(self):  # pyright: ignore[reportIncompatibleMethodOverride]
         pass  # Not applicable to the local git provider, but required by the interface
 
-    def get_repo_settings(self):
+    def get_repo_settings(self):  # pyright: ignore[reportIncompatibleMethodOverride]
         pass  # Not applicable to the local git provider, but required by the interface
 
-    def remove_reaction(self, comment):  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]
+    def remove_reaction(self, comment):  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]  # pyright: ignore[reportIncompatibleMethodOverride]
         pass  # Not applicable to the local git provider, but required by the interface
 
-    def get_languages(self):
+    def get_languages(self):  # pyright: ignore[reportIncompatibleMethodOverride]
         """
         Calculate percentage of languages in repository. Used for hunk prioritisation.
 
@@ -200,10 +200,10 @@ class LocalGitProvider(GitProvider):
         total = sum(lang_count.values()) or 1
         return {lang: count / total * 100 for lang, count in lang_count.items()}
 
-    def get_pr_branch(self):
+    def get_pr_branch(self):  # pyright: ignore[reportIncompatibleMethodOverride]
         return self.repo.head
 
-    def get_user_id(self):
+    def get_user_id(self):  # pyright: ignore[reportIncompatibleMethodOverride]
         return -1  # Not used anywhere for the local provider, but required by the interface
 
     def get_pr_description_full(self):

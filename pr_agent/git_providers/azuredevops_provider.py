@@ -124,7 +124,7 @@ class AzureDevopsProvider(GitProvider):
                 get_logger().error(f"Azure failed to publish code suggestion, error: {e}", suggestion=suggestion)
         return True
 
-    def reply_to_comment_from_comment_id(self, comment_id: int, body: str, is_temporary: bool = False) -> Comment | None:
+    def reply_to_comment_from_comment_id(self, comment_id: int, body: str, is_temporary: bool = False) -> Comment | None:  # pyright: ignore[reportIncompatibleMethodOverride]
         # comment_id is actually thread_id
         return self.reply_to_thread(comment_id, body, is_temporary)
 
@@ -156,7 +156,7 @@ class AzureDevopsProvider(GitProvider):
         except Exception as e:
             get_logger().exception(f"Failed to remove comment, error: {e}")
 
-    def publish_labels(self, pr_types):  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]
+    def publish_labels(self, pr_types):  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]  # pyright: ignore[reportIncompatibleMethodOverride]
         try:
             for pr_type in pr_types:
                 self.azure_devops_client.create_pull_request_label(
@@ -188,7 +188,7 @@ class AzureDevopsProvider(GitProvider):
         self.workspace_slug, self.repo_slug, self.pr_num = self._parse_pr_url(pr_url)
         self.pr = self._get_pr()
 
-    def get_incremental_commits(self, incremental=None):  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]
+    def get_incremental_commits(self, incremental=None):  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]  # pyright: ignore[reportIncompatibleMethodOverride]
         if incremental is None:
             incremental = IncrementalPR(False)
         self.incremental = incremental
@@ -338,7 +338,7 @@ class AzureDevopsProvider(GitProvider):
         latest.created_at = _to_naive_utc(getattr(latest, "published_date", None))
         return latest
 
-    def get_repo_settings(self):
+    def get_repo_settings(self):  # pyright: ignore[reportIncompatibleMethodOverride]
         try:
             contents = self.azure_devops_client.get_item_content(
                 repository_id=self.repo_slug,
@@ -601,7 +601,7 @@ class AzureDevopsProvider(GitProvider):
             get_logger().exception(f"Failed to get diff files, error: {e}")
             return []
 
-    def publish_comment(self, pr_comment: str, is_temporary: bool = False, thread_context=None) -> Comment | None:  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]
+    def publish_comment(self, pr_comment: str, is_temporary: bool = False, thread_context=None) -> Comment | None:  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]  # pyright: ignore[reportIncompatibleMethodOverride]
         if is_temporary and not get_settings().config.publish_output_progress:
             get_logger().debug(f"Skipping publish_comment for temporary comment: {pr_comment}")
             return None
@@ -671,7 +671,7 @@ class AzureDevopsProvider(GitProvider):
 
     def publish_inline_comment(self, body: str, relevant_file: str, relevant_line_in_file: str, original_suggestion=None):  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]
         self.publish_inline_comments([self.create_inline_comment(body, relevant_file, relevant_line_in_file)])  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
-    def create_inline_comment(self, body: str, relevant_file: str, relevant_line_in_file: str,
+    def create_inline_comment(self, body: str, relevant_file: str, relevant_line_in_file: str,  # pyright: ignore[reportIncompatibleMethodOverride]
                               absolute_position: int = None):  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
         position, absolute_position = find_line_number_of_relevant_line_in_file(self.get_diff_files(),
                                                                                 relevant_file.strip('`'),
@@ -686,7 +686,7 @@ class AzureDevopsProvider(GitProvider):
         path = relevant_file.strip()
         return dict(body=body, path=path, position=position, absolute_position=absolute_position) if subject_type == "LINE" else {}
 
-    def publish_inline_comments(self, comments: list[dict[str, object]], disable_fallback: bool = False):
+    def publish_inline_comments(self, comments: list[dict[str, object]], disable_fallback: bool = False):  # pyright: ignore[reportIncompatibleMethodOverride]
             overall_success = True
             for comment in comments:
                 try:
@@ -751,7 +751,7 @@ class AzureDevopsProvider(GitProvider):
         source_branch = pr_info.source_ref_name.split("/")[-1]
         return source_branch
 
-    def get_user_id(self):
+    def get_user_id(self):  # pyright: ignore[reportIncompatibleMethodOverride]
         return 0
 
     def get_issue_comments(self) -> list[Comment]:
@@ -870,10 +870,10 @@ class AzureDevopsProvider(GitProvider):
         )
         return self.pr
 
-    def get_commit_messages(self):
+    def get_commit_messages(self):  # pyright: ignore[reportIncompatibleMethodOverride]
         return ""  # not implemented yet
 
-    def get_pr_id(self) -> str:
+    def get_pr_id(self) -> str:  # pyright: ignore[reportIncompatibleMethodOverride]
         try:
             pr_id = f"{self.workspace_slug}/{self.repo_slug}/{self.pr_num}"
             return pr_id

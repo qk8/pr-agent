@@ -90,7 +90,7 @@ class GithubProvider(GitProvider):
             get_logger().exception(f"Failed to get an issue object for issue: {issue_url}, belonging to owner/repo: {repo_name}")
             return None
 
-    def get_incremental_commits(self, incremental=IncrementalPR(False)):  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]
+    def get_incremental_commits(self, incremental=IncrementalPR(False)):  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]  # pyright: ignore[reportIncompatibleMethodOverride]
         self.incremental = incremental
         if self.incremental.is_incremental:
             self.unreviewed_files_map = dict()
@@ -210,7 +210,7 @@ class GithubProvider(GitProvider):
                 return self.comments[index]
         return None
 
-    def get_files(self):
+    def get_files(self):  # pyright: ignore[reportIncompatibleMethodOverride]
         if self.incremental.is_incremental and self.unreviewed_files_map:
             return self.unreviewed_files_map.values()
         try:
@@ -469,7 +469,7 @@ class GithubProvider(GitProvider):
             get_logger().warning("Failed to look up existing check runs")
         return None
 
-    def publish_comment(self, pr_comment: str, is_temporary: bool = False):
+    def publish_comment(self, pr_comment: str, is_temporary: bool = False):  # pyright: ignore[reportIncompatibleMethodOverride]
         if not self.pr and not self.issue_main:
             get_logger().error("Cannot publish a comment if missing PR/Issue context")
             return None
@@ -495,7 +495,7 @@ class GithubProvider(GitProvider):
     def publish_inline_comment(self, body: str, relevant_file: str, relevant_line_in_file: str, original_suggestion=None):  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]
         body = self.limit_output_characters(body, self.max_comment_chars)
         self.publish_inline_comments([self.create_inline_comment(body, relevant_file, relevant_line_in_file)])  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
-    def create_inline_comment(self, body: str, relevant_file: str, relevant_line_in_file: str,
+    def create_inline_comment(self, body: str, relevant_file: str, relevant_line_in_file: str,  # pyright: ignore[reportIncompatibleMethodOverride]
                               absolute_position: int = None):  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
         body = self.limit_output_characters(body, self.max_comment_chars)
         position, absolute_position = find_line_number_of_relevant_line_in_file(self.diff_files,  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
@@ -731,7 +731,7 @@ class GithubProvider(GitProvider):
         except Exception as e:
             get_logger().exception(f"Failed to reply comment, error: {e}")
 
-    def get_comment_body_from_comment_id(self, comment_id: int):
+    def get_comment_body_from_comment_id(self, comment_id: int):  # pyright: ignore[reportIncompatibleMethodOverride]
         try:
             # self.pr.get_issue_comment(comment_id).edit(body)
             _headers, data_patch = self.pr._requester.requestJsonAndCheck(  # pyright: ignore[reportPrivateUsage]  # pyright: ignore[reportOptionalMemberAccess]
@@ -824,10 +824,10 @@ class GithubProvider(GitProvider):
         notifications = self.github_client.get_user().get_notifications(since=since)
         return notifications
 
-    def get_issue_comments(self):
+    def get_issue_comments(self):  # pyright: ignore[reportIncompatibleMethodOverride]
         return self.pr.get_issue_comments()  # pyright: ignore[reportOptionalMemberAccess]
 
-    def get_repo_settings(self):
+    def get_repo_settings(self):  # pyright: ignore[reportIncompatibleMethodOverride]
         settings_files = []
         global_settings = self._get_global_repo_settings()
         if global_settings:
@@ -907,7 +907,7 @@ class GithubProvider(GitProvider):
             # Transient/unexpected errors propagate so the caller does not cache the failure.
             raise
 
-    def get_repo_file_content(self, file_path: str, from_default_branch: bool = False):
+    def get_repo_file_content(self, file_path: str, from_default_branch: bool = False):  # pyright: ignore[reportIncompatibleMethodOverride]
         try:
             # Prefer the PR target (base) ref so repo-context instruction files match the branch
             # the PR is merging into. Fall back to the repo default branch when no PR base is
@@ -932,7 +932,7 @@ class GithubProvider(GitProvider):
                 return ""
             raise
 
-    def get_workspace_name(self):
+    def get_workspace_name(self):  # pyright: ignore[reportIncompatibleMethodOverride]
         return self.repo.split('/')[0]  # pyright: ignore[reportOptionalMemberAccess]
 
     def add_eyes_reaction(self, issue_comment_id: int, disable_eyes: bool = False) -> int | None:
@@ -948,7 +948,7 @@ class GithubProvider(GitProvider):
             get_logger().warning(f"Failed to add eyes reaction, error: {e}")
             return None
 
-    def remove_reaction(self, issue_comment_id: int, reaction_id: str) -> bool:
+    def remove_reaction(self, issue_comment_id: int, reaction_id: str) -> bool:  # pyright: ignore[reportIncompatibleMethodOverride]
         try:
             # self.pr.get_issue_comment(issue_comment_id).delete_reaction(reaction_id)
             _headers, _data_patch = self.pr._requester.requestJsonAndCheck(  # pyright: ignore[reportPrivateUsage]  # pyright: ignore[reportOptionalMemberAccess]
@@ -1085,7 +1085,7 @@ class GithubProvider(GitProvider):
     def _get_pr_file_content(self, file: FilePatchInfo, sha: str) -> str:
         return self.get_pr_file_content(file.filename, sha)
 
-    def publish_labels(self, pr_types):  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]
+    def publish_labels(self, pr_types):  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]  # pyright: ignore[reportIncompatibleMethodOverride]
         try:
             label_color_map = {"Bug fix": "1d76db", "Tests": "e99695", "Bug fix with tests": "c5def5",
                                "Enhancement": "bfd4f2", "Documentation": "d4c5f9",
@@ -1114,11 +1114,11 @@ class GithubProvider(GitProvider):
             get_logger().exception(f"Failed to get labels, error: {e}")
             return []
 
-    def get_repo_labels(self):
+    def get_repo_labels(self):  # pyright: ignore[reportIncompatibleMethodOverride]
         labels = self.repo_obj.get_labels()  # pyright: ignore[reportOptionalMemberAccess]
         return [label for label in itertools.islice(labels, 50)]
 
-    def get_commit_messages(self):
+    def get_commit_messages(self):  # pyright: ignore[reportIncompatibleMethodOverride]
         """
         Retrieves the commit messages of a pull request.
 
@@ -1196,7 +1196,7 @@ class GithubProvider(GitProvider):
 
         return link
 
-    def get_pr_id(self):
+    def get_pr_id(self):  # pyright: ignore[reportIncompatibleMethodOverride]
         try:
             pr_id = f"{self.repo}/{self.pr_num}"
             return pr_id

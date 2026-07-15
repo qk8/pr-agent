@@ -78,7 +78,7 @@ class BitbucketProvider(GitProvider):
         self.bitbucket_comment_api_url = self.pr._BitbucketBase__data["links"]["comments"]["href"]
         self.bitbucket_pull_request_api_url = self.pr._BitbucketBase__data["links"]['self']['href']
 
-    def get_repo_settings(self):
+    def get_repo_settings(self):  # pyright: ignore[reportIncompatibleMethodOverride]
         settings_files = []
         global_settings = self._get_global_repo_settings()
         if global_settings:
@@ -124,13 +124,13 @@ class BitbucketProvider(GitProvider):
         file_resp.raise_for_status()
         return file_resp.text.encode('utf-8')
 
-    def get_repo_file_content(self, file_path: str, from_default_branch: bool = False):
+    def get_repo_file_content(self, file_path: str, from_default_branch: bool = False):  # pyright: ignore[reportIncompatibleMethodOverride]
         # Read from the PR destination (target) branch, matching the other providers,
         # or from the repository default branch when from_default_branch is requested.
         branch = self.get_repo_default_branch() if from_default_branch else self.pr.destination_branch  # pyright: ignore[reportOptionalMemberAccess]
         return self.get_pr_file_content(file_path, branch)
 
-    def get_git_repo_url(self, pr_url: str=None) -> str: #bitbucket does not support issue url, so ignore param  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]
+    def get_git_repo_url(self, pr_url: str=None) -> str: #bitbucket does not support issue url, so ignore param  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]  # pyright: ignore[reportIncompatibleMethodOverride]
         try:
             parsed_url = urlparse(self.pr_url)
             return f"{parsed_url.scheme}://{parsed_url.netloc}/{self.workspace_slug}/{self.repo_slug}.git"
@@ -241,7 +241,7 @@ class BitbucketProvider(GitProvider):
         self.workspace_slug, self.repo_slug, self.pr_num = self._parse_pr_url(pr_url)
         self.pr = self._get_pr()
 
-    def get_files(self):
+    def get_files(self):  # pyright: ignore[reportIncompatibleMethodOverride]
         try:
             git_files = context.get("git_files", None)
             if git_files:
@@ -420,7 +420,7 @@ class BitbucketProvider(GitProvider):
             pass
         self.publish_comment(pr_comment)
 
-    def publish_comment(self, pr_comment: str, is_temporary: bool = False):
+    def publish_comment(self, pr_comment: str, is_temporary: bool = False):  # pyright: ignore[reportIncompatibleMethodOverride]
         if is_temporary and not get_settings().config.publish_output_progress:
             get_logger().debug(f"Skipping publish_comment for temporary comment: {pr_comment}")
             return None
@@ -451,7 +451,7 @@ class BitbucketProvider(GitProvider):
             get_logger().exception(f"Failed to remove comment, error: {e}")
 
     # function to create_inline_comment
-    def create_inline_comment(self, body: str, relevant_file: str, relevant_line_in_file: str,
+    def create_inline_comment(self, body: str, relevant_file: str, relevant_line_in_file: str,  # pyright: ignore[reportIncompatibleMethodOverride]
                               absolute_position: int = None):  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
         body = self.limit_output_characters(body, self.max_comment_length)
         position, absolute_position = find_line_number_of_relevant_line_in_file(self.get_diff_files(),
@@ -467,7 +467,7 @@ class BitbucketProvider(GitProvider):
         path = relevant_file.strip()
         return dict(body=body, path=path, position=absolute_position) if subject_type == "LINE" else {}
 
-    def publish_inline_comment(self, comment: str, from_line: int, file: str, original_suggestion=None):  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]
+    def publish_inline_comment(self, comment: str, from_line: int, file: str, original_suggestion=None):  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]  # pyright: ignore[reportIncompatibleMethodOverride]
         comment = self.limit_output_characters(comment, self.max_comment_length)
         payload = json.dumps({
             "content": {
@@ -525,7 +525,7 @@ class BitbucketProvider(GitProvider):
     def get_title(self):
         return self.pr.title  # pyright: ignore[reportOptionalMemberAccess]
 
-    def get_languages(self):
+    def get_languages(self):  # pyright: ignore[reportIncompatibleMethodOverride]
         languages = {self._get_repo().get_data("language"): 0}
         return languages
 
@@ -545,10 +545,10 @@ class BitbucketProvider(GitProvider):
     def get_pr_owner_id(self) -> str | None:
         return self.workspace_slug
 
-    def get_pr_description_full(self):
+    def get_pr_description_full(self):  # pyright: ignore[reportIncompatibleMethodOverride]
         return self.pr.description  # pyright: ignore[reportOptionalMemberAccess]
 
-    def get_user_id(self):
+    def get_user_id(self):  # pyright: ignore[reportIncompatibleMethodOverride]
         return 0
 
     def get_issue_comments(self):
@@ -638,11 +638,11 @@ class BitbucketProvider(GitProvider):
         except Exception:
             return ""
 
-    def get_commit_messages(self):
+    def get_commit_messages(self):  # pyright: ignore[reportIncompatibleMethodOverride]
         return ""  # not implemented yet
 
     # bitbucket does not support labels
-    def publish_description(self, pr_title: str, description: str):
+    def publish_description(self, pr_title: str, description: str):  # pyright: ignore[reportIncompatibleMethodOverride]
         payload_dict = {"description": description}
         if pr_title is not None:  # pyright: ignore[reportUnnecessaryComparison]
             payload_dict["title"] = pr_title
@@ -657,11 +657,11 @@ class BitbucketProvider(GitProvider):
         return response
 
     # bitbucket does not support labels
-    def publish_labels(self, pr_types: list[str]):
+    def publish_labels(self, pr_types: list[str]):  # pyright: ignore[reportIncompatibleMethodOverride]
         pass
 
     # bitbucket does not support labels
-    def get_pr_labels(self, update=False):  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]
+    def get_pr_labels(self, update=False):  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]  # pyright: ignore[reportIncompatibleMethodOverride]
         pass
     #Clone related
     def _prepare_clone_url_with_token(self, repo_url_to_clone: str) -> str | None:

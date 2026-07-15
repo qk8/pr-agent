@@ -86,7 +86,7 @@ class CodeCommitProvider(GitProvider):
         self.repo_name, self.pr_num = self._parse_pr_url(pr_url)
         self.pr = self._get_pr()
 
-    def get_files(self) -> list[CodeCommitFile]:
+    def get_files(self) -> list[CodeCommitFile]:  # pyright: ignore[reportIncompatibleMethodOverride]
         # bring files from CodeCommit only once
         if self.git_files:
             return self.git_files
@@ -216,16 +216,16 @@ class CodeCommitProvider(GitProvider):
         # Since this function publishes the suggestions one at a time anyway, we always return True here to avoid the retry.
         return True
 
-    def publish_labels(self, labels):  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]
+    def publish_labels(self, labels):  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]  # pyright: ignore[reportIncompatibleMethodOverride]
         return [""]  # not implemented yet
 
     def get_pr_labels(self, update=False):  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]
         return [""]  # not implemented yet
 
-    def remove_initial_comment(self):
+    def remove_initial_comment(self):  # pyright: ignore[reportIncompatibleMethodOverride]
         return ""  # not implemented yet
 
-    def remove_comment(self, comment):  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]
+    def remove_comment(self, comment):  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]  # pyright: ignore[reportIncompatibleMethodOverride]
         return ""  # not implemented yet
 
     def publish_inline_comment(self, body: str, relevant_file: str, relevant_line_in_file: str, original_suggestion=None):  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]
@@ -238,7 +238,7 @@ class CodeCommitProvider(GitProvider):
     def get_title(self):
         return self.pr.title  # pyright: ignore[reportOptionalMemberAccess]
 
-    def get_pr_id(self):
+    def get_pr_id(self):  # pyright: ignore[reportIncompatibleMethodOverride]
         """
         Returns the PR ID in the format: "repo_name/pr_number".
         Note: This is an internal identifier for PR-Agent,
@@ -283,19 +283,19 @@ class CodeCommitProvider(GitProvider):
 
         return languages
 
-    def get_pr_branch(self):
+    def get_pr_branch(self):  # pyright: ignore[reportIncompatibleMethodOverride]
         return self.pr.source_branch  # pyright: ignore[reportOptionalMemberAccess]
 
     def get_pr_description_full(self) -> str:
         return self.pr.description if self.pr.description else ""  # pyright: ignore[reportOptionalMemberAccess]
 
-    def get_user_id(self):
+    def get_user_id(self):  # pyright: ignore[reportIncompatibleMethodOverride]
         return -1  # not implemented yet
 
     def get_issue_comments(self):
         raise NotImplementedError("CodeCommit provider does not support issue comments yet")
 
-    def get_repo_settings(self):
+    def get_repo_settings(self):  # pyright: ignore[reportIncompatibleMethodOverride]
         # a local ".pr_agent.toml" settings file is optional
         settings_filename = ".pr_agent.toml"
         return self.codecommit_client.get_file(self.repo_name, settings_filename, self.pr.source_commit, optional=True)  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]  # pyright: ignore[reportOptionalMemberAccess]
@@ -384,7 +384,7 @@ class CodeCommitProvider(GitProvider):
 
         return mimic
 
-    def get_commit_messages(self):
+    def get_commit_messages(self):  # pyright: ignore[reportIncompatibleMethodOverride]
         return ""  # not implemented yet
 
     @staticmethod
