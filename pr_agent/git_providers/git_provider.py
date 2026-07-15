@@ -55,7 +55,7 @@ def get_cached_global_settings(cache_key, fetch_fn):  # pyright: ignore[reportUn
     if value_size <= _GLOBAL_SETTINGS_CACHE_MAX_VALUE_BYTES:
         _GLOBAL_SETTINGS_CACHE[cache_key] = (value, now + _GLOBAL_SETTINGS_CACHE_TTL_SECONDS)
         while len(_GLOBAL_SETTINGS_CACHE) > _GLOBAL_SETTINGS_CACHE_MAX_SIZE:
-            oldest_key = min(_GLOBAL_SETTINGS_CACHE, key=lambda k: _GLOBAL_SETTINGS_CACHE[k][1])  # pyright: ignore[reportIndexIssue,reportOptionalSubscript,reportUnknownLambdaType
+            oldest_key = min(_GLOBAL_SETTINGS_CACHE, key=lambda k: _GLOBAL_SETTINGS_CACHE[k][1])  # pyright: ignore[reportIndexIssue,reportOptionalSubscript,reportUnknownLambdaType]
             _GLOBAL_SETTINGS_CACHE.pop(oldest_key, None)
     return value
 

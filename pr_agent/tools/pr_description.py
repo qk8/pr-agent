@@ -380,8 +380,7 @@ class PRDescription:
             if counter_extra_files > 0:
                 get_logger().info(f"Adding {counter_extra_files} unprocessed extra files to table prediction")
                 prediction_extra_dict = load_yaml(prediction_extra, keys_fix_yaml=self.keys_fix)
-                if original_prediction_dict and isinstance(original_prediction_dict, dict) and \
-                        isinstance(prediction_extra_dict, dict) and "pr_files" in prediction_extra_dict:  # pyright: ignore[reportUnnecessaryIsInstance,reportInvalidTypeForm]
+                if original_prediction_dict and isinstance(prediction_extra_dict, dict) and "pr_files" in prediction_extra_dict:  # pyright: ignore[reportUnnecessaryIsInstance]
                     if "pr_files" in original_prediction_dict:
                         original_prediction_dict["pr_files"].extend(prediction_extra_dict["pr_files"])  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
                     else:
