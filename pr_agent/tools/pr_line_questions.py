@@ -88,7 +88,7 @@ class PR_LineQuestions:
         if self.patch_with_lines:
             model_answer = await retry_with_fallback_models(self._get_prediction, model_type=ModelType.WEAK)
             # sanitize the answer so that no line will start with "/"
-            model_answer_sanitized = model_answer.strip().replace("\n/", "\n /")
+            model_answer_sanitized = model_answer.strip().replace("\n/", "\n /")  # pyright: ignore[reportOptionalMemberAccess]
             if model_answer_sanitized.startswith("/"):
                 model_answer_sanitized = " " + model_answer_sanitized
 

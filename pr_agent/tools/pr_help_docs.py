@@ -176,7 +176,7 @@ def format_markdown_q_and_a_response(question_str: str, response_str: str, relev
         answer_str += f"### Answer:\n{response_str.strip()}\n\n"
         answer_str += f"#### Relevant Sources:\n\n"
         for section in relevant_sections:
-            file = section.get('file_name').lstrip('/').strip() #Remove any '/' in the beginning, since some models do it anyway
+            file = section.get('file_name').lstrip('/').strip() #Remove any '/' in the beginning, since some models do it anyway  # pyright: ignore[reportOptionalMemberAccess]
             ext = [suffix for suffix in supported_suffixes if file.endswith(suffix)]
             if not ext:
                 get_logger().warning(f"Unsupported file extension: {file}")
@@ -292,9 +292,9 @@ class PRHelpDocs(object):
             self.repo_url_given_explicitly = True
             self.repo_url = get_settings().get('PR_HELP_DOCS.REPO_URL', '')
             self.repo_desired_branch = get_settings().get('PR_HELP_DOCS.REPO_DEFAULT_BRANCH', 'main') #Ignored if self.repo_url is empty
-            self.include_root_readme_file = not(get_settings()['PR_HELP_DOCS.EXCLUDE_ROOT_README'])
-            self.supported_doc_exts = get_settings()['PR_HELP_DOCS.SUPPORTED_DOC_EXTS']
-            self.docs_path = get_settings()['PR_HELP_DOCS.DOCS_PATH']
+            self.include_root_readme_file = not(get_settings()['PR_HELP_DOCS.EXCLUDE_ROOT_README'])  # pyright: ignore[reportIndexIssue,reportOptionalSubscript]
+            self.supported_doc_exts = get_settings()['PR_HELP_DOCS.SUPPORTED_DOC_EXTS']  # pyright: ignore[reportIndexIssue,reportOptionalSubscript]
+            self.docs_path = get_settings()['PR_HELP_DOCS.DOCS_PATH']  # pyright: ignore[reportIndexIssue,reportOptionalSubscript]
 
             retrieved_settings = [self.include_root_readme_file, self.supported_doc_exts, self.docs_path]
             if any([setting is None for setting in retrieved_settings]):

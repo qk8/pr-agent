@@ -151,7 +151,7 @@ class PRGenerateLabels:
 
     def _prepare_data(self) -> None:
         # Load the AI prediction data into a dictionary
-        self.data = load_yaml(self.prediction.strip())
+        self.data = load_yaml(self.prediction.strip())  # pyright: ignore[reportOptionalMemberAccess]
 
 
 

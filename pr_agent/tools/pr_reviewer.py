@@ -241,7 +241,7 @@ class PRReviewer:
         """
         first_key = 'review'
         last_key = 'security_concerns'
-        data = load_yaml(self.prediction.strip(),
+        data = load_yaml(self.prediction.strip(),  # pyright: ignore[reportOptionalMemberAccess]
                          keys_fix_yaml=["ticket_compliance_check", "estimated_effort_to_review_[1-5]:", "security_concerns:", "key_issues_to_review:",
                                         "relevant_file:", "relevant_line:", "suggestion:"],
                          first_key=first_key, last_key=last_key)
@@ -254,7 +254,7 @@ class PRReviewer:
         # move data['review'] 'key_issues_to_review' key to the end of the dictionary
         if 'key_issues_to_review' in data['review']:  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
             key_issues_to_review = data['review'].pop('key_issues_to_review')
-            data['review']['key_issues_to_review'] = key_issues_to_review
+            data['review']['key_issues_to_review'] = key_issues_to_review  # pyright: ignore[reportIndexIssue,reportOptionalSubscript]
 
         incremental_review_markdown_text = None
         # Add incremental review section

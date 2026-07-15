@@ -1,6 +1,6 @@
 from __future__ import annotations
 from fastapi import FastAPI
-from mangum import Mangum
+from mangum import Mangum  # pyright: ignore[reportMissingImports]
 from starlette.middleware import Middleware
 from starlette_context.middleware import RawContextMiddleware
 

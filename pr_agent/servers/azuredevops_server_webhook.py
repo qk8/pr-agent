@@ -62,12 +62,12 @@ def handle_line_comment(body: str, thread_id: int, provider: AzureDevopsProvider
     
     path = thread_context.file_path
     if thread_context.left_file_end or thread_context.left_file_start:
-        start_line = thread_context.left_file_start.line
-        end_line = thread_context.left_file_end.line
+        start_line = thread_context.left_file_start.line  # pyright: ignore[reportOptionalMemberAccess]
+        end_line = thread_context.left_file_end.line  # pyright: ignore[reportOptionalMemberAccess]
         side = "left"
     elif thread_context.right_file_end or thread_context.right_file_start:
-        start_line = thread_context.right_file_start.line
-        end_line = thread_context.right_file_end.line
+        start_line = thread_context.right_file_start.line  # pyright: ignore[reportOptionalMemberAccess]
+        end_line = thread_context.right_file_end.line  # pyright: ignore[reportOptionalMemberAccess]
         side = "right"
     else:
         get_logger().info("No line range found in thread context", artifact={"thread_context": thread_context})

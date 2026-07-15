@@ -62,7 +62,7 @@ class BitbucketServerProvider(GitProvider):
                     password=password
                 )
         try:
-            self.bitbucket_api_version = parse_version(self.bitbucket_client.get("rest/api/1.0/application-properties").get('version'))
+            self.bitbucket_api_version = parse_version(self.bitbucket_client.get("rest/api/1.0/application-properties").get('version'))  # pyright: ignore[reportOptionalMemberAccess]
         except Exception:
             self.bitbucket_api_version = None
 
@@ -72,7 +72,7 @@ class BitbucketServerProvider(GitProvider):
     def get_git_repo_url(self, pr_url: str=None) -> str: #bitbucket server does not support issue url, so ignore param  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]
         try:
             parsed_url = urlparse(self.pr_url)
-            return f"{parsed_url.scheme}://{parsed_url.netloc}/scm/{self.workspace_slug.lower()}/{self.repo_slug.lower()}.git"
+            return f"{parsed_url.scheme}://{parsed_url.netloc}/scm/{self.workspace_slug.lower()}/{self.repo_slug.lower()}.git"  # pyright: ignore[reportOptionalMemberAccess]
         except Exception as _:
             get_logger().exception(f"url is not a valid merge requests url: {self.pr_url}")
             return ""
@@ -88,7 +88,7 @@ class BitbucketServerProvider(GitProvider):
             project_name = self.repo_slug
             default_branch_dict = self.bitbucket_client.get_default_branch(workspace_name, project_name)
             if 'displayId' in default_branch_dict:  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
-                desired_branch = default_branch_dict['displayId']  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
+                desired_branch = default_branch_dict['displayId']  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]  # pyright: ignore[reportIndexIssue,reportOptionalSubscript]
             else:
                 get_logger().error(f"Cannot obtain default branch for workspace_name={workspace_name}, "  # pyright: ignore[reportImplicitStringConcatenation]
                                    f"project_name={project_name}, default_branch_dict={default_branch_dict}")
@@ -111,7 +111,7 @@ class BitbucketServerProvider(GitProvider):
             return content
         except Exception as e:
             if isinstance(e, HTTPError):
-                if e.response.status_code == 404:  # not found
+                if e.response.status_code == 404:  # not found  # pyright: ignore[reportOptionalMemberAccess]
                     return ""
 
             # A missing .pr_agent.toml is an expected, optional case (like the other
@@ -125,9 +125,9 @@ class BitbucketServerProvider(GitProvider):
         # or from the repository default branch when from_default_branch is requested.
         if from_default_branch:
             default_branch_dict = self.bitbucket_client.get_default_branch(self.workspace_slug, self.repo_slug)
-            ref = default_branch_dict.get('displayId') or self.pr.toRef['latestCommit']
+            ref = default_branch_dict.get('displayId') or self.pr.toRef['latestCommit']  # pyright: ignore[reportOptionalMemberAccess]
         else:
-            ref = self.pr.toRef['latestCommit']
+            ref = self.pr.toRef['latestCommit']  # pyright: ignore[reportOptionalMemberAccess]
         return self.get_file(file_path, ref)
 
     def get_pr_id(self):
@@ -143,8 +143,8 @@ class BitbucketServerProvider(GitProvider):
             original_suggestion = suggestion.get('original_suggestion', None)  # needed for diff code
             if original_suggestion:
                 try:
-                    existing_code = original_suggestion['existing_code'].rstrip() + "\n"
-                    improved_code = original_suggestion['improved_code'].rstrip() + "\n"
+                    existing_code = original_suggestion['existing_code'].rstrip() + "\n"  # pyright: ignore[reportIndexIssue,reportOptionalSubscript]
+                    improved_code = original_suggestion['improved_code'].rstrip() + "\n"  # pyright: ignore[reportIndexIssue,reportOptionalSubscript]
                     diff = difflib.unified_diff(existing_code.split('\n'),
                                                 improved_code.split('\n'), n=999)
                     patch_orig = "\n".join(diff)
@@ -244,12 +244,12 @@ class BitbucketServerProvider(GitProvider):
         if self.diff_files:
             return self.diff_files
 
-        head_sha = self.pr.fromRef['latestCommit']
+        head_sha = self.pr.fromRef['latestCommit']  # pyright: ignore[reportOptionalMemberAccess]
 
         # if Bitbucket api version is >= 8.16 then use the merge-base api for 2-way diff calculation
         if self.bitbucket_api_version is not None and self.bitbucket_api_version >= parse_version("8.16"):
             try:
-                base_sha = self.bitbucket_client.get(self._get_merge_base())['id']  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
+                base_sha = self.bitbucket_client.get(self._get_merge_base())['id']  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]  # pyright: ignore[reportIndexIssue,reportOptionalSubscript]
             except Exception as e:
                 get_logger().error(f"Failed to get the best common ancestor for PR: {self.pr_url}, \nerror: {e}")
                 raise e
@@ -266,7 +266,7 @@ class BitbucketServerProvider(GitProvider):
                 try:
                     destination_commits = list(
                         self.bitbucket_client.get_commits(self.workspace_slug, self.repo_slug, base_sha,
-                                                          self.pr.toRef['latestCommit']))
+                                                          self.pr.toRef['latestCommit']))  # pyright: ignore[reportOptionalMemberAccess]
                     base_sha = self.get_best_common_ancestor(source_commits_list, destination_commits, base_sha)
                 except Exception as e:
                     get_logger().error(
@@ -280,12 +280,12 @@ class BitbucketServerProvider(GitProvider):
         changes_original = list(self.bitbucket_client.get_pull_requests_changes(self.workspace_slug, self.repo_slug, self.pr_num))
         changes = filter_ignored(changes_original, 'bitbucket_server')
         for change in changes:
-            file_path = change['path']['toString']
+            file_path = change['path']['toString']  # pyright: ignore[reportIndexIssue,reportOptionalSubscript]
             if not is_valid_file(file_path.split("/")[-1]):
                 get_logger().info(f"Skipping a non-code file: {file_path}")
                 continue
 
-            match change['type']:
+            match change['type']:  # pyright: ignore[reportIndexIssue,reportOptionalSubscript]
                 case 'ADD':
                     edit_type = EDIT_TYPE.ADDED
                     new_file_content_str = self.get_file(file_path, head_sha)
@@ -421,20 +421,20 @@ class BitbucketServerProvider(GitProvider):
                 get_logger().error(f"Could not publish inline comment: {comment}")
 
     def get_title(self):
-        return self.pr.title
+        return self.pr.title  # pyright: ignore[reportOptionalMemberAccess]
 
     def get_languages(self):
         return {"yaml": 0}  # devops LOL
 
     def get_pr_branch(self):
-        return self.pr.fromRef['displayId']
+        return self.pr.fromRef['displayId']  # pyright: ignore[reportOptionalMemberAccess]
 
     def get_pr_owner_id(self) -> str | None:
         return self.workspace_slug
 
     def get_pr_description_full(self):
         if hasattr(self.pr, "description"):
-            return self.pr.description
+            return self.pr.description  # pyright: ignore[reportOptionalMemberAccess]
         else:
             return None
 
@@ -532,10 +532,10 @@ class BitbucketServerProvider(GitProvider):
             pr = self._get_pr()
             self.pr = pr
         payload = {
-            "version": pr.version,
+            "version": pr.version,  # pyright: ignore[reportOptionalMemberAccess]
             "description": description,
             "title": pr_title if pr_title is not None else pr.title,  # pyright: ignore[reportUnnecessaryComparison]
-            "reviewers": pr.reviewers  # needs to be sent otherwise gets wiped
+            "reviewers": pr.reviewers  # needs to be sent otherwise gets wiped  # pyright: ignore[reportOptionalMemberAccess]
         }
         try:
             self.bitbucket_client.update_pull_request(self.workspace_slug, self.repo_slug, str(self.pr_num), payload)

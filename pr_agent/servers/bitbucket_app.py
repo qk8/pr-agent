@@ -264,7 +264,7 @@ async def handle_github_webhooks(background_tasks: BackgroundTasks, request: Req
             decoded_claims = base64.urlsafe_b64decode(claim_part)
             claims = json.loads(decoded_claims)
             client_key = claims["iss"]
-            secrets = json.loads(secret_provider.get_secret(client_key))
+            secrets = json.loads(secret_provider.get_secret(client_key))  # pyright: ignore[reportOptionalMemberAccess]
             shared_secret = secrets["shared_secret"]
             jwt.decode(input_jwt, shared_secret, audience=client_key, algorithms=["HS256"])
             bearer_token = await get_bearer_token(shared_secret, client_key)
@@ -325,7 +325,7 @@ async def handle_installed_webhooks(request: Request, response: Response):
             "shared_secret": shared_secret,
             "client_key": client_key
         }
-        secret_provider.store_secret(username, json.dumps(secrets))
+        secret_provider.store_secret(username, json.dumps(secrets))  # pyright: ignore[reportOptionalMemberAccess]
     except Exception as e:
         get_logger().error(f"Failed to register user: {e}")
         return JSONResponse({"error": "Unable to register user"}, status_code=500)

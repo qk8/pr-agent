@@ -89,7 +89,7 @@ class CodeCommitClient:
         # The differences response from AWS is paginated, so we need to iterate through the pages to get all the differences.
         differences = []
         try:
-            paginator = self.boto_client.get_paginator("get_differences")
+            paginator = self.boto_client.get_paginator("get_differences")  # pyright: ignore[reportOptionalMemberAccess]
             for page in paginator.paginate(
                 repositoryName=repo_name,
                 beforeCommitSpecifier=destination_commit,
@@ -131,7 +131,7 @@ class CodeCommitClient:
             self._connect_boto_client()
 
         try:
-            response = self.boto_client.get_file(repositoryName=repo_name, commitSpecifier=sha_hash, filePath=file_path)
+            response = self.boto_client.get_file(repositoryName=repo_name, commitSpecifier=sha_hash, filePath=file_path)  # pyright: ignore[reportOptionalMemberAccess]
         except botocore.exceptions.ClientError as e:
             if e.response["Error"]["Code"] == 'RepositoryDoesNotExistException':
                 raise ValueError(f"CodeCommit cannot retrieve PR: Repository does not exist: {repo_name}") from e
@@ -165,7 +165,7 @@ class CodeCommitClient:
             self._connect_boto_client()
 
         try:
-            response = self.boto_client.get_pull_request(pullRequestId=str(pr_number))
+            response = self.boto_client.get_pull_request(pullRequestId=str(pr_number))  # pyright: ignore[reportOptionalMemberAccess]
         except botocore.exceptions.ClientError as e:
             if e.response["Error"]["Code"] == 'PullRequestDoesNotExistException':
                 raise ValueError(f"CodeCommit cannot retrieve PR: PR number does not exist: {pr_number}") from e
@@ -203,8 +203,8 @@ class CodeCommitClient:
 
         try:
             if pr_title is not None:  # pyright: ignore[reportUnnecessaryComparison]
-                self.boto_client.update_pull_request_title(pullRequestId=str(pr_number), title=pr_title)
-            self.boto_client.update_pull_request_description(pullRequestId=str(pr_number), description=pr_body)
+                self.boto_client.update_pull_request_title(pullRequestId=str(pr_number), title=pr_title)  # pyright: ignore[reportOptionalMemberAccess]
+            self.boto_client.update_pull_request_description(pullRequestId=str(pr_number), description=pr_body)  # pyright: ignore[reportOptionalMemberAccess]
         except botocore.exceptions.ClientError as e:
             if e.response["Error"]["Code"] == 'PullRequestDoesNotExistException':
                 raise ValueError(f"PR number does not exist: {pr_number}") from e
@@ -249,7 +249,7 @@ class CodeCommitClient:
             # If the comment has code annotations,
             # then set the file path and line number in the location dictionary
             if annotation_file and annotation_line:
-                self.boto_client.post_comment_for_pull_request(
+                self.boto_client.post_comment_for_pull_request(  # pyright: ignore[reportOptionalMemberAccess]
                     pullRequestId=str(pr_number),
                     repositoryName=repo_name,
                     beforeCommitId=destination_commit,
@@ -263,7 +263,7 @@ class CodeCommitClient:
                 )
             else:
                 # The comment does not have code annotations
-                self.boto_client.post_comment_for_pull_request(
+                self.boto_client.post_comment_for_pull_request(  # pyright: ignore[reportOptionalMemberAccess]
                     pullRequestId=str(pr_number),
                     repositoryName=repo_name,
                     beforeCommitId=destination_commit,

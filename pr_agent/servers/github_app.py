@@ -360,15 +360,15 @@ async def handle_request(body: dict[str, Any], event: str):
 def handle_line_comments(body: dict[str, object], comment_body: str | Any) -> str:
     if not comment_body:
         return ""
-    start_line = body["comment"]["start_line"]
-    end_line = body["comment"]["line"]
+    start_line = body["comment"]["start_line"]  # pyright: ignore[reportIndexIssue,reportOptionalSubscript]
+    end_line = body["comment"]["line"]  # pyright: ignore[reportIndexIssue,reportOptionalSubscript]
     start_line = end_line if not start_line else start_line
     question = comment_body.replace('/ask', '').strip()
-    diff_hunk = body["comment"]["diff_hunk"]
+    diff_hunk = body["comment"]["diff_hunk"]  # pyright: ignore[reportIndexIssue,reportOptionalSubscript]
     get_settings().set("ask_diff_hunk", diff_hunk)
-    path = body["comment"]["path"]
-    side = body["comment"]["side"]
-    comment_id = body["comment"]["id"]
+    path = body["comment"]["path"]  # pyright: ignore[reportIndexIssue,reportOptionalSubscript]
+    side = body["comment"]["side"]  # pyright: ignore[reportIndexIssue,reportOptionalSubscript]
+    comment_id = body["comment"]["id"]  # pyright: ignore[reportIndexIssue,reportOptionalSubscript]
     if '/ask' in comment_body:
         comment_body = f"/ask_line --line_start={start_line} --line_end={end_line} --side={side} --file_name={path} --comment_id={comment_id} {question}"
     return comment_body

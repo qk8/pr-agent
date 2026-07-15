@@ -36,9 +36,9 @@ class PRSimilarIssue:
 
         if get_settings().pr_similar_issue.vectordb == "pinecone":
             try:
-                import pandas as pd  # pyright: ignore[reportUnusedImport]
-                import pinecone
-                from pinecone_datasets import DatasetMetadata  # pyright: ignore[reportUndefinedVariable,reportUnusedImport]
+                import pandas as pd  # pyright: ignore[reportUnusedImport]  # pyright: ignore[reportMissingImports]
+                import pinecone  # pyright: ignore[reportMissingImports]
+                from pinecone_datasets import DatasetMetadata  # pyright: ignore[reportUndefinedVariable,reportUnusedImport]  # pyright: ignore[reportMissingImports]
             except:
                 raise Exception("Please install 'pinecone' and 'pinecone_datasets' to use pinecone as vectordb")
             # assuming pinecone api key and environment are set in secrets file
@@ -113,7 +113,7 @@ class PRSimilarIssue:
 
         elif get_settings().pr_similar_issue.vectordb == "lancedb":
             try:
-                import lancedb  # import lancedb only if needed
+                import lancedb  # import lancedb only if needed  # pyright: ignore[reportMissingImports]
             except:
                 raise Exception("Please install lancedb to use lancedb as vectordb")
             self.db = lancedb.connect(get_settings().lancedb.uri)
@@ -158,7 +158,7 @@ class PRSimilarIssue:
                     issue_str, comments, number = self._process_issue(issue)  # pyright: ignore[reportUnusedVariable]
                     issue_key = f"issue_{number}"
                     issue_id = issue_key + "." + "issue"
-                    res = self.table.search().limit(len(self.table)).where(f"id='{issue_id}'").to_list()  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
+                    res = self.table.search().limit(len(self.table)).where(f"id='{issue_id}'").to_list()  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]  # pyright: ignore[reportOptionalMemberAccess]
                     is_new_issue = True
                     for r in res:
                         if r['metadata']['repo'] == repo_name_for_index:
@@ -178,8 +178,8 @@ class PRSimilarIssue:
 
         elif get_settings().pr_similar_issue.vectordb == "qdrant":
             try:
-                import qdrant_client
-                from qdrant_client.models import (Distance, FieldCondition,
+                import qdrant_client  # pyright: ignore[reportMissingImports]
+                from qdrant_client.models import (Distance, FieldCondition,  # pyright: ignore[reportMissingImports]
                                                   Filter, MatchValue,
                                                   VectorParams)
             except Exception:
@@ -318,7 +318,7 @@ class PRSimilarIssue:
             get_logger().info('Done')
 
         elif get_settings().pr_similar_issue.vectordb == "lancedb":
-            res = self.table.search(embeds[0]).where(f"metadata.repo='{self.repo_name_for_index}'", prefilter=True).to_list()
+            res = self.table.search(embeds[0]).where(f"metadata.repo='{self.repo_name_for_index}'", prefilter=True).to_list()  # pyright: ignore[reportOptionalMemberAccess]
 
             for r in res:
                 # skip example issue
@@ -344,7 +344,7 @@ class PRSimilarIssue:
             get_logger().info('Done')
 
         elif get_settings().pr_similar_issue.vectordb == "qdrant":
-            from qdrant_client.models import FieldCondition, Filter, MatchValue
+            from qdrant_client.models import FieldCondition, Filter, MatchValue  # pyright: ignore[reportMissingImports]
             res = self.qdrant.search(
                 collection_name=self.index_name,
                 query_vector=embeds[0],
@@ -578,7 +578,7 @@ class PRSimilarIssue:
         else:
             get_logger().info('Ingesting in Table...')
             if self.index_name not in self.db.table_names():
-                self.table.add(df)
+                self.table.add(df)  # pyright: ignore[reportOptionalMemberAccess]
             else:
                 get_logger().info(f"Table {self.index_name} doesn't exists!")
             time.sleep(5)
@@ -589,8 +589,8 @@ class PRSimilarIssue:
         try:
             import uuid
 
-            import pandas as pd
-            from qdrant_client.models import PointStruct
+            import pandas as pd  # pyright: ignore[reportMissingImports]
+            from qdrant_client.models import PointStruct  # pyright: ignore[reportMissingImports]
         except Exception:
             raise
 

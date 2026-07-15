@@ -87,17 +87,17 @@ class GiteaProvider(GitProvider):
             # Optional ignore with user custom
             self.git_files = filter_ignored(self.git_files, platform="gitea")
 
-            self.sha = self.pr.head.sha if self.pr.head.sha else ""
+            self.sha = self.pr.head.sha if self.pr.head.sha else ""  # pyright: ignore[reportOptionalMemberAccess]
             self.__add_file_content()
             self.__add_file_diff()
             self.pr_commits = self.repo_api.list_all_commits(
                 owner=self.owner,  # pyright: ignore[reportUnknownArgumentType,reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess]
                 repo=self.repo  # pyright: ignore[reportUnknownArgumentType,reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess]
             )
-            self.last_commit = self.pr_commits[-1]
+            self.last_commit = self.pr_commits[-1]  # pyright: ignore[reportIndexIssue,reportOptionalSubscript]
             self.last_commit_id = self.last_commit
-            self.base_sha = self.pr.base.sha if self.pr.base.sha else ""
-            self.base_ref = self.pr.base.ref if self.pr.base.ref else ""
+            self.base_sha = self.pr.base.sha if self.pr.base.sha else ""  # pyright: ignore[reportOptionalMemberAccess]
+            self.base_ref = self.pr.base.ref if self.pr.base.ref else ""  # pyright: ignore[reportOptionalMemberAccess]
         elif "issues" in url:
             self.issue_url = url
             self.__set_repo_and_owner_from_issue()
@@ -228,7 +228,7 @@ class GiteaProvider(GitProvider):
         return self.issue_url
 
     def get_latest_commit_url(self) -> str:
-        return self.last_commit.html_url
+        return self.last_commit.html_url  # pyright: ignore[reportOptionalMemberAccess]
 
     def get_comment_url(self, comment) -> str:  # pyright: ignore[reportUnknownArgumentType,reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]
         return comment.html_url
@@ -375,7 +375,7 @@ class GiteaProvider(GitProvider):
                 self.logger.error("Failed to add eyes reaction")
                 return None
 
-            return response[0].id if isinstance(response, tuple) else response.id
+            return response[0].id if isinstance(response, tuple) else response.id  # pyright: ignore[reportOptionalMemberAccess]
 
         except ApiException as e:
             self.logger.error(f"Error adding eyes reaction: {e}")
@@ -413,7 +413,7 @@ class GiteaProvider(GitProvider):
             return ""
 
         try:
-            commit_messages = [commit["commit"]["message"] for commit in pr_commits if commit]
+            commit_messages = [commit["commit"]["message"] for commit in pr_commits if commit]  # pyright: ignore[reportIndexIssue,reportOptionalSubscript]
 
             if not commit_messages:
                 self.logger.error("No commit messages found")
@@ -440,7 +440,7 @@ class GiteaProvider(GitProvider):
         return self.repo_api.get_file_content(
             owner=self.owner,  # pyright: ignore[reportUnknownArgumentType,reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess]
             repo=self.repo,  # pyright: ignore[reportUnknownArgumentType,reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess]
-            commit_sha=self.last_commit.sha,
+            commit_sha=self.last_commit.sha,  # pyright: ignore[reportOptionalMemberAccess]
             filepath=filename
         )
 
@@ -596,10 +596,10 @@ class GiteaProvider(GitProvider):
     def get_pr_labels(self,update=False) -> list[str]:  # pyright: ignore[reportUnknownArgumentType,reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]
         """Get labels assigned to the PR"""
         if not update:
-            if not self.pr.labels:
+            if not self.pr.labels:  # pyright: ignore[reportOptionalMemberAccess]
                 self.logger.error("Failed to get PR labels")
                 return []
-            return [label.name for label in self.pr.labels]
+            return [label.name for label in self.pr.labels]  # pyright: ignore[reportOptionalMemberAccess]
 
         labels = self.repo_api.get_issue_labels(
             owner=self.owner,  # pyright: ignore[reportUnknownArgumentType,reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess]
@@ -763,7 +763,7 @@ class GiteaProvider(GitProvider):
                 return ""
 
             if from_default_branch:
-                ref = self.repo_api.repo_get(self.owner, self.repo).default_branch
+                ref = self.repo_api.repo_get(self.owner, self.repo).default_branch  # pyright: ignore[reportOptionalMemberAccess]
             else:
                 # Only trust the PR target (base) ref — never fall back to the PR head (self.sha).
                 ref = self.base_sha or self.base_ref
@@ -860,10 +860,10 @@ class RepoApi(giteapy.RepositoryApi):
             )
 
             if hasattr(response, 'data'):
-                raw_data = response.data.read()
+                raw_data = response.data.read()  # pyright: ignore[reportOptionalMemberAccess]
                 return raw_data.decode('utf-8', errors='replace')
             elif isinstance(response, tuple):
-                raw_data = response[0].read()
+                raw_data = response[0].read()  # pyright: ignore[reportOptionalMemberAccess]
                 return raw_data.decode('utf-8', errors='replace')
             else:
                 error_msg = f"Unexpected response format received from API: {type(response)}"
@@ -914,11 +914,11 @@ class RepoApi(giteapy.RepositoryApi):
             )
 
             if hasattr(response, 'data'):
-                raw_data = response.data.read()
+                raw_data = response.data.read()  # pyright: ignore[reportOptionalMemberAccess]
                 diff_content = raw_data.decode('utf-8')
                 return json.loads(diff_content) if isinstance(diff_content, str) else diff_content
             elif isinstance(response, tuple):
-                raw_data = response[0].read()
+                raw_data = response[0].read()  # pyright: ignore[reportOptionalMemberAccess]
                 diff_content = raw_data.decode('utf-8')
                 return json.loads(diff_content) if isinstance(diff_content, str) else diff_content
 
@@ -947,10 +947,10 @@ class RepoApi(giteapy.RepositoryApi):
             )
 
             if hasattr(response, 'data'):
-                raw_data = response.data.read()
+                raw_data = response.data.read()  # pyright: ignore[reportOptionalMemberAccess]
                 return json.loads(raw_data.decode('utf-8'))
             elif isinstance(response, tuple):
-                raw_data = response[0].read()
+                raw_data = response[0].read()  # pyright: ignore[reportOptionalMemberAccess]
                 return json.loads(raw_data.decode('utf-8'))
 
             return {}
@@ -988,10 +988,10 @@ class RepoApi(giteapy.RepositoryApi):
             # decode_if_bytes returns "" only if every encoding fails; binary files are
             # filtered downstream by extension (should_skip_patch).
             if hasattr(response, 'data'):
-                raw_data = response.data.read()
+                raw_data = response.data.read()  # pyright: ignore[reportOptionalMemberAccess]
                 return decode_if_bytes(raw_data)
             elif isinstance(response, tuple):
-                raw_data = response[0].read()
+                raw_data = response[0].read()  # pyright: ignore[reportOptionalMemberAccess]
                 return decode_if_bytes(raw_data)
 
             return ""
@@ -1079,11 +1079,11 @@ class RepoApi(giteapy.RepositoryApi):
             )
 
             if hasattr(response, 'data'):
-                raw_data = response.data.read()
+                raw_data = response.data.read()  # pyright: ignore[reportOptionalMemberAccess]
                 commits_data = json.loads(raw_data.decode('utf-8'))
                 return commits_data
             elif isinstance(response, tuple):
-                raw_data = response[0].read()
+                raw_data = response[0].read()  # pyright: ignore[reportOptionalMemberAccess]
                 commits_data = json.loads(raw_data.decode('utf-8'))
                 return commits_data
 

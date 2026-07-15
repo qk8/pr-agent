@@ -128,7 +128,7 @@ class PRQuestions:
         return model_answer
 
     def _prepare_pr_answer(self) -> str:
-        model_answer = self.prediction.strip()
+        model_answer = self.prediction.strip()  # pyright: ignore[reportOptionalMemberAccess]
         # sanitize the answer so that no line will start with "/"
         model_answer_sanitized = model_answer.replace("\n/", "\n /")
         model_answer_sanitized = model_answer_sanitized.replace("\r/", "\r /")

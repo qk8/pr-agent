@@ -406,14 +406,14 @@ class GitLabProvider(GitProvider):
             return self.diff_files
 
         # filter files using [ignore] patterns
-        raw_changes = self.mr.changes().get('changes', [])
+        raw_changes = self.mr.changes().get('changes', [])  # pyright: ignore[reportOptionalMemberAccess]
         raw_changes = self._expand_submodule_changes(raw_changes)
         diffs_original = raw_changes
         diffs = filter_ignored(diffs_original, 'gitlab')
         if diffs != diffs_original:
             try:
                 names_original = [diff['new_path'] for diff in diffs_original]
-                names_filtered = [diff['new_path'] for diff in diffs]
+                names_filtered = [diff['new_path'] for diff in diffs]  # pyright: ignore[reportIndexIssue,reportOptionalSubscript]
                 get_logger().info(f"Filtered out [ignore] files for merge request {self.id_mr}", extra={
                     'original_files': names_original,
                     'filtered_files': names_filtered
@@ -425,15 +425,15 @@ class GitLabProvider(GitProvider):
         invalid_files_names = []
         counter_valid = 0
         for diff in diffs:
-            if not is_valid_file(diff['new_path']):
-                invalid_files_names.append(diff['new_path'])
+            if not is_valid_file(diff['new_path']):  # pyright: ignore[reportIndexIssue,reportOptionalSubscript]
+                invalid_files_names.append(diff['new_path'])  # pyright: ignore[reportIndexIssue,reportOptionalSubscript]
                 continue
 
             # allow only a limited number of files to be fully loaded. We can manage the rest with diffs only
             counter_valid += 1
-            if counter_valid < MAX_FILES_ALLOWED_FULL or not diff['diff']:
-                original_file_content_str = self.get_pr_file_content(diff['old_path'], self.mr.diff_refs['base_sha'])
-                new_file_content_str = self.get_pr_file_content(diff['new_path'], self.mr.diff_refs['head_sha'])
+            if counter_valid < MAX_FILES_ALLOWED_FULL or not diff['diff']:  # pyright: ignore[reportIndexIssue,reportOptionalSubscript]
+                original_file_content_str = self.get_pr_file_content(diff['old_path'], self.mr.diff_refs['base_sha'])  # pyright: ignore[reportIndexIssue,reportOptionalSubscript]  # pyright: ignore[reportOptionalMemberAccess]
+                new_file_content_str = self.get_pr_file_content(diff['new_path'], self.mr.diff_refs['head_sha'])  # pyright: ignore[reportIndexIssue,reportOptionalSubscript]  # pyright: ignore[reportOptionalMemberAccess]
             else:
                 if counter_valid == MAX_FILES_ALLOWED_FULL:
                     get_logger().info(f"Too many files in PR, will avoid loading full content for rest of files")
@@ -445,15 +445,15 @@ class GitLabProvider(GitProvider):
             new_file_content_str = decode_if_bytes(new_file_content_str)
 
             edit_type = EDIT_TYPE.MODIFIED
-            if diff['new_file']:
+            if diff['new_file']:  # pyright: ignore[reportIndexIssue,reportOptionalSubscript]
                 edit_type = EDIT_TYPE.ADDED
-            elif diff['deleted_file']:
+            elif diff['deleted_file']:  # pyright: ignore[reportIndexIssue,reportOptionalSubscript]
                 edit_type = EDIT_TYPE.DELETED
-            elif diff['renamed_file']:
+            elif diff['renamed_file']:  # pyright: ignore[reportIndexIssue,reportOptionalSubscript]
                 edit_type = EDIT_TYPE.RENAMED
 
-            filename = diff['new_path']
-            patch = diff['diff']
+            filename = diff['new_path']  # pyright: ignore[reportIndexIssue,reportOptionalSubscript]
+            patch = diff['diff']  # pyright: ignore[reportIndexIssue,reportOptionalSubscript]
             if not patch:
                 patch = load_large_diff(filename, new_file_content_str, original_file_content_str)
 
@@ -467,7 +467,7 @@ class GitLabProvider(GitProvider):
                               patch=patch,
                               filename=filename,
                               edit_type=edit_type,
-                              old_filename=None if diff['old_path'] == diff['new_path'] else diff['old_path'],
+                              old_filename=None if diff['old_path'] == diff['new_path'] else diff['old_path'],  # pyright: ignore[reportIndexIssue,reportOptionalSubscript]
                               num_plus_lines=num_plus_lines,
                               num_minus_lines=num_minus_lines, ))
         if invalid_files_names:
@@ -478,22 +478,22 @@ class GitLabProvider(GitProvider):
 
     def get_files(self) -> list[str]:
         if not self.git_files:
-            raw_changes = self.mr.changes().get('changes', [])
+            raw_changes = self.mr.changes().get('changes', [])  # pyright: ignore[reportOptionalMemberAccess]
             raw_changes = self._expand_submodule_changes(raw_changes)
             self.git_files = [str(c.get('new_path', '')) for c in raw_changes if c.get('new_path')]
         return self.git_files  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
     def publish_description(self, pr_title: str, pr_body: str):
         try:
             if pr_title is not None:  # pyright: ignore[reportUnnecessaryComparison]
-                self.mr.title = pr_title
-            self.mr.description = pr_body
-            self.mr.save()
+                self.mr.title = pr_title  # pyright: ignore[reportOptionalMemberAccess]
+            self.mr.description = pr_body  # pyright: ignore[reportOptionalMemberAccess]
+            self.mr.save()  # pyright: ignore[reportOptionalMemberAccess]
         except Exception as e:
             get_logger().exception(f"Could not update merge request {self.id_mr} description: {e}")
 
     def get_latest_commit_url(self):
         try:
-            return self.mr.commits().next().web_url
+            return self.mr.commits().next().web_url  # pyright: ignore[reportOptionalMemberAccess]
         except StopIteration: # no commits
             return ""
         except Exception as e:
@@ -501,7 +501,7 @@ class GitLabProvider(GitProvider):
             return ""
 
     def get_comment_url(self, comment):  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]
-        return f"{self.mr.web_url}#note_{comment.id}"
+        return f"{self.mr.web_url}#note_{comment.id}"  # pyright: ignore[reportOptionalMemberAccess]
 
     def publish_persistent_comment(self, pr_comment: str,
                                    initial_header: str,
@@ -515,24 +515,24 @@ class GitLabProvider(GitProvider):
             get_logger().debug(f"Skipping publish_comment for temporary comment: {mr_comment}")
             return None
         mr_comment = self.limit_output_characters(mr_comment, self.max_comment_chars)
-        comment = self.mr.notes.create({'body': mr_comment})
+        comment = self.mr.notes.create({'body': mr_comment})  # pyright: ignore[reportOptionalMemberAccess]
         if is_temporary:
             self.temp_comments.append(comment)
         return comment
 
     def edit_comment(self, comment, body: str):  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]
         body = self.limit_output_characters(body, self.max_comment_chars)
-        self.mr.notes.update(comment.id,{'body': body} )
+        self.mr.notes.update(comment.id,{'body': body} )  # pyright: ignore[reportOptionalMemberAccess]
 
     def edit_comment_from_comment_id(self, comment_id: int, body: str):
         body = self.limit_output_characters(body, self.max_comment_chars)
-        comment = self.mr.notes.get(comment_id)
+        comment = self.mr.notes.get(comment_id)  # pyright: ignore[reportOptionalMemberAccess]
         comment.body = body
         comment.save()
 
     def reply_to_comment_from_comment_id(self, comment_id: int, body: str):
         body = self.limit_output_characters(body, self.max_comment_chars)
-        discussion = self.mr.discussions.get(comment_id)
+        discussion = self.mr.discussions.get(comment_id)  # pyright: ignore[reportOptionalMemberAccess]
         discussion.notes.create({'body': body})
 
     def publish_inline_comment(self, body: str, relevant_file: str, relevant_line_in_file: str, original_suggestion=None):  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]
@@ -548,7 +548,7 @@ class GitLabProvider(GitProvider):
         raise NotImplementedError("Gitlab provider does not support publishing inline comments yet")
 
     def get_comment_body_from_comment_id(self, comment_id: int):
-        comment = self.mr.notes.get(comment_id).body
+        comment = self.mr.notes.get(comment_id).body  # pyright: ignore[reportOptionalMemberAccess]
         return comment
 
     def send_inline_comment(self, body: str, edit_type: str, found: bool, relevant_file: str,
@@ -576,29 +576,29 @@ class GitLabProvider(GitProvider):
                 pos_obj['old_line'] = source_line_no - 1
             get_logger().debug(f"Creating comment in MR {self.id_mr} with body {body} and position {pos_obj}")
             try:
-                self.mr.discussions.create({'body': body, 'position': pos_obj})
+                self.mr.discussions.create({'body': body, 'position': pos_obj})  # pyright: ignore[reportOptionalMemberAccess]
             except Exception as _:
                 try:
                     # fallback - create a general note on the file in the MR
                     if 'suggestion_orig_location' in original_suggestion:  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
-                        line_start = original_suggestion['suggestion_orig_location']['start_line']
-                        line_end = original_suggestion['suggestion_orig_location']['end_line']
-                        old_code_snippet = original_suggestion['prev_code_snippet']
-                        new_code_snippet = original_suggestion['new_code_snippet']
-                        content = original_suggestion['suggestion_summary']
-                        label = original_suggestion['category']
+                        line_start = original_suggestion['suggestion_orig_location']['start_line']  # pyright: ignore[reportIndexIssue,reportOptionalSubscript]
+                        line_end = original_suggestion['suggestion_orig_location']['end_line']  # pyright: ignore[reportIndexIssue,reportOptionalSubscript]
+                        old_code_snippet = original_suggestion['prev_code_snippet']  # pyright: ignore[reportIndexIssue,reportOptionalSubscript]
+                        new_code_snippet = original_suggestion['new_code_snippet']  # pyright: ignore[reportIndexIssue,reportOptionalSubscript]
+                        content = original_suggestion['suggestion_summary']  # pyright: ignore[reportIndexIssue,reportOptionalSubscript]
+                        label = original_suggestion['category']  # pyright: ignore[reportIndexIssue,reportOptionalSubscript]
                         if 'score' in original_suggestion:  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
-                            score = original_suggestion['score']
+                            score = original_suggestion['score']  # pyright: ignore[reportIndexIssue,reportOptionalSubscript]
                         else:
                             score = 7
                     else:
-                        line_start = original_suggestion['relevant_lines_start']
-                        line_end = original_suggestion['relevant_lines_end']
-                        old_code_snippet = original_suggestion['existing_code']
-                        new_code_snippet = original_suggestion['improved_code']
-                        content = original_suggestion['suggestion_content']
-                        label = original_suggestion['label']
-                        score = original_suggestion.get('score', 7)
+                        line_start = original_suggestion['relevant_lines_start']  # pyright: ignore[reportIndexIssue,reportOptionalSubscript]
+                        line_end = original_suggestion['relevant_lines_end']  # pyright: ignore[reportIndexIssue,reportOptionalSubscript]
+                        old_code_snippet = original_suggestion['existing_code']  # pyright: ignore[reportIndexIssue,reportOptionalSubscript]
+                        new_code_snippet = original_suggestion['improved_code']  # pyright: ignore[reportIndexIssue,reportOptionalSubscript]
+                        content = original_suggestion['suggestion_content']  # pyright: ignore[reportIndexIssue,reportOptionalSubscript]
+                        label = original_suggestion['label']  # pyright: ignore[reportIndexIssue,reportOptionalSubscript]
+                        score = original_suggestion.get('score', 7)  # pyright: ignore[reportOptionalMemberAccess]
 
                     if hasattr(self, 'main_language'):
                         _language = self.main_language
@@ -617,7 +617,7 @@ class GitLabProvider(GitProvider):
                     body_fallback += diff_code
 
                     # Create a general note on the file in the MR
-                    self.mr.notes.create({
+                    self.mr.notes.create({  # pyright: ignore[reportOptionalMemberAccess]
                         'body': body_fallback,
                         'position': {
                             'base_sha': diff.base_commit_sha,
@@ -635,18 +635,18 @@ class GitLabProvider(GitProvider):
                     get_logger().exception(f"Failed to create comment in MR {self.id_mr}")
 
     def get_relevant_diff(self, relevant_file: str, relevant_line_in_file: str) -> dict[str, object] | None:
-        _changes = self.mr.changes()  # dict
-        _changes['changes'] = self._expand_submodule_changes(_changes.get('changes', []))
+        _changes = self.mr.changes()  # dict  # pyright: ignore[reportOptionalMemberAccess]
+        _changes['changes'] = self._expand_submodule_changes(_changes.get('changes', []))  # pyright: ignore[reportIndexIssue,reportOptionalSubscript]
         changes = _changes
         if not changes:
             get_logger().error('No changes found for the merge request.')
             return None
-        all_diffs = self.mr.diffs.list(get_all=True)
+        all_diffs = self.mr.diffs.list(get_all=True)  # pyright: ignore[reportOptionalMemberAccess]
         if not all_diffs:
             get_logger().error('No diffs found for the merge request.')
             return None
         for diff in all_diffs:
-            for change in changes['changes']:
+            for change in changes['changes']:  # pyright: ignore[reportIndexIssue,reportOptionalSubscript]
                 if change['new_path'] == relevant_file and relevant_line_in_file in change['diff']:
                     return dict(vars(diff))
             get_logger().debug(
@@ -768,14 +768,14 @@ class GitLabProvider(GitProvider):
             get_logger().exception(f"Failed to remove comment, error: {e}")
 
     def get_title(self):
-        return self.mr.title
+        return self.mr.title  # pyright: ignore[reportOptionalMemberAccess]
 
     def get_languages(self):
         languages = self.gl.projects.get(self.id_project).languages()  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
         return languages
 
     def get_pr_branch(self):
-        return self.mr.source_branch
+        return self.mr.source_branch  # pyright: ignore[reportOptionalMemberAccess]
 
     def get_pr_owner_id(self) -> str | None:
         if not self.gitlab_url or 'gitlab.com' in self.gitlab_url:
@@ -787,10 +787,10 @@ class GitLabProvider(GitProvider):
         return host
 
     def get_pr_description_full(self):
-        return self.mr.description
+        return self.mr.description  # pyright: ignore[reportOptionalMemberAccess]
 
     def get_issue_comments(self):
-        return self.mr.notes.list(get_all=True)[::-1]
+        return self.mr.notes.list(get_all=True)[::-1]  # pyright: ignore[reportOptionalMemberAccess]
 
     def get_repo_settings(self):
         settings_files = []
@@ -849,7 +849,7 @@ class GitLabProvider(GitProvider):
             return ""
 
     def get_workspace_name(self):
-        return self.id_project.split('/')[0]
+        return self.id_project.split('/')[0]  # pyright: ignore[reportOptionalMemberAccess]
 
     def add_eyes_reaction(self, issue_comment_id: int, disable_eyes: bool = False) -> int | None:
         if disable_eyes:
@@ -933,8 +933,8 @@ class GitLabProvider(GitProvider):
 
     def publish_labels(self, pr_types):  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]
         try:
-            self.mr.labels = list(set(pr_types))
-            self.mr.save()
+            self.mr.labels = list(set(pr_types))  # pyright: ignore[reportOptionalMemberAccess]
+            self.mr.save()  # pyright: ignore[reportOptionalMemberAccess]
         except Exception as e:
             get_logger().warning(f"Failed to publish labels, error: {e}")
 
@@ -942,7 +942,7 @@ class GitLabProvider(GitProvider):
         pass
 
     def get_pr_labels(self, update=False):  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]
-        return self.mr.labels
+        return self.mr.labels  # pyright: ignore[reportOptionalMemberAccess]
 
     def get_repo_labels(self):
         return self.gl.projects.get(self.id_project).labels.list()  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
@@ -955,7 +955,7 @@ class GitLabProvider(GitProvider):
         """
         max_tokens = get_settings().get("CONFIG.MAX_COMMITS_TOKENS", None)
         try:
-            commit_messages_list = [commit['message'] for commit in self.mr.commits()._list]
+            commit_messages_list = [commit['message'] for commit in self.mr.commits()._list]  # pyright: ignore[reportPrivateUsage]  # pyright: ignore[reportOptionalMemberAccess]
             commit_messages_str = "\n".join([f"{i + 1}. {message}" for i, message in enumerate(commit_messages_list)])
         except Exception:
             commit_messages_str = ""
@@ -965,18 +965,18 @@ class GitLabProvider(GitProvider):
 
     def get_pr_id(self) -> str:
         try:
-            pr_id = self.mr.web_url
+            pr_id = self.mr.web_url  # pyright: ignore[reportOptionalMemberAccess]
             return pr_id
         except:
             return ""
 
     def get_line_link(self, relevant_file: str, relevant_line_start: int, relevant_line_end: int = None) -> str:  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]
         if relevant_line_start == -1:
-            link = f"{self.gl.url}/{self.id_project}/-/blob/{self.mr.source_branch}/{relevant_file}?ref_type=heads"
+            link = f"{self.gl.url}/{self.id_project}/-/blob/{self.mr.source_branch}/{relevant_file}?ref_type=heads"  # pyright: ignore[reportOptionalMemberAccess]
         elif relevant_line_end:
-            link = f"{self.gl.url}/{self.id_project}/-/blob/{self.mr.source_branch}/{relevant_file}?ref_type=heads#L{relevant_line_start}-{relevant_line_end}"
+            link = f"{self.gl.url}/{self.id_project}/-/blob/{self.mr.source_branch}/{relevant_file}?ref_type=heads#L{relevant_line_start}-{relevant_line_end}"  # pyright: ignore[reportOptionalMemberAccess]
         else:
-            link = f"{self.gl.url}/{self.id_project}/-/blob/{self.mr.source_branch}/{relevant_file}?ref_type=heads#L{relevant_line_start}"
+            link = f"{self.gl.url}/{self.id_project}/-/blob/{self.mr.source_branch}/{relevant_file}?ref_type=heads#L{relevant_line_start}"  # pyright: ignore[reportOptionalMemberAccess]
         return link
 
 
@@ -991,7 +991,7 @@ class GitLabProvider(GitProvider):
                 (self.diff_files, relevant_file, relevant_line_str)  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
             if absolute_position != -1:
                 # link to right file only
-                link = f"{self.gl.url}/{self.id_project}/-/blob/{self.mr.source_branch}/{relevant_file}?ref_type=heads#L{absolute_position}"
+                link = f"{self.gl.url}/{self.id_project}/-/blob/{self.mr.source_branch}/{relevant_file}?ref_type=heads#L{absolute_position}"  # pyright: ignore[reportOptionalMemberAccess]
 
                 # # link to diff
                 # sha_file = hashlib.sha1(relevant_file.encode('utf-8')).hexdigest()

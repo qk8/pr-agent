@@ -94,7 +94,7 @@ class PRAddDocs:
         return response
 
     def _prepare_pr_code_docs(self) -> dict[str, object]:
-        docs = self.prediction.strip()
+        docs = self.prediction.strip()  # pyright: ignore[reportOptionalMemberAccess]
         data = load_yaml(docs)
         if isinstance(data, list):
             data = {'Code Documentation': data}

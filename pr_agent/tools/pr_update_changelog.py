@@ -136,7 +136,7 @@ class PRUpdateChangelog:
         return response
 
     def _prepare_changelog_update(self) -> tuple[str, str]:
-        answer = self.prediction.strip().strip("```").strip()  # noqa B005
+        answer = self.prediction.strip().strip("```").strip()  # noqa B005  # pyright: ignore[reportOptionalMemberAccess]
         if hasattr(self, "changelog_file"):
             existing_content = self.changelog_file
         else:

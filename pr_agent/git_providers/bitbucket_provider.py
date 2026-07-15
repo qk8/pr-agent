@@ -85,7 +85,7 @@ class BitbucketProvider(GitProvider):
             settings_files.append(("global", global_settings))
         try:
             url = (f"https://api.bitbucket.org/2.0/repositories/{self.workspace_slug}/{self.repo_slug}/src/"
-                   f"{self.pr.destination_branch}/.pr_agent.toml")
+                   f"{self.pr.destination_branch}/.pr_agent.toml")  # pyright: ignore[reportOptionalMemberAccess]
             response = requests.request("GET", url, headers=self.headers)
             if response.status_code == 200:  # found
                 settings_files.append(("local", response.text.encode('utf-8')))
@@ -127,7 +127,7 @@ class BitbucketProvider(GitProvider):
     def get_repo_file_content(self, file_path: str, from_default_branch: bool = False):
         # Read from the PR destination (target) branch, matching the other providers,
         # or from the repository default branch when from_default_branch is requested.
-        branch = self.get_repo_default_branch() if from_default_branch else self.pr.destination_branch
+        branch = self.get_repo_default_branch() if from_default_branch else self.pr.destination_branch  # pyright: ignore[reportOptionalMemberAccess]
         return self.get_pr_file_content(file_path, branch)
 
     def get_git_repo_url(self, pr_url: str=None) -> str: #bitbucket does not support issue url, so ignore param  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]
@@ -171,8 +171,8 @@ class BitbucketProvider(GitProvider):
             original_suggestion = suggestion.get('original_suggestion', None)  # needed for diff code
             if original_suggestion:
                 try:
-                    existing_code = original_suggestion['existing_code'].rstrip() + "\n"
-                    improved_code = original_suggestion['improved_code'].rstrip() + "\n"
+                    existing_code = original_suggestion['existing_code'].rstrip() + "\n"  # pyright: ignore[reportIndexIssue,reportOptionalSubscript]
+                    improved_code = original_suggestion['improved_code'].rstrip() + "\n"  # pyright: ignore[reportIndexIssue,reportOptionalSubscript]
                     diff = difflib.unified_diff(existing_code.split('\n'),
                                                 improved_code.split('\n'), n=999)
                     patch_orig = "\n".join(diff)
@@ -246,19 +246,19 @@ class BitbucketProvider(GitProvider):
             git_files = context.get("git_files", None)
             if git_files:
                 return git_files
-            self.git_files = [_gef_filename(diff) for diff in self.pr.diffstat()]
+            self.git_files = [_gef_filename(diff) for diff in self.pr.diffstat()]  # pyright: ignore[reportOptionalMemberAccess]
             context["git_files"] = self.git_files
             return self.git_files
         except Exception:
             if not self.git_files:
-                self.git_files = [_gef_filename(diff) for diff in self.pr.diffstat()]
+                self.git_files = [_gef_filename(diff) for diff in self.pr.diffstat()]  # pyright: ignore[reportOptionalMemberAccess]
             return self.git_files
 
     def get_diff_files(self) -> list[FilePatchInfo]:
         if self.diff_files:
             return self.diff_files
 
-        diffs_original = list(self.pr.diffstat())
+        diffs_original = list(self.pr.diffstat())  # pyright: ignore[reportOptionalMemberAccess]
         diffs = filter_ignored(diffs_original, 'bitbucket')
         if diffs != diffs_original:
             try:
@@ -276,7 +276,7 @@ class BitbucketProvider(GitProvider):
 
         # get the pr patches
         try:
-            pr_patches = self.pr.diff()
+            pr_patches = self.pr.diff()  # pyright: ignore[reportOptionalMemberAccess]
         except Exception as e:
             # Try different encodings if UTF-8 fails
             get_logger().warning(f"Failed to decode PR patch with utf-8, error: {e}")
@@ -284,7 +284,7 @@ class BitbucketProvider(GitProvider):
             pr_patches = None
             for encoding in encodings_to_try:
                 try:
-                    pr_patches = self.pr.diff(encoding=encoding)
+                    pr_patches = self.pr.diff(encoding=encoding)  # pyright: ignore[reportOptionalMemberAccess]
                     get_logger().info(f"Successfully decoded PR patch with encoding {encoding}")
                     break
                 except UnicodeDecodeError:
@@ -387,7 +387,7 @@ class BitbucketProvider(GitProvider):
         return diff_files
 
     def get_latest_commit_url(self):
-        return self.pr.data['source']['commit']['links']['html']['href']
+        return self.pr.data['source']['commit']['links']['html']['href']  # pyright: ignore[reportOptionalMemberAccess]
 
     def get_comment_url(self, comment):  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]
         return comment.data['links']['html']['href']
@@ -398,7 +398,7 @@ class BitbucketProvider(GitProvider):
                                    name='review',  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
                                    final_update_message=True):  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
         try:
-            for comment in self.pr.comments():
+            for comment in self.pr.comments():  # pyright: ignore[reportOptionalMemberAccess]
                 body = comment.raw
                 if initial_header in body:
                     latest_commit_url = self.get_latest_commit_url()
@@ -410,7 +410,7 @@ class BitbucketProvider(GitProvider):
                         pr_comment_updated = pr_comment
                     get_logger().info(f"Persistent mode - updating comment {comment_url} to latest {name} message")
                     d = {"content": {"raw": pr_comment_updated}}
-                    _response = comment._update_data(comment.put(None, data=d))
+                    _response = comment._update_data(comment.put(None, data=d))  # pyright: ignore[reportPrivateUsage]
                     if final_update_message:
                         self.publish_comment(
                             f"**[Persistent {name}]({comment_url})** updated to latest commit {latest_commit_url}")
@@ -425,9 +425,9 @@ class BitbucketProvider(GitProvider):
             get_logger().debug(f"Skipping publish_comment for temporary comment: {pr_comment}")
             return None
         pr_comment = self.limit_output_characters(pr_comment, self.max_comment_length)
-        comment = self.pr.comment(pr_comment)
+        comment = self.pr.comment(pr_comment)  # pyright: ignore[reportOptionalMemberAccess]
         if is_temporary:
-            self.temp_comments.append(comment["id"])
+            self.temp_comments.append(comment["id"])  # pyright: ignore[reportIndexIssue,reportOptionalSubscript]
         return comment
 
     def edit_comment(self, comment, body: str):  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]
@@ -446,7 +446,7 @@ class BitbucketProvider(GitProvider):
 
     def remove_comment(self, comment):  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]
         try:
-            self.pr.delete(f"comments/{comment}")
+            self.pr.delete(f"comments/{comment}")  # pyright: ignore[reportOptionalMemberAccess]
         except Exception as e:
             get_logger().exception(f"Failed to remove comment, error: {e}")
 
@@ -523,14 +523,14 @@ class BitbucketProvider(GitProvider):
                 get_logger().error(f"Could not publish inline comment {comment}")
 
     def get_title(self):
-        return self.pr.title
+        return self.pr.title  # pyright: ignore[reportOptionalMemberAccess]
 
     def get_languages(self):
         languages = {self._get_repo().get_data("language"): 0}
         return languages
 
     def get_pr_branch(self):
-        return self.pr.source_branch
+        return self.pr.source_branch  # pyright: ignore[reportOptionalMemberAccess]
 
     # This function attempts to get the default branch of the repository. As a fallback, uses the PR destination branch.
     # Note: Must be running from a PR context.
@@ -540,13 +540,13 @@ class BitbucketProvider(GitProvider):
             response_repo = requests.request("GET", url_repo, headers=self.headers).json()
             return response_repo['mainbranch']['name']
         except:
-            return self.pr.destination_branch
+            return self.pr.destination_branch  # pyright: ignore[reportOptionalMemberAccess]
 
     def get_pr_owner_id(self) -> str | None:
         return self.workspace_slug
 
     def get_pr_description_full(self):
-        return self.pr.description
+        return self.pr.description  # pyright: ignore[reportOptionalMemberAccess]
 
     def get_user_id(self):
         return 0
@@ -596,10 +596,10 @@ class BitbucketProvider(GitProvider):
 
     def get_pr_file_content(self, file_path: str, branch: str) -> str:
         try:
-            if branch == self.pr.source_branch:
-                branch = self.pr.data["source"]["commit"]["hash"]
-            elif branch == self.pr.destination_branch:
-                branch = self.pr.data["destination"]["commit"]["hash"]
+            if branch == self.pr.source_branch:  # pyright: ignore[reportOptionalMemberAccess]
+                branch = self.pr.data["source"]["commit"]["hash"]  # pyright: ignore[reportOptionalMemberAccess]
+            elif branch == self.pr.destination_branch:  # pyright: ignore[reportOptionalMemberAccess]
+                branch = self.pr.data["destination"]["commit"]["hash"]  # pyright: ignore[reportOptionalMemberAccess]
             url = (f"https://api.bitbucket.org/2.0/repositories/{self.workspace_slug}/{self.repo_slug}/src/"
                    f"{branch}/{file_path}")
             response = requests.request("GET", url, headers=self.headers)

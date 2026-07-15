@@ -98,19 +98,19 @@ def get_pr_diff(git_provider: GitProvider, token_handler: TokenHandler,
         for filename, file_values in file_dict.items():
             if filename in files_in_patch:
                 continue
-            if file_values['edit_type'] == EDIT_TYPE.ADDED:
+            if file_values['edit_type'] == EDIT_TYPE.ADDED:  # pyright: ignore[reportIndexIssue,reportOptionalSubscript]
                 unprocessed_files.append(filename)
                 if not added_list_str:
                     added_list_str = ADDED_FILES_ + f"\n{filename}"
                 else:
                     added_list_str = added_list_str + f"\n{filename}"
-            elif file_values['edit_type'] in [EDIT_TYPE.MODIFIED, EDIT_TYPE.RENAMED]:
+            elif file_values['edit_type'] in [EDIT_TYPE.MODIFIED, EDIT_TYPE.RENAMED]:  # pyright: ignore[reportIndexIssue,reportOptionalSubscript]
                 unprocessed_files.append(filename)
                 if not modified_list_str:
                     modified_list_str = MORE_MODIFIED_FILES_ + f"\n{filename}"
                 else:
                     modified_list_str = modified_list_str + f"\n{filename}"
-            elif file_values['edit_type'] == EDIT_TYPE.DELETED:
+            elif file_values['edit_type'] == EDIT_TYPE.DELETED:  # pyright: ignore[reportIndexIssue,reportOptionalSubscript]
                 # unprocessed_files.append(filename) # not needed here, because the file was deleted, so no need to process it
                 if not deleted_list_str:
                     deleted_list_str = DELETED_FILES_ + f"\n{filename}"

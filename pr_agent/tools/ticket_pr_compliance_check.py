@@ -143,10 +143,10 @@ async def extract_tickets(git_provider):  # pyright: ignore[reportUnknownParamet
             if tickets:
 
                 for ticket in tickets:
-                    repo_name, original_issue_number = git_provider._parse_issue_url(ticket)  # pyright: ignore[reportUnusedVariable]
+                    repo_name, original_issue_number = git_provider._parse_issue_url(ticket)  # pyright: ignore[reportUnusedVariable]  # pyright: ignore[reportPrivateUsage]
 
                     try:
-                        issue_main = git_provider.repo_obj.get_issue(original_issue_number)
+                        issue_main = git_provider.repo_obj.get_issue(original_issue_number)  # pyright: ignore[reportOptionalMemberAccess]
                     except Exception as e:
                         get_logger().error(f"Error getting main issue: {e}",
                                            artifact={"traceback": traceback.format_exc()})
@@ -162,8 +162,8 @@ async def extract_tickets(git_provider):  # pyright: ignore[reportUnknownParamet
                         sub_issues = git_provider.fetch_sub_issues(ticket)
                         for sub_issue_url in sub_issues:
                             try:
-                                sub_repo, sub_issue_number = git_provider._parse_issue_url(sub_issue_url)  # pyright: ignore[reportUnusedVariable]
-                                sub_issue = git_provider.repo_obj.get_issue(sub_issue_number)
+                                sub_repo, sub_issue_number = git_provider._parse_issue_url(sub_issue_url)  # pyright: ignore[reportUnusedVariable]  # pyright: ignore[reportPrivateUsage]
+                                sub_issue = git_provider.repo_obj.get_issue(sub_issue_number)  # pyright: ignore[reportOptionalMemberAccess]
 
                                 sub_body = sub_issue.body or ""
                                 if len(sub_body) > MAX_TICKET_CHARACTERS:

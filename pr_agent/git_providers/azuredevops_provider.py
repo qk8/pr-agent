@@ -129,7 +129,7 @@ class AzureDevopsProvider(GitProvider):
         return self.reply_to_thread(comment_id, body, is_temporary)
 
     def get_pr_description_full(self) -> str:
-        return self.pr.description
+        return self.pr.description  # pyright: ignore[reportOptionalMemberAccess]
 
     def edit_comment(self, comment: Comment, body: str):
         try:
@@ -214,16 +214,16 @@ class AzureDevopsProvider(GitProvider):
         self.previous_review = self.get_previous_review(full=True, incremental=True)
         if not self.previous_review:
             get_logger().info("No previous review found, will review the entire PR")
-            self.incremental.is_incremental = False
+            self.incremental.is_incremental = False  # pyright: ignore[reportOptionalMemberAccess]
             return
 
-        self.incremental.commits_range = self._get_commit_range()
-        if self.incremental.commits_range is None:
+        self.incremental.commits_range = self._get_commit_range()  # pyright: ignore[reportOptionalMemberAccess]
+        if self.incremental.commits_range is None:  # pyright: ignore[reportOptionalMemberAccess]
             return
         candidate_paths = []
         had_errors = False
         non_merge_seen = False
-        for commit in self.incremental.commits_range:
+        for commit in self.incremental.commits_range:  # pyright: ignore[reportOptionalMemberAccess]
             if len(commit.parents) > 1:
                 get_logger().info(f"Skipping merge commit {commit.sha}")
                 continue
@@ -256,16 +256,16 @@ class AzureDevopsProvider(GitProvider):
             for path in filtered:
                 if is_valid_file(path):
                     self.unreviewed_files_map[path] = path
-        elif had_errors and self.incremental.commits_range:
+        elif had_errors and self.incremental.commits_range:  # pyright: ignore[reportOptionalMemberAccess]
             get_logger().warning(
                 "Failed to fetch changes for incremental commits; falling back to full review."
             )
-            self.incremental.is_incremental = False
-        elif self.incremental.commits_range and not non_merge_seen:
+            self.incremental.is_incremental = False  # pyright: ignore[reportOptionalMemberAccess]
+        elif self.incremental.commits_range and not non_merge_seen:  # pyright: ignore[reportOptionalMemberAccess]
             get_logger().info(
                 "Incremental range only contains merge commits; falling back to full review."
             )
-            self.incremental.is_incremental = False
+            self.incremental.is_incremental = False  # pyright: ignore[reportOptionalMemberAccess]
 
     def _get_commit_range(self):
         last_review_time = _to_naive_utc(getattr(self.previous_review, "created_at", None))
@@ -274,7 +274,7 @@ class AzureDevopsProvider(GitProvider):
                 "Cannot compute incremental commit range "  # pyright: ignore[reportImplicitStringConcatenation]
                 "(missing previous review timestamp or PR commits); falling back to full review."
             )
-            self.incremental.is_incremental = False
+            self.incremental.is_incremental = False  # pyright: ignore[reportOptionalMemberAccess]
             return None
         # Walk newest -> oldest to find the newest commit that predates the previous review
         # (the "last seen" baseline). The new range is then everything positioned after that
@@ -290,14 +290,14 @@ class AzureDevopsProvider(GitProvider):
             saw_reliable_date = True
             if cdate <= last_review_time:
                 last_seen_index = index
-                self.incremental.last_seen_commit = self.pr_commits[index]
+                self.incremental.last_seen_commit = self.pr_commits[index]  # pyright: ignore[reportOptionalMemberAccess]
                 break
         if not saw_reliable_date:
             get_logger().info(
                 "All PR commit author dates are missing; cannot compute incremental range. "  # pyright: ignore[reportImplicitStringConcatenation]
                 "Falling back to full review."
             )
-            self.incremental.is_incremental = False
+            self.incremental.is_incremental = False  # pyright: ignore[reportOptionalMemberAccess]
             return None
         # No commit predates the previous review, so there is no baseline to diff against.
         # Without it get_diff_files() cannot rebuild the incremental diff and would silently
@@ -308,11 +308,11 @@ class AzureDevopsProvider(GitProvider):
                 "No PR commit predates the previous review (no last-seen baseline commit); "  # pyright: ignore[reportImplicitStringConcatenation]
                 "falling back to full review."
             )
-            self.incremental.is_incremental = False
+            self.incremental.is_incremental = False  # pyright: ignore[reportOptionalMemberAccess]
             return None
         commits_range = self.pr_commits[last_seen_index + 1:]
         if commits_range:
-            self.incremental.first_new_commit = commits_range[0]
+            self.incremental.first_new_commit = commits_range[0]  # pyright: ignore[reportOptionalMemberAccess]
         return commits_range
 
     def get_previous_review(self, *, full: bool, incremental: bool):
@@ -362,7 +362,7 @@ class AzureDevopsProvider(GitProvider):
                 version = None
             else:
                 version = GitVersionDescriptor(  # pyright: ignore[reportPossiblyUnboundVariable]
-                    version=self.pr.last_merge_target_commit.commit_id, version_type="commit"
+                    version=self.pr.last_merge_target_commit.commit_id, version_type="commit"  # pyright: ignore[reportOptionalMemberAccess]
                 )
             item = self.azure_devops_client.get_item(
                 repository_id=self.repo_slug,
@@ -380,7 +380,7 @@ class AzureDevopsProvider(GitProvider):
 
     def get_files(self):
         if (isinstance(getattr(self, "incremental", None), IncrementalPR)
-                and self.incremental.is_incremental
+                and self.incremental.is_incremental  # pyright: ignore[reportOptionalMemberAccess]
                 and self.unreviewed_files_map):
             return list(self.unreviewed_files_map.keys())
         return self._get_files_full()
@@ -408,7 +408,7 @@ class AzureDevopsProvider(GitProvider):
             if self.diff_files is not None:
                 return self.diff_files
 
-            if self.pr.last_merge_commit is None or self.pr.last_merge_target_commit is None:
+            if self.pr.last_merge_commit is None or self.pr.last_merge_target_commit is None:  # pyright: ignore[reportOptionalMemberAccess]
                 get_logger().info(
                     f"PR {self.pr_num} has no last_merge_commit/last_merge_target_commit; "  # pyright: ignore[reportImplicitStringConcatenation]
                     f"cannot compute diff files."
@@ -416,8 +416,8 @@ class AzureDevopsProvider(GitProvider):
                 self.diff_files = []
                 return []
 
-            base_sha = self.pr.last_merge_target_commit
-            head_sha = self.pr.last_merge_commit
+            base_sha = self.pr.last_merge_target_commit  # pyright: ignore[reportOptionalMemberAccess]
+            head_sha = self.pr.last_merge_commit  # pyright: ignore[reportOptionalMemberAccess]
 
             # Get PR iterations
             iterations = self.azure_devops_client.get_pull_request_iterations(
@@ -484,9 +484,9 @@ class AzureDevopsProvider(GitProvider):
 
             incremental_active = (
                 isinstance(getattr(self, "incremental", None), IncrementalPR)
-                and self.incremental.is_incremental
+                and self.incremental.is_incremental  # pyright: ignore[reportOptionalMemberAccess]
                 and bool(self.unreviewed_files_map)
-                and self.incremental.last_seen_commit_sha
+                and self.incremental.last_seen_commit_sha  # pyright: ignore[reportOptionalMemberAccess]
             )
             if incremental_active:
                 diffs = [f for f in diffs if f in self.unreviewed_files_map]
@@ -533,7 +533,7 @@ class AzureDevopsProvider(GitProvider):
                     original_file_content_str = ""
                 elif incremental_active:
                     inc_version = GitVersionDescriptor(  # pyright: ignore[reportPossiblyUnboundVariable]
-                        version=self.incremental.last_seen_commit_sha, version_type="commit"
+                        version=self.incremental.last_seen_commit_sha, version_type="commit"  # pyright: ignore[reportOptionalMemberAccess]
                     )
                     try:
                         inc_original = self.azure_devops_client.get_item(
@@ -547,7 +547,7 @@ class AzureDevopsProvider(GitProvider):
                         original_file_content_str = inc_original.content or ""
                     except Exception as error:
                         get_logger().warning(
-                            f"Failed to retrieve original of {file} at {self.incremental.last_seen_commit_sha}: {error}"
+                            f"Failed to retrieve original of {file} at {self.incremental.last_seen_commit_sha}: {error}"  # pyright: ignore[reportOptionalMemberAccess]
                         )
                         original_file_content_str = ""
                 else:
@@ -713,7 +713,7 @@ class AzureDevopsProvider(GitProvider):
             return overall_success
 
     def get_title(self):
-        return self.pr.title
+        return self.pr.title  # pyright: ignore[reportOptionalMemberAccess]
 
     def get_languages(self):
         languages = []

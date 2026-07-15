@@ -448,7 +448,7 @@ class PRDescription:
 
     def _prepare_data(self):
         # Load the AI prediction data into a dictionary
-        self.data = load_yaml(self.prediction.strip(), keys_fix_yaml=self.keys_fix)
+        self.data = load_yaml(self.prediction.strip(), keys_fix_yaml=self.keys_fix)  # pyright: ignore[reportOptionalMemberAccess]
 
         if get_settings().pr_description.add_original_user_description and self.user_description:
             self.data["User Description"] = self.user_description
@@ -612,7 +612,7 @@ class PRDescription:
             elif key.lower().strip() == 'description':
                 if isinstance(value, list):
                     value = ', '.join(v.rstrip() for v in value)
-                value = value.replace('\n-', '\n\n-').strip() # makes the bullet points more readable by adding double space
+                value = value.replace('\n-', '\n\n-').strip() # makes the bullet points more readable by adding double space  # pyright: ignore[reportOptionalMemberAccess]
                 pr_body += f"{value}\n"
             else:
                 # if the value is a list, join its items by comma

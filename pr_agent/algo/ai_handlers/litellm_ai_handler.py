@@ -19,8 +19,8 @@ from pr_agent.algo import (CLAUDE_EXTENDED_THINKING_MODELS,
                            USER_MESSAGE_ONLY_MODELS)
 from pr_agent.algo.ai_handlers.base_ai_handler import BaseAiHandler
 from pr_agent.algo.ai_handlers.litellm_helpers import (
-    MockResponse, _get_azure_ad_token, _handle_streaming_response,
-    _process_litellm_extra_body)
+    MockResponse, _get_azure_ad_token, _handle_streaming_response,  # pyright: ignore[reportPrivateUsage]
+    _process_litellm_extra_body)  # pyright: ignore[reportPrivateUsage]
 from pr_agent.algo.utils import ReasoningEffort, get_version
 from pr_agent.config_loader import get_settings
 from pr_agent.log import get_logger
@@ -300,11 +300,11 @@ class LiteLLMAIHandler(BaseAiHandler):
 
     def _activate_static_aws_fallback(self) -> None:
         """Swap process env to static credentials for Bedrock fallback after IMDS failure."""
-        os.environ["AWS_ACCESS_KEY_ID"] = self._aws_static_creds["AWS_ACCESS_KEY_ID"]
-        os.environ["AWS_SECRET_ACCESS_KEY"] = self._aws_static_creds["AWS_SECRET_ACCESS_KEY"]
-        os.environ["AWS_REGION_NAME"] = self._aws_static_creds["AWS_REGION_NAME"]
+        os.environ["AWS_ACCESS_KEY_ID"] = self._aws_static_creds["AWS_ACCESS_KEY_ID"]  # pyright: ignore[reportIndexIssue,reportOptionalSubscript]
+        os.environ["AWS_SECRET_ACCESS_KEY"] = self._aws_static_creds["AWS_SECRET_ACCESS_KEY"]  # pyright: ignore[reportIndexIssue,reportOptionalSubscript]
+        os.environ["AWS_REGION_NAME"] = self._aws_static_creds["AWS_REGION_NAME"]  # pyright: ignore[reportIndexIssue,reportOptionalSubscript]
         if "AWS_SESSION_TOKEN" in self._aws_static_creds:  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
-            os.environ["AWS_SESSION_TOKEN"] = self._aws_static_creds["AWS_SESSION_TOKEN"]
+            os.environ["AWS_SESSION_TOKEN"] = self._aws_static_creds["AWS_SESSION_TOKEN"]  # pyright: ignore[reportIndexIssue,reportOptionalSubscript]
         elif "AWS_SESSION_TOKEN" in os.environ:
             del os.environ["AWS_SESSION_TOKEN"]
         self._aws_imds_fell_back = True
@@ -381,8 +381,8 @@ class LiteLLMAIHandler(BaseAiHandler):
 
         context = captured_extra[0] if len(captured_extra) > 0 else None
 
-        command = context.get("command", "unknown")
-        pr_url = context.get("pr_url", "unknown")
+        command = context.get("command", "unknown")  # pyright: ignore[reportOptionalMemberAccess]
+        pr_url = context.get("pr_url", "unknown")  # pyright: ignore[reportOptionalMemberAccess]
         git_provider = get_settings().config.git_provider
 
         metadata = dict()
@@ -650,8 +650,8 @@ class LiteLLMAIHandler(BaseAiHandler):
             return resp, finish_reason, mock_response
         else:
             response = await acompletion(**kwargs)
-            if response is None or len(response["choices"]) == 0:  # pyright: ignore[reportUnnecessaryComparison]
+            if response is None or len(response["choices"]) == 0:  # pyright: ignore[reportUnnecessaryComparison]  # pyright: ignore[reportIndexIssue,reportOptionalSubscript]
                 raise openai.APIError  # pyright: ignore[reportGeneralTypeIssues,reportCallIssue]
-            return (response["choices"][0]['message']['content'],
-                    response["choices"][0]["finish_reason"],
+            return (response["choices"][0]['message']['content'],  # pyright: ignore[reportIndexIssue,reportOptionalSubscript]
+                    response["choices"][0]["finish_reason"],  # pyright: ignore[reportIndexIssue,reportOptionalSubscript]
                     response)

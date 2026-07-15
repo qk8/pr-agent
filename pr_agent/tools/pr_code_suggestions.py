@@ -429,12 +429,12 @@ class PRCodeSuggestions:
         if code_suggestions_feedback and len(code_suggestions_feedback) == len(data["code_suggestions"]):  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
             for i, suggestion in enumerate(data["code_suggestions"]):
                 try:
-                    suggestion["score"] = code_suggestions_feedback[i]["suggestion_score"]
-                    suggestion["score_why"] = code_suggestions_feedback[i]["why"]
+                    suggestion["score"] = code_suggestions_feedback[i]["suggestion_score"]  # pyright: ignore[reportIndexIssue,reportOptionalSubscript]
+                    suggestion["score_why"] = code_suggestions_feedback[i]["why"]  # pyright: ignore[reportIndexIssue,reportOptionalSubscript]
 
                     if 'relevant_lines_start' not in suggestion:
-                        relevant_lines_start = code_suggestions_feedback[i].get('relevant_lines_start', -1)
-                        relevant_lines_end = code_suggestions_feedback[i].get('relevant_lines_end', -1)
+                        relevant_lines_start = code_suggestions_feedback[i].get('relevant_lines_start', -1)  # pyright: ignore[reportIndexIssue,reportOptionalSubscript]
+                        relevant_lines_end = code_suggestions_feedback[i].get('relevant_lines_end', -1)  # pyright: ignore[reportIndexIssue,reportOptionalSubscript]
                         suggestion['relevant_lines_start'] = relevant_lines_start
                         suggestion['relevant_lines_end'] = relevant_lines_end
                         if relevant_lines_start < 0 or relevant_lines_end < 0:
@@ -459,7 +459,7 @@ class PRCodeSuggestions:
                 except Exception as e:  #
                     get_logger().error(f"Error processing suggestion score {i}",
                                        artifact={"suggestion": suggestion,
-                                                 "code_suggestions_feedback": code_suggestions_feedback[i]})
+                                                 "code_suggestions_feedback": code_suggestions_feedback[i]})  # pyright: ignore[reportIndexIssue,reportOptionalSubscript]
                     suggestion["score"] = 7
                     suggestion["score_why"] = ""
 
@@ -516,7 +516,7 @@ class PRCodeSuggestions:
                 if get_settings().get("pr_code_suggestions.focus_only_on_problems", False):
                     CRITICAL_LABEL = 'critical'
                     if CRITICAL_LABEL in suggestion['label'].lower(): # we want the published labels to be less declarative  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
-                        suggestion['label'] = 'possible issue'
+                        suggestion['label'] = 'possible issue'  # pyright: ignore[reportIndexIssue,reportOptionalSubscript]
 
                 if suggestion['one_sentence_summary'] in one_sentence_summary_list:  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
                     get_logger().debug(f"Skipping suggestion {i + 1}, because it is a duplicate: {suggestion}")
