@@ -26,19 +26,22 @@ OUTPUT_BUFFER_TOKENS_HARD_THRESHOLD = 1000
 MAX_EXTRA_LINES = 10
 
 
-def cap_and_log_extra_lines(value, direction) -> int:  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]
+def cap_and_log_extra_lines(value: int, direction: str) -> int:
     if value > MAX_EXTRA_LINES:
         get_logger().warning(f"patch_extra_lines_{direction} was {value}, capping to {MAX_EXTRA_LINES}")
         return MAX_EXTRA_LINES
     return value
 
 
-def get_pr_diff(git_provider: GitProvider, token_handler: TokenHandler,
-                model: str,
-                add_line_numbers_to_hunks: bool = False,
-                disable_extra_lines: bool = False,
-                large_pr_handling=False,  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
-                return_remaining_files=False):  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
+def get_pr_diff(
+    git_provider: GitProvider,
+    token_handler: TokenHandler,
+    model: str,
+    add_line_numbers_to_hunks: bool = False,
+    disable_extra_lines: bool = False,
+    large_pr_handling: bool = False,
+    return_remaining_files: bool = False,
+) -> str | tuple[str, list[dict[str, str]]]:
     if disable_extra_lines:
         PATCH_EXTRA_LINES_BEFORE = 0
         PATCH_EXTRA_LINES_AFTER = 0
@@ -270,7 +273,13 @@ def pr_generate_compressed_diff(top_langs: list[dict[str, object]], token_handle
     return patches_list, total_tokens_list, deleted_files_list, remaining_files_list, file_dict, files_in_patches_list
 
 
-def generate_full_patch(convert_hunks_to_line_numbers, file_dict, max_tokens_model,remaining_files_list_prev, token_handler):  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]
+def generate_full_patch(
+    convert_hunks_to_line_numbers: bool,
+    file_dict: dict[str, dict[str, object]],
+    max_tokens_model: int,
+    remaining_files_list_prev: list[str],
+    token_handler: TokenHandler,
+) -> tuple[int, list[str], list[str], list[str]]:
     total_tokens = token_handler.prompt_tokens # initial tokens
     patches = []
     remaining_files_list_new = []
@@ -491,7 +500,10 @@ def get_pr_multi_diffs(git_provider: GitProvider,
     return final_diff_list
 
 
-def add_ai_metadata_to_diff_files(git_provider, pr_description_files):  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]
+def add_ai_metadata_to_diff_files(
+    git_provider: GitProvider,
+    pr_description_files: list[dict[str, str]],
+) -> None:
     """
     Adds AI metadata to the diff files based on the PR description files (FilePatchInfo.ai_file_summary).
     """
@@ -515,7 +527,10 @@ def add_ai_metadata_to_diff_files(git_provider, pr_description_files):  # pyrigh
                            artifact={"traceback": traceback.format_exc()})
 
 
-def add_ai_summary_top_patch(file, full_extended_patch):  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]
+def add_ai_summary_top_patch(
+    file: FilePatchInfo,
+    full_extended_patch: str,
+) -> str:
     try:
         # below every instance of '## File: ...' in the patch, add the ai-summary metadata
         full_extended_patch_lines = full_extended_patch.split("\n")
