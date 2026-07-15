@@ -142,7 +142,7 @@ class LocalGitProvider(GitProvider):
     def remove_comment(self, comment):  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]
         pass  # Not applicable to the local git provider, but required by the interface
 
-    def add_eyes_reaction(self, comment):  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]  # pyright: ignore[reportIncompatibleMethodOverride]
+    def add_eyes_reaction(self, comment):  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportIncompatibleMethodOverride]
         pass  # Not applicable to the local git provider, but required by the interface
 
     def get_commit_messages(self):  # pyright: ignore[reportIncompatibleMethodOverride]
