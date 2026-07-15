@@ -9,7 +9,7 @@ from pr_agent.algo.git_patch_processing import (
     decouple_and_convert_to_hunks_with_lines_numbers)
 from pr_agent.algo.language_handler import sort_files_by_main_languages
 from pr_agent.algo.token_handler import TokenHandler
-from pr_agent.algo.types import EDIT_TYPE
+from pr_agent.algo.types import EDIT_TYPE, FilePatchInfo
 from pr_agent.algo.utils import ModelType, clip_tokens, get_max_tokens, get_model
 from pr_agent.config_loader import get_settings
 from pr_agent.git_providers.git_provider import GitProvider
@@ -41,7 +41,7 @@ def get_pr_diff(
     disable_extra_lines: bool = False,
     large_pr_handling: bool = False,
     return_remaining_files: bool = False,
-) -> str | tuple[str, list[dict[str, str]]]:
+) -> str | tuple[str, list[str]]:
     if disable_extra_lines:
         PATCH_EXTRA_LINES_BEFORE = 0
         PATCH_EXTRA_LINES_AFTER = 0
@@ -207,7 +207,7 @@ def pr_generate_extended_diff(pr_languages: list[str],
 
 def pr_generate_compressed_diff(top_langs: list[dict[str, object]], token_handler: TokenHandler, model: str,
                                 convert_hunks_to_line_numbers: bool,
-                                large_pr_handling: bool) -> tuple[list[dict[str, object]], list[dict[str, object]], list[dict[str, object]], list[dict[str, object]], dict[str, object], list[dict[str, object]]]:
+                                large_pr_handling: bool) -> tuple[list[list[str]], list[int], list[str], list[str], dict[str, dict[str, object]], list[list[str]]]:
     deleted_files_list = []
 
     # sort each one of the languages in top_langs by the number of tokens in the diff
