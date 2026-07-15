@@ -1,5 +1,4 @@
 from __future__ import annotations
-from typing import Any
 import copy
 import os
 import re
@@ -125,7 +124,7 @@ def _resolve_extra_config_to_file(source):  # pyright: ignore[reportUnknownParam
         else:
             # Surface misconfiguration instead of silently dropping the header.
             get_logger().warning(
-                "PR_AGENT_EXTRA_CONFIG_AUTH_HEADER is set but malformed "
+                "PR_AGENT_EXTRA_CONFIG_AUTH_HEADER is set but malformed "  # pyright: ignore[reportImplicitStringConcatenation]
                 "(expected '<HeaderName>: <value>'); ignoring."
             )
 
@@ -205,7 +204,7 @@ def _apply_settings_from_file(path: str, label: str):
                 return
 
             get_logger().warning(
-                "Your Dynaconf version does not support disabled "
+                "Your Dynaconf version does not support disabled "  # pyright: ignore[reportImplicitStringConcatenation]
                 "'load_dotenv'/'merge_enabled' parameters. Loading extra config "
                 "after explicit security pre-validation; some Dynaconf-level "
                 "hardening flags are off. Please upgrade Dynaconf for better "
@@ -266,7 +265,7 @@ def apply_repo_settings(pr_url):  # pyright: ignore[reportUnknownParameterType,r
                         )
     elif extra_source is not None and not isinstance(extra_source, str):
         get_logger().warning(
-            "Ignoring CONFIG.EXTRA_CONFIG_URL: expected str, got "
+            "Ignoring CONFIG.EXTRA_CONFIG_URL: expected str, got "  # pyright: ignore[reportImplicitStringConcatenation]
             f"{type(extra_source).__name__}"
         )
 
@@ -359,7 +358,7 @@ def _apply_repo_settings_file(repo_settings_file):  # pyright: ignore[reportUnkn
             rejected = [k for k in contents if k.lower() not in allowed_keys]
             if rejected:
                 get_logger().warning(
-                    f"Ignoring host-only key(s) {rejected} in section [{section}] from repo "
+                    f"Ignoring host-only key(s) {rejected} in section [{section}] from repo "  # pyright: ignore[reportImplicitStringConcatenation]
                     f"settings; only {sorted(allowed_keys)} may be set per-repo for this section"
                 )
             contents = {k: v for k, v in contents.items() if k.lower() in allowed_keys}

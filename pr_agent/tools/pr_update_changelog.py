@@ -74,7 +74,7 @@ class PRUpdateChangelog:
         # already False in that case), so the output is not dropped.
         if self.push_skipped_reason:
             get_logger().info(
-                f"Pushing changelog changes is {self.push_skipped_reason}; "
+                f"Pushing changelog changes is {self.push_skipped_reason}; "  # pyright: ignore[reportImplicitStringConcatenation]
                 f"publishing the changelog as a comment instead"
             )
 
@@ -149,7 +149,7 @@ class PRUpdateChangelog:
 
         if not self.commit_changelog:
             answer += "\n\n\n>to commit the new content to the CHANGELOG.md file, please type:" \
-                      "\n>'/update_changelog --pr_update_changelog.push_changelog_changes=true'\n"
+                      "\n>'/update_changelog --pr_update_changelog.push_changelog_changes=true'\n"  # pyright: ignore[reportImplicitStringConcatenation]
 
         return new_file_content, answer
 

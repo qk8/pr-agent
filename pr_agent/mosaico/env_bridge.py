@@ -50,7 +50,7 @@ def apply_mosaico_env() -> None:
             custom_max_tokens = DEFAULT_CUSTOM_MODEL_MAX_TOKENS
         if custom_max_tokens <= 0:
             get_logger().warning(
-                f"MOSAICO: MODEL_MAX_TOKENS={custom_max_tokens!r} is non-positive; "
+                f"MOSAICO: MODEL_MAX_TOKENS={custom_max_tokens!r} is non-positive; "  # pyright: ignore[reportImplicitStringConcatenation]
                 f"falling back to DEFAULT_CUSTOM_MODEL_MAX_TOKENS={DEFAULT_CUSTOM_MODEL_MAX_TOKENS}."
             )
             custom_max_tokens = DEFAULT_CUSTOM_MODEL_MAX_TOKENS

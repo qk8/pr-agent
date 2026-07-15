@@ -188,7 +188,7 @@ def discover_skills(paths: list[str]) -> list[Skill]:
     seen: set[str] = set()
 
     for raw_path in paths or []:
-        if not isinstance(raw_path, str) or not raw_path.strip():
+        if not isinstance(raw_path, str) or not raw_path.strip():  # pyright: ignore[reportUnnecessaryIsInstance]
             continue
         expanded = os.path.expanduser(os.path.expandvars(raw_path.strip()))
         if not os.path.exists(expanded):
@@ -241,7 +241,7 @@ def format_skills_context(skills: list[Skill], max_tokens: int) -> str:
     """
     if not skills:
         return ""
-    if max_tokens is None or max_tokens <= 0:
+    if max_tokens is None or max_tokens <= 0:  # pyright: ignore[reportUnnecessaryComparison]
         return ""
 
     truncate_marker = "\n\n[truncated]"

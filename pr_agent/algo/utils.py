@@ -565,7 +565,7 @@ def parse_code_suggestion(code_suggestion: dict[str, object], i: int = 0, gfm_su
         markdown_text += "<hr>"
     else:
         for sub_key, sub_value in code_suggestion.items():
-            if isinstance(sub_key, str):
+            if isinstance(sub_key, str):  # pyright: ignore[reportUnnecessaryIsInstance]
                 sub_key = sub_key.rstrip()
             if isinstance(sub_value,str):
                 sub_value = sub_value.rstrip()
@@ -984,7 +984,7 @@ def get_user_labels(current_labels: list[str] = None):  # pyright: ignore[report
     try:
         enable_custom_labels = get_settings().config.get('enable_custom_labels', False)
         custom_labels = get_settings().get('custom_labels', [])
-        if current_labels is None:
+        if current_labels is None:  # pyright: ignore[reportUnnecessaryComparison]
             current_labels = []
         user_labels = []
         for label in current_labels:
@@ -1140,7 +1140,7 @@ def find_line_number_of_relevant_line_in_file(diff_files: list[FilePatchInfo],
                                               relevant_line_in_file: str,
                                               absolute_position: int = None) -> tuple[int, int]:  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
     position = -1
-    if absolute_position is None:
+    if absolute_position is None:  # pyright: ignore[reportUnnecessaryComparison]
         absolute_position = -1
     re_hunk_header = re.compile(
         r"^@@ -(\d+)(?:,(\d+))? \+(\d+)(?:,(\d+))? @@[ ]?(.*)")

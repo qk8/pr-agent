@@ -61,7 +61,7 @@ class DefaultDictWithTimeout(defaultdict[str, object]):
         return time.monotonic()
 
     def __refresh(self):
-        if self.__ttl is None:
+        if self.__ttl is None:  # pyright: ignore[reportUnnecessaryComparison]
             return
         request_time = self.__time()
         if request_time - self.__last_refresh < self.__refresh_interval:

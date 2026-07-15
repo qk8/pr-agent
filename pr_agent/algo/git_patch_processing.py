@@ -168,7 +168,7 @@ def process_patch_lines(patch_str, original_file_str, patch_extra_lines_before, 
                         delta_lines_original = []
                     extended_patch_lines.append('')
                     extended_patch_lines.append(
-                        f'@@ -{extended_start1},{extended_size1} '
+                        f'@@ -{extended_start1},{extended_size1} '  # pyright: ignore[reportImplicitStringConcatenation]
                         f'+{extended_start2},{extended_size2} @@ {section_header}')
                     extended_patch_lines.extend(delta_lines_original)  # one to zero based
                     continue

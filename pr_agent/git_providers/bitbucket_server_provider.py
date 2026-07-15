@@ -90,7 +90,7 @@ class BitbucketServerProvider(GitProvider):
             if 'displayId' in default_branch_dict:  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
                 desired_branch = default_branch_dict['displayId']  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
             else:
-                get_logger().error(f"Cannot obtain default branch for workspace_name={workspace_name}, "
+                get_logger().error(f"Cannot obtain default branch for workspace_name={workspace_name}, "  # pyright: ignore[reportImplicitStringConcatenation]
                                    f"project_name={project_name}, default_branch_dict={default_branch_dict}")
                 return ("", "")
         elif '.git' in repo_git_url and 'scm/' in repo_git_url:
@@ -167,7 +167,7 @@ class BitbucketServerProvider(GitProvider):
 
             if relevant_lines_end < relevant_lines_start:  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
                 get_logger().warning(
-                    f"Failed to publish code suggestion, "
+                    f"Failed to publish code suggestion, "  # pyright: ignore[reportImplicitStringConcatenation]
                     f"relevant_lines_end is {relevant_lines_end} and "
                     f"relevant_lines_start is {relevant_lines_start}"
                 )
@@ -404,7 +404,7 @@ class BitbucketServerProvider(GitProvider):
                 return link
         except Exception as e:
             if get_settings().config.verbosity_level >= 2:
-                get_logger().info(f"Failed adding line link to '{relevant_file}', error: {e}")
+                get_logger().info(f"Failed adding line link to '{relevant_file}', error: {e}")  # pyright: ignore[reportPossiblyUnboundVariable]
 
         return ""
 
@@ -526,7 +526,7 @@ class BitbucketServerProvider(GitProvider):
     # bitbucket does not support labels
     def publish_description(self, pr_title: str, description: str):
         pr = self.pr
-        if pr_title is None:
+        if pr_title is None:  # pyright: ignore[reportUnnecessaryComparison]
             # Replace-style update: an omitted/stale title would be lost, so
             # re-fetch to preserve a title edited during the describe run.
             pr = self._get_pr()
@@ -534,7 +534,7 @@ class BitbucketServerProvider(GitProvider):
         payload = {
             "version": pr.version,
             "description": description,
-            "title": pr_title if pr_title is not None else pr.title,
+            "title": pr_title if pr_title is not None else pr.title,  # pyright: ignore[reportUnnecessaryComparison]
             "reviewers": pr.reviewers  # needs to be sent otherwise gets wiped
         }
         try:
@@ -576,7 +576,7 @@ class BitbucketServerProvider(GitProvider):
             #Shouldn't happen since this is checked in _prepare_clone, therefore - throwing an exception.
             raise RuntimeError(f"Bearer token is required!")
 
-        cli_args = shlex.split(f"git clone -c http.extraHeader='Authorization: Bearer {bearer_token}' "
+        cli_args = shlex.split(f"git clone -c http.extraHeader='Authorization: Bearer {bearer_token}' "  # pyright: ignore[reportImplicitStringConcatenation]
                                f"--filter=blob:none --depth 1 {repo_url} {dest_folder}")
 
         ssl_env = get_git_ssl_env()

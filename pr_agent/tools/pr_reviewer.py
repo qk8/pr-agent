@@ -2,7 +2,6 @@ from __future__ import annotations
 from typing import Any
 import copy
 import datetime
-from collections import OrderedDict
 from functools import partial
 
 from jinja2 import Environment, StrictUndefined
@@ -19,8 +18,7 @@ from pr_agent.algo.utils import (ModelType, PRReviewHeader,
                                  convert_to_markdown_v2, github_action_output,
                                  load_yaml, show_relevant_configurations)
 from pr_agent.config_loader import get_settings
-from pr_agent.git_providers import (get_git_provider,
-                                    get_git_provider_with_context)
+from pr_agent.git_providers import get_git_provider_with_context
 from pr_agent.git_providers.git_provider import (IncrementalPR,
                                                  get_main_pr_language)
 from pr_agent.log import get_logger
@@ -155,7 +153,7 @@ class PRReviewer:
                 if hasattr(self.git_provider, "previous_review") and self.git_provider.previous_review is not None:
                     previous_review_url = getattr(self.git_provider.previous_review, "html_url", "") or ""
                 if get_settings().config.publish_output:
-                    self.git_provider.publish_comment(f"Incremental Review Skipped\n"
+                    self.git_provider.publish_comment(f"Incremental Review Skipped\n"  # pyright: ignore[reportImplicitStringConcatenation]
                                     f"No files were changed since the [previous PR Review]({previous_review_url})")
                 return None
 
@@ -262,7 +260,7 @@ class PRReviewer:
         # Add incremental review section
         if self.incremental.is_incremental:
             last_commit_url = f"{self.git_provider.get_pr_url()}/commits/" \
-                              f"{self.git_provider.incremental.first_new_commit_sha}"
+                              f"{self.git_provider.incremental.first_new_commit_sha}"  # pyright: ignore[reportImplicitStringConcatenation]
             incremental_review_markdown_text = f"Starting from commit {last_commit_url}"
 
         markdown_text = convert_to_markdown_v2(data, self.git_provider.is_supported("gfm_markdown"),
@@ -283,7 +281,7 @@ class PRReviewer:
         # Add custom labels from the review prediction (effort, security)
         self.set_review_labels(data)
 
-        if markdown_text == None or len(markdown_text) == 0:
+        if markdown_text == None or len(markdown_text) == 0:  # pyright: ignore[reportUnnecessaryComparison]
             markdown_text = ""
 
         return markdown_text
@@ -349,7 +347,7 @@ class PRReviewer:
             return False
         if self.incremental.commits_range is None:
             get_logger().info(
-                f"Incremental review not initialized for {get_settings().config.git_provider}; "
+                f"Incremental review not initialized for {get_settings().config.git_provider}; "  # pyright: ignore[reportImplicitStringConcatenation]
                 f"falling back to full review."
             )
             self.incremental.is_incremental = False
@@ -372,7 +370,7 @@ class PRReviewer:
         condition = any if get_settings().pr_reviewer.require_all_thresholds_for_incremental_review else all
         if condition((not_enough_commits, all_commits_too_recent)):
             get_logger().info(
-                f"Incremental review is enabled for {self.pr_url} but didn't pass the threshold check to run:"
+                f"Incremental review is enabled for {self.pr_url} but didn't pass the threshold check to run:"  # pyright: ignore[reportImplicitStringConcatenation]
                 f"\n* Number of new commits = {num_new_commits} (threshold is {num_commits_threshold})"
                 f"\n* Last seen commit date = {last_seen_commit_date} (threshold is {recent_commits_threshold})"
             )
@@ -442,5 +440,5 @@ class PRReviewer:
                 self.git_provider.publish_comment("Auto-approved PR")
         else:
             get_logger().info("Auto-approval option is disabled")
-            self.git_provider.publish_comment("Auto-approval option for PR-Agent is disabled. "
+            self.git_provider.publish_comment("Auto-approval option for PR-Agent is disabled. "  # pyright: ignore[reportImplicitStringConcatenation]
                                               "You can enable it via a [configuration file](https://github.com/Codium-ai/pr-agent/blob/main/docs/REVIEW.md#auto-approval-1)")

@@ -305,7 +305,7 @@ class PRHelpDocs(object):
                 raise Exception(f"No git provider found at {ctx_url}")
             if not self.repo_url:
                 self.repo_url_given_explicitly = False
-                get_logger().debug(f"No explicit repo url provided, deducing it from type: {self.git_provider.__class__.__name__} "
+                get_logger().debug(f"No explicit repo url provided, deducing it from type: {self.git_provider.__class__.__name__} "  # pyright: ignore[reportImplicitStringConcatenation]
                                   f"context url: {self.ctx_url}")
                 self.repo_url = self.git_provider.get_git_repo_url(self.ctx_url)
                 if not self.repo_url:
@@ -440,12 +440,12 @@ class PRHelpDocs(object):
                     doc_files.extend(self._find_all_document_files_matching_exts(abs_docs_path,
                                                                                  ignore_readme=(self.docs_path=='.')))
                     if not doc_files:
-                        get_logger().warning(f"No documentation files found matching file extensions: "
+                        get_logger().warning(f"No documentation files found matching file extensions: "  # pyright: ignore[reportImplicitStringConcatenation]
                                              f"{self.supported_doc_exts} under repo: {self.repo_url} "
                                              f"path: {self.docs_path}. Returning empty dict.")
                         return {}
 
-                get_logger().info(f'For context {self.ctx_url} and repo: {self.repo_url}'
+                get_logger().info(f'For context {self.ctx_url} and repo: {self.repo_url}'  # pyright: ignore[reportImplicitStringConcatenation]
                                   f' will be using the following documentation files: ',
                                   artifacts={'doc_files': doc_files})
 

@@ -98,7 +98,7 @@ class PRAddDocs:
         data = load_yaml(docs)
         if isinstance(data, list):
             data = {'Code Documentation': data}
-        elif not isinstance(data, dict):
+        elif not isinstance(data, dict):  # pyright: ignore[reportUnnecessaryIsInstance]
             data = {'Code Documentation': []}
         return data  # type: ignore[return-value]
 
@@ -146,7 +146,7 @@ class PRAddDocs:
                     break
             if original_initial_line:
                 if doc_placement == 'after':
-                    line = file.head_file.splitlines()[relevant_lines_start]
+                    line = file.head_file.splitlines()[relevant_lines_start]  # pyright: ignore[reportPossiblyUnboundVariable]
                 else:
                     line = original_initial_line
                 suggested_initial_line = new_code_snippet.splitlines()[0]

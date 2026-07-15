@@ -57,7 +57,7 @@ class PlainDiffGitProvider(GitProvider):
         root = os.path.realpath(str(repo_root)) if repo_root else None
         if root is None:
             get_logger().info(
-                "No repository root (.git) found; running in patch-only mode "
+                "No repository root (.git) found; running in patch-only mode "  # pyright: ignore[reportImplicitStringConcatenation]
                 "(working-tree enrichment disabled)."
             )
         for f in files:
@@ -96,7 +96,7 @@ class PlainDiffGitProvider(GitProvider):
         # (PRReviewer would otherwise call len() on an unpopulated commits_range).
         if getattr(incremental, "is_incremental", False):
             get_logger().info(
-                "Incremental review is not supported in plain-diff mode; "
+                "Incremental review is not supported in plain-diff mode; "  # pyright: ignore[reportImplicitStringConcatenation]
                 "running a full review instead."
             )
         incremental.is_incremental = False

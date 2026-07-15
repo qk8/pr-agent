@@ -238,8 +238,7 @@ async def handle_github_webhooks(background_tasks: BackgroundTasks, request: Req
     log_context = {"server_type": "bitbucket_app", "app_name": app_name}
     get_logger().debug(request.headers)
     jwt_header = request.headers.get("authorization", None)
-    if jwt_header:
-        input_jwt = jwt_header.split(" ")[1]
+    input_jwt = jwt_header.split(" ")[1] if jwt_header else ""
     data = await request.json()
     get_logger().debug(data)
 
@@ -279,7 +278,7 @@ async def handle_github_webhooks(background_tasks: BackgroundTasks, request: Req
                 log_context["event"] = "pull_request"
                 if pr_url:
                     with get_logger().contextualize(**log_context):
-                        if get_identity_provider().verify_eligibility("bitbucket",
+                        if get_identity_provider().verify_eligibility("bitbucket",  # pyright: ignore[reportUnnecessaryComparison]
                                                         sender_id, pr_url) is not Eligibility.NOT_ELIGIBLE:
                             if get_settings().get("bitbucket_app.pr_commands"):
                                 await _perform_commands_bitbucket("pr_commands", agent, pr_url, log_context, data)  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
@@ -289,7 +288,7 @@ async def handle_github_webhooks(background_tasks: BackgroundTasks, request: Req
                 log_context["event"] = "pull_request"
                 if pr_url:
                     with get_logger().contextualize(**log_context):
-                        if get_identity_provider().verify_eligibility("bitbucket",
+                        if get_identity_provider().verify_eligibility("bitbucket",  # pyright: ignore[reportUnnecessaryComparison]
                                                         sender_id, pr_url) is not Eligibility.NOT_ELIGIBLE:
 
                             if get_settings().get("bitbucket_app.push_commands"):
@@ -300,7 +299,7 @@ async def handle_github_webhooks(background_tasks: BackgroundTasks, request: Req
                 log_context["event"] = "comment"
                 comment_body = data["data"]["comment"]["content"]["raw"]
                 with get_logger().contextualize(**log_context):
-                    if get_identity_provider().verify_eligibility("bitbucket",
+                    if get_identity_provider().verify_eligibility("bitbucket",  # pyright: ignore[reportUnnecessaryComparison]
                                                                      sender_id, pr_url) is not Eligibility.NOT_ELIGIBLE:
                         await agent.handle_request(pr_url, comment_body)
         except Exception as e:

@@ -37,11 +37,11 @@ class LangChainOpenAIHandler(BaseAiHandler):
         """
         return get_settings().get("OPENAI.DEPLOYMENT_ID", None)
 
-    async def _create_chat_async(self, deployment_id=None) -> AzureChatOpenAI | ChatOpenAI:  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]
+    async def _create_chat_async(self, deployment_id=None) -> AzureChatOpenAI | ChatOpenAI:  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportPossiblyUnboundVariable]
         try:
             if self.azure:
                 # Using Azure OpenAI service
-                return AzureChatOpenAI(
+                return AzureChatOpenAI(  # pyright: ignore[reportPossiblyUnboundVariable]
                     openai_api_key=get_settings().openai.key,
                     openai_api_version=get_settings().openai.api_version,
                     azure_deployment=deployment_id,
@@ -51,10 +51,10 @@ class LangChainOpenAIHandler(BaseAiHandler):
                 # Using standard OpenAI or other LLM services
                 openai_api_base = get_settings().get("OPENAI.API_BASE", None)
                 if openai_api_base is None or len(openai_api_base) == 0:
-                    return ChatOpenAI(openai_api_key=get_settings().openai.key)
+                    return ChatOpenAI(openai_api_key=get_settings().openai.key)  # pyright: ignore[reportPossiblyUnboundVariable]
                 else:
-                    return ChatOpenAI(
-                        openai_api_key=get_settings().openai.key, 
+                    return ChatOpenAI(  # pyright: ignore[reportPossiblyUnboundVariable]
+                        openai_api_key=get_settings().openai.key,
                         openai_api_base=openai_api_base
                     )
         except AttributeError as e:
@@ -71,7 +71,7 @@ class LangChainOpenAIHandler(BaseAiHandler):
         if img_path:
             get_logger().warning(f"Image path is not supported for LangChainOpenAIHandler. Ignoring image path: {img_path}")
         try:
-            messages = [SystemMessage(content=system), HumanMessage(content=user)]
+            messages = [SystemMessage(content=system), HumanMessage(content=user)]  # pyright: ignore[reportPossiblyUnboundVariable]
             llm = await self._create_chat_async(deployment_id=self.deployment_id)
             
             if not isinstance(llm, Runnable):
@@ -85,7 +85,7 @@ class LangChainOpenAIHandler(BaseAiHandler):
                 raise NotImplementedError(error_message)
 
             # Handle parameters based on LLM type
-            if isinstance(llm, (ChatOpenAI, AzureChatOpenAI)):
+            if isinstance(llm, (ChatOpenAI, AzureChatOpenAI)):  # pyright: ignore[reportPossiblyUnboundVariable]
                 # OpenAI models support all parameters
                 resp = await llm.ainvoke(
                     input=messages,

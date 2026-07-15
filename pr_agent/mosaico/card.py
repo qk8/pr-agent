@@ -32,7 +32,7 @@ def _build_skills() -> list[object]:
         AgentSkill(
             id="review",
             name="Review",
-            description="Review a pull request or supplied diff and produce a structured "
+            description="Review a pull request or supplied diff and produce a structured "  # pyright: ignore[reportImplicitStringConcatenation]
                         "code review (key issues, effort estimate, security concerns).",
             tags=["review", "code-review", "pull-request"],
             examples=["Review https://github.com/org/repo/pull/1",
@@ -41,7 +41,7 @@ def _build_skills() -> list[object]:
         AgentSkill(
             id="improve",
             name="Improve",
-            description="Propose concrete code suggestions to improve a pull request or "
+            description="Propose concrete code suggestions to improve a pull request or "  # pyright: ignore[reportImplicitStringConcatenation]
                         "supplied diff.",
             tags=["improve", "code-suggestions", "pull-request"],
             examples=["Improve https://github.com/org/repo/pull/1",
@@ -58,7 +58,7 @@ def _build_skills() -> list[object]:
         AgentSkill(
             id="ask",
             name="Ask",
-            description="Answer a free-text question scoped to a specific pull request or "
+            description="Answer a free-text question scoped to a specific pull request or "  # pyright: ignore[reportImplicitStringConcatenation]
                         "supplied git diff (requires a PR URL or a diff to answer).",
             tags=["ask", "question", "pull-request", "diff"],
             examples=["What does this PR change?",
@@ -71,7 +71,7 @@ def build_agent_card() -> AgentCard:
     extensions = [
         AgentExtension(
             uri=OBSERVABILITY_EXTENSION_URI,
-            description="Includes metadata in A2A messages to enable end-to-end "
+            description="Includes metadata in A2A messages to enable end-to-end "  # pyright: ignore[reportImplicitStringConcatenation]
                         "observability, such as trace linking between the reference "
                         "agent and any downstream agents.",
             required=True,
@@ -79,7 +79,7 @@ def build_agent_card() -> AgentCard:
     ]
     return AgentCard(
         name=AGENT_NAME,
-        description="PR-Agent solution agent for pull-request and unified-diff code review. "
+        description="PR-Agent solution agent for pull-request and unified-diff code review. "  # pyright: ignore[reportImplicitStringConcatenation]
                     "Given a pull-request URL or a supplied git diff, it produces a structured "
                     "code review (key issues, security concerns, effort estimate), inline code "
                     "suggestions, a generated PR title and description, and answers to questions "

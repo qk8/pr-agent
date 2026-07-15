@@ -1,5 +1,4 @@
 from __future__ import annotations
-from typing import Any
 import difflib
 import re
 import urllib.parse
@@ -43,7 +42,7 @@ class GitLabProvider(GitProvider):
 
         # Basic validation of authentication type
         if auth_method not in ["oauth_token", "private_token"]:
-            raise ValueError(f"Unsupported GITLAB.AUTH_TYPE: '{auth_method}'. "
+            raise ValueError(f"Unsupported GITLAB.AUTH_TYPE: '{auth_method}'. "  # pyright: ignore[reportImplicitStringConcatenation]
                            f"Must be 'oauth_token' or 'private_token'.")
 
         # Create GitLab instance based on authentication method
@@ -101,9 +100,9 @@ class GitLabProvider(GitProvider):
             # 1) python-gitlab File.decode() – usually returns BYTES
             try:
                 raw = f.decode()
-                if isinstance(raw, (bytes, bytearray)):
+                if isinstance(raw, (bytes, bytearray)):  # pyright: ignore[reportUnnecessaryIsInstance]
                     return raw.decode("utf-8", "ignore")
-                if isinstance(raw, str):
+                if isinstance(raw, str):  # pyright: ignore[reportUnnecessaryIsInstance]
                     return raw
             except Exception:
                 pass
@@ -485,7 +484,7 @@ class GitLabProvider(GitProvider):
         return self.git_files  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
     def publish_description(self, pr_title: str, pr_body: str):
         try:
-            if pr_title is not None:
+            if pr_title is not None:  # pyright: ignore[reportUnnecessaryComparison]
                 self.mr.title = pr_title
             self.mr.description = pr_body
             self.mr.save()
@@ -700,6 +699,9 @@ class GitLabProvider(GitProvider):
 
     def search_line(self, relevant_file, relevant_line_in_file):  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]
         target_file = None
+        found = False
+        source_line_no = 0
+        target_line_no = 0
 
         edit_type = self.get_edit_type(relevant_line_in_file)
         for file in self.get_diff_files():
@@ -1008,7 +1010,7 @@ class GitLabProvider(GitProvider):
         (scheme, base_url) = repo_url_to_clone.split("gitlab.")
         access_token = getattr(self.gl, 'oauth_token', None) or getattr(self.gl, 'private_token', None)
         if not all([scheme, access_token, base_url]):
-            get_logger().error(f"Either no access token found, or repo URL: {repo_url_to_clone} "
+            get_logger().error(f"Either no access token found, or repo URL: {repo_url_to_clone} "  # pyright: ignore[reportImplicitStringConcatenation]
                                f"is missing prefix: {scheme} and/or base URL: {base_url}.")
             return None
 

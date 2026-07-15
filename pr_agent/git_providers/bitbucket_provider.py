@@ -196,7 +196,7 @@ class BitbucketProvider(GitProvider):
 
             if relevant_lines_end < relevant_lines_start:  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
                 get_logger().exception(
-                    f"Failed to publish code suggestion, "
+                    f"Failed to publish code suggestion, "  # pyright: ignore[reportImplicitStringConcatenation]
                     f"relevant_lines_end is {relevant_lines_end} and "
                     f"relevant_lines_start is {relevant_lines_start}"
                 )
@@ -644,7 +644,7 @@ class BitbucketProvider(GitProvider):
     # bitbucket does not support labels
     def publish_description(self, pr_title: str, description: str):
         payload_dict = {"description": description}
-        if pr_title is not None:
+        if pr_title is not None:  # pyright: ignore[reportUnnecessaryComparison]
             payload_dict["title"] = pr_title
         payload = json.dumps(payload_dict)
 

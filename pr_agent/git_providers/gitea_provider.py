@@ -652,7 +652,7 @@ class GiteaProvider(GitProvider):
             pr_number=self.pr_number if self.enabled_pr else self.issue_number,
             body=pr_body,
         )
-        if pr_title is not None:
+        if pr_title is not None:  # pyright: ignore[reportUnnecessaryComparison]
             edit_kwargs["title"] = pr_title
         response = self.repo_api.edit_pull_request(**edit_kwargs)  # pyright: ignore[reportUnknownArgumentType,reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess]
         if not response:

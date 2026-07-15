@@ -36,9 +36,9 @@ class PRSimilarIssue:
 
         if get_settings().pr_similar_issue.vectordb == "pinecone":
             try:
-                import pandas as pd
+                import pandas as pd  # pyright: ignore[reportUnusedImport]
                 import pinecone
-                from pinecone_datasets import DatasetMetadata  # pyright: ignore[reportUndefinedVariable]
+                from pinecone_datasets import DatasetMetadata  # pyright: ignore[reportUndefinedVariable,reportUnusedImport]
             except:
                 raise Exception("Please install 'pinecone' and 'pinecone_datasets' to use pinecone as vectordb")
             # assuming pinecone api key and environment are set in secrets file

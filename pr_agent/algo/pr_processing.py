@@ -69,11 +69,11 @@ def get_pr_diff(git_provider: GitProvider, token_handler: TokenHandler,
 
     # if we are under the limit, return the full diff
     if total_tokens + OUTPUT_BUFFER_TOKENS_SOFT_THRESHOLD < get_max_tokens(model):
-        get_logger().info(f"Tokens: {total_tokens}, total tokens under limit: {get_max_tokens(model)}, "
+        get_logger().info(f"Tokens: {total_tokens}, total tokens under limit: {get_max_tokens(model)}, "  # pyright: ignore[reportImplicitStringConcatenation]
                           f"returning full diff.")
         return "\n".join(patches_extended)  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
     # if we are over the limit, start pruning (If we got here, we will not extend the patches with extra lines)
-    get_logger().info(f"Tokens: {total_tokens}, total tokens over limit: {get_max_tokens(model)}, "
+    get_logger().info(f"Tokens: {total_tokens}, total tokens over limit: {get_max_tokens(model)}, "  # pyright: ignore[reportImplicitStringConcatenation]
                       f"pruning diff.")
     patches_compressed_list, total_tokens_list, deleted_files_list, remaining_files_list, file_dict, files_in_patches_list = \
         pr_generate_compressed_diff(pr_languages, token_handler, model, add_line_numbers_to_hunks, large_pr_handling)  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]  # pyright: ignore[reportUnusedVariable]
@@ -130,7 +130,7 @@ def get_pr_diff(git_provider: GitProvider, token_handler: TokenHandler,
     if deleted_list_str:
         final_diff = final_diff + "\n\n" + deleted_list_str
 
-    get_logger().debug(f"After pruning, added_list_str: {added_list_str}, modified_list_str: {modified_list_str}, "
+    get_logger().debug(f"After pruning, added_list_str: {added_list_str}, modified_list_str: {modified_list_str}, "  # pyright: ignore[reportImplicitStringConcatenation]
                        f"deleted_list_str: {deleted_list_str}")
     if not return_remaining_files:
         return final_diff
@@ -223,7 +223,7 @@ def pr_generate_compressed_diff(top_langs: list[dict[str, object]], token_handle
         # removing delete-only hunks
         patch = handle_patch_deletions(patch, original_file_content_str,
                                        new_file_content_str, file.filename, file.edit_type)
-        if patch is None:
+        if patch is None:  # pyright: ignore[reportUnnecessaryComparison]
             if file.filename not in deleted_files_list:
                 deleted_files_list.append(file.filename)
             continue
@@ -318,7 +318,7 @@ async def retry_with_fallback_models(f: Callable[..., object], model_type: Model
     for i, (model, deployment_id) in enumerate(zip(all_models, all_deployments)):
         try:
             get_logger().debug(
-                f"Generating prediction with {model}"
+                f"Generating prediction with {model}"  # pyright: ignore[reportImplicitStringConcatenation]
                 f"{(' from deployment ' + deployment_id) if deployment_id else ''}"
             )
             get_settings().set("openai.deployment_id", deployment_id)
@@ -356,7 +356,7 @@ def _get_all_deployments(all_models: list[str]) -> list[str]:
     if fallback_deployments:
         all_deployments = [deployment_id] + fallback_deployments
         if len(all_deployments) < len(all_models):
-            raise ValueError(f"The number of deployments ({len(all_deployments)}) "
+            raise ValueError(f"The number of deployments ({len(all_deployments)}) "  # pyright: ignore[reportImplicitStringConcatenation]
                              f"is less than the number of models ({len(all_models)})")
     else:
         all_deployments = [deployment_id] * len(all_models)
@@ -430,7 +430,7 @@ def get_pr_multi_diffs(git_provider: GitProvider,
 
         # Remove delete-only hunks
         patch = handle_patch_deletions(patch, original_file_content_str, new_file_content_str, file.filename, file.edit_type)
-        if patch is None:
+        if patch is None:  # pyright: ignore[reportUnnecessaryComparison]
             continue
 
         # Add line numbers and metadata to the patch

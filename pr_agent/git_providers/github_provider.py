@@ -81,7 +81,7 @@ class GithubProvider(GitProvider):
         try:
             repo_obj = self.github_client.get_repo(repo_name)
             if not repo_obj:
-                get_logger().error(f"Given url: {issue_url}, belonging to owner/repo: {repo_name} does "
+                get_logger().error(f"Given url: {issue_url}, belonging to owner/repo: {repo_name} does "  # pyright: ignore[reportImplicitStringConcatenation]
                                    f"not have a valid repository: {self.get_git_repo_url(issue_url)}")
                 return None
             # else: Valid repo handle:
@@ -374,7 +374,7 @@ class GithubProvider(GitProvider):
             raise RateLimitExceeded("Rate limit exceeded for GitHub API.") from e
 
     def publish_description(self, pr_title: str, pr_body: str):
-        if pr_title is None:
+        if pr_title is None:  # pyright: ignore[reportUnnecessaryComparison]
             self.pr.edit(body=pr_body)
         else:
             self.pr.edit(title=pr_title, body=pr_body)
@@ -667,7 +667,7 @@ class GithubProvider(GitProvider):
                 continue
 
             if relevant_lines_end < relevant_lines_start:
-                get_logger().exception(f"Failed to publish code suggestion, "
+                get_logger().exception(f"Failed to publish code suggestion, "  # pyright: ignore[reportImplicitStringConcatenation]
                                   f"relevant_lines_end is {relevant_lines_end} and "
                                   f"relevant_lines_start is {relevant_lines_start}")
                 continue
@@ -1035,7 +1035,7 @@ class GithubProvider(GitProvider):
                 token = get_settings().github.user_token
             except AttributeError as e:
                 raise ValueError(
-                    "GitHub token is required when using user deployment. See: "
+                    "GitHub token is required when using user deployment. See: "  # pyright: ignore[reportImplicitStringConcatenation]
                     "https://github.com/Codium-ai/pr-agent#method-2-run-from-source") from e
             self.auth = Auth.Token(token)
         if self.auth:
@@ -1370,10 +1370,10 @@ class GithubProvider(GitProvider):
                                 body = re.sub(r'```suggestion.*?```', diff_code, body, flags=re.DOTALL)
                                 body += "\n\n</details>"
                                 suggestion['body'] = body
-                                get_logger().info(f"Comment was moved to a valid hunk, "
+                                get_logger().info(f"Comment was moved to a valid hunk, "  # pyright: ignore[reportImplicitStringConcatenation]
                                                   f"start_line={suggestion['relevant_lines_start']}, end_line={suggestion['relevant_lines_end']}, file={file.filename}")
                             else:
-                                get_logger().error(f"Comment is not inside a valid hunk, "
+                                get_logger().error(f"Comment is not inside a valid hunk, "  # pyright: ignore[reportImplicitStringConcatenation]
                                                    f"start_line={suggestion['relevant_lines_start']}, end_line={suggestion['relevant_lines_end']}, file={file.filename}")
             except Exception as e:
                 get_logger().error(f"Failed to process patch for committable comment, error: {e}")

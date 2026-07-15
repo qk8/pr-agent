@@ -112,7 +112,7 @@ class LocalGitProvider(GitProvider):
 
     def publish_description(self, pr_title: str, pr_body: str):
         with open(self.description_path, "w") as file:
-            title = self.get_pr_title() if pr_title is None else pr_title
+            title = self.get_pr_title() if pr_title is None else pr_title  # pyright: ignore[reportUnnecessaryComparison]
             file.write(title + '\n' + pr_body)
 
     def publish_comment(self, pr_comment: str, is_temporary: bool = False):

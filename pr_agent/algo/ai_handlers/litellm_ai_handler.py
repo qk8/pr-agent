@@ -70,14 +70,14 @@ class LiteLLMAIHandler(BaseAiHandler):
                     get_logger().info("Using ambient AWS credentials from IMDS/task-role/IRSA")
                 else:
                     get_logger().warning(
-                        "AWS_USE_IMDS is set but boto3 found no credentials; "
+                        "AWS_USE_IMDS is set but boto3 found no credentials; "  # pyright: ignore[reportImplicitStringConcatenation]
                         "falling through to static keys"
                     )
             except (botocore.exceptions.BotoCoreError, botocore.exceptions.ClientError):
                 # ClientError is intentionally not a BotoCoreError subclass in botocore's
                 # design; it is raised by STS-backed providers (AssumeRole, IRSA web-identity).
                 get_logger().exception(
-                    "AWS_USE_IMDS: failed to resolve credentials via boto3; "
+                    "AWS_USE_IMDS: failed to resolve credentials via boto3; "  # pyright: ignore[reportImplicitStringConcatenation]
                     "falling through to static keys"
                 )
             if not os.environ.get("AWS_REGION_NAME"):
@@ -91,7 +91,7 @@ class LiteLLMAIHandler(BaseAiHandler):
                             get_logger().info(f"AWS region resolved from environment: {region}")
                         else:
                             get_logger().warning(
-                                "AWS_USE_IMDS: could not determine AWS region; "
+                                "AWS_USE_IMDS: could not determine AWS region; "  # pyright: ignore[reportImplicitStringConcatenation]
                                 "set AWS_REGION_NAME explicitly"
                             )
                     except Exception as e:
@@ -248,13 +248,13 @@ class LiteLLMAIHandler(BaseAiHandler):
         override = get_settings().config.get("claude_extended_thinking_models_override", []) or []
         if override and not isinstance(override, list):
             get_logger().warning(
-                "Invalid claude_extended_thinking_models_override in config; expected a list of model names. "
+                "Invalid claude_extended_thinking_models_override in config; expected a list of model names. "  # pyright: ignore[reportImplicitStringConcatenation]
                 "Falling back to the built-in Claude extended-thinking model list."
             )
             override = []
         elif override and not all(isinstance(model, str) and model.strip() for model in override):
             get_logger().warning(
-                "Invalid claude_extended_thinking_models_override in config; "
+                "Invalid claude_extended_thinking_models_override in config; "  # pyright: ignore[reportImplicitStringConcatenation]
                 "expected a list of model name strings. "
                 "Falling back to the built-in Claude extended-thinking model list."
             )
@@ -486,7 +486,7 @@ class LiteLLMAIHandler(BaseAiHandler):
                         effort = ReasoningEffort.MEDIUM.value
                         if config_effort is not None:
                             get_logger().warning(
-                                f"Invalid reasoning_effort '{config_effort}' in config. "
+                                f"Invalid reasoning_effort '{config_effort}' in config. "  # pyright: ignore[reportImplicitStringConcatenation]
                                 f"Using default '{effort}'. Valid values: {[e.value for e in ReasoningEffort]}"
                             )
 
@@ -549,7 +549,7 @@ class LiteLLMAIHandler(BaseAiHandler):
                         reasoning_effort = ReasoningEffort.MEDIUM.value
                         if config_effort is not None:
                             get_logger().warning(
-                                f"Invalid reasoning_effort '{config_effort}' in config. "
+                                f"Invalid reasoning_effort '{config_effort}' in config. "  # pyright: ignore[reportImplicitStringConcatenation]
                                 f"Using default '{reasoning_effort}'. Valid values: {[e.value for e in ReasoningEffort]}"
                             )
 
@@ -616,7 +616,7 @@ class LiteLLMAIHandler(BaseAiHandler):
                     # env-var swap is fully visible to this call. Letting @retry
                     # handle the retry would release the lock between attempts,
                     # allowing a concurrent coroutine to overwrite os.environ.
-                    resp, finish_reason, response_obj = await self._get_completion(**kwargs)
+                    resp, finish_reason, response_obj = await self._get_completion(**kwargs)  # pyright: ignore[reportPossiblyUnboundVariable]
                 else:
                     get_logger().warning(f"Error during LLM inference: {e}")
                     raise
@@ -650,7 +650,7 @@ class LiteLLMAIHandler(BaseAiHandler):
             return resp, finish_reason, mock_response
         else:
             response = await acompletion(**kwargs)
-            if response is None or len(response["choices"]) == 0:
+            if response is None or len(response["choices"]) == 0:  # pyright: ignore[reportUnnecessaryComparison]
                 raise openai.APIError  # pyright: ignore[reportGeneralTypeIssues,reportCallIssue]
             return (response["choices"][0]['message']['content'],
                     response["choices"][0]["finish_reason"],

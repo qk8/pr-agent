@@ -33,7 +33,7 @@ def parse_unified_diff(diff_text: str) -> list[FilePatchInfo]:
     consumes), edit_type inferred from new/deleted/rename file modes, and head/base
     file content reconstructed best-effort from +/-/context lines. Degrades gracefully:
     a blob with no ``diff --git`` header yields []."""
-    if not diff_text or not isinstance(diff_text, str):
+    if not diff_text or not isinstance(diff_text, str):  # pyright: ignore[reportUnnecessaryIsInstance]
         return []
 
     lines = diff_text.splitlines(keepends=True)

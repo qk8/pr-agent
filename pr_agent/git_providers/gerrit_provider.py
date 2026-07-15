@@ -1,5 +1,4 @@
 from __future__ import annotations
-from typing import Any
 import json
 import os
 import pathlib
@@ -370,18 +369,18 @@ class GerritProvider(GitProvider):
 
     def publish_description(self, pr_title: str, pr_body: str):
         msg = adopt_to_gerrit_message(pr_body)
-        text = msg if pr_title is None else pr_title + '\n' + msg
+        text = msg if pr_title is None else pr_title + '\n' + msg  # pyright: ignore[reportUnnecessaryComparison]
         add_comment(self.parsed_url, self.refspec, text)
 
     def publish_inline_comments(self, comments: list[dict[str, object]]):
         raise NotImplementedError(
-            'Publishing inline comments is not implemented for the gerrit '
+            'Publishing inline comments is not implemented for the gerrit '  # pyright: ignore[reportImplicitStringConcatenation]
             'provider')
 
     def publish_inline_comment(self, body: str, relevant_file: str,
                                relevant_line_in_file: str, original_suggestion=None):  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
         raise NotImplementedError(
-            'Publishing inline comments is not implemented for the gerrit '
+            'Publishing inline comments is not implemented for the gerrit '  # pyright: ignore[reportImplicitStringConcatenation]
             'provider')
 
 

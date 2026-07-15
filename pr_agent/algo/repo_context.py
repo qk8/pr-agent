@@ -113,7 +113,7 @@ def _provider_supports_repo_context(git_provider) -> bool:  # pyright: ignore[re
     if provider_class not in _unsupported_repo_context_provider_classes:
         _unsupported_repo_context_provider_classes.add(provider_class)
         get_logger().warning(
-            f"repo_context_files is configured, but {provider_class.__name__} does not support repository "
+            f"repo_context_files is configured, but {provider_class.__name__} does not support repository "  # pyright: ignore[reportImplicitStringConcatenation]
             "file fetching; skipping repo context"
         )
     return False
@@ -172,7 +172,7 @@ def _load_repo_context_files(git_provider: object, context_files: list[str]) -> 
     files = {}
     had_fetch_error = False
     for file_path in context_files:
-        if not isinstance(file_path, str) or not file_path.strip():
+        if not isinstance(file_path, str) or not file_path.strip():  # pyright: ignore[reportUnnecessaryIsInstance]
             get_logger().warning("Skipping invalid repo context file path", artifact={"file_path": file_path})
             continue
 

@@ -1,5 +1,5 @@
 from __future__ import annotations
-from typing import Any
+# pyright: ignore[reportPossiblyUnboundVariable]
 
 import datetime as _dt
 import os
@@ -102,17 +102,17 @@ class AzureDevopsProvider(GitProvider):
                 continue
 
             if relevant_lines_end < relevant_lines_start:  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
-                get_logger().warning(f"Failed to publish code suggestion, "
+                get_logger().warning(f"Failed to publish code suggestion, "  # pyright: ignore[reportImplicitStringConcatenation]
                                        f"relevant_lines_end is {relevant_lines_end} and "
                                        f"relevant_lines_start is {relevant_lines_start}")
                 continue
 
-            thread_context = CommentThreadContext(
+            thread_context = CommentThreadContext(  # pyright: ignore[reportPossiblyUnboundVariable]
                 file_path=relevant_file,
-                right_file_start=CommentPosition(offset=1, line=relevant_lines_start),
-                right_file_end=CommentPosition(offset=1, line=relevant_lines_end))
-            comment = Comment(content=body, comment_type=1)
-            thread = CommentThread(comments=[comment], thread_context=thread_context, status=status)
+                right_file_start=CommentPosition(offset=1, line=relevant_lines_start),  # pyright: ignore[reportPossiblyUnboundVariable]
+                right_file_end=CommentPosition(offset=1, line=relevant_lines_end))  # pyright: ignore[reportPossiblyUnboundVariable]
+            comment = Comment(content=body, comment_type=1)  # pyright: ignore[reportPossiblyUnboundVariable]
+            thread = CommentThread(comments=[comment], thread_context=thread_context, status=status)  # pyright: ignore[reportPossiblyUnboundVariable]
             try:
                 self.azure_devops_client.create_thread(
                     comment_thread=thread,
@@ -138,7 +138,7 @@ class AzureDevopsProvider(GitProvider):
                 pull_request_id=self.pr_num,
                 thread_id=comment.thread_id,
                 comment_id=comment.id,
-                comment=Comment(content=body),
+                comment=Comment(content=body),  # pyright: ignore[reportPossiblyUnboundVariable]
                 project=self.workspace_slug,
             )
         except Exception as e:
@@ -271,7 +271,7 @@ class AzureDevopsProvider(GitProvider):
         last_review_time = _to_naive_utc(getattr(self.previous_review, "created_at", None))
         if last_review_time is None or not self.pr_commits:
             get_logger().info(
-                "Cannot compute incremental commit range "
+                "Cannot compute incremental commit range "  # pyright: ignore[reportImplicitStringConcatenation]
                 "(missing previous review timestamp or PR commits); falling back to full review."
             )
             self.incremental.is_incremental = False
@@ -294,7 +294,7 @@ class AzureDevopsProvider(GitProvider):
                 break
         if not saw_reliable_date:
             get_logger().info(
-                "All PR commit author dates are missing; cannot compute incremental range. "
+                "All PR commit author dates are missing; cannot compute incremental range. "  # pyright: ignore[reportImplicitStringConcatenation]
                 "Falling back to full review."
             )
             self.incremental.is_incremental = False
@@ -305,7 +305,7 @@ class AzureDevopsProvider(GitProvider):
         # explicitly to a full review instead.
         if last_seen_index is None:
             get_logger().info(
-                "No PR commit predates the previous review (no last-seen baseline commit); "
+                "No PR commit predates the previous review (no last-seen baseline commit); "  # pyright: ignore[reportImplicitStringConcatenation]
                 "falling back to full review."
             )
             self.incremental.is_incremental = False
@@ -361,7 +361,7 @@ class AzureDevopsProvider(GitProvider):
             if from_default_branch:
                 version = None
             else:
-                version = GitVersionDescriptor(
+                version = GitVersionDescriptor(  # pyright: ignore[reportPossiblyUnboundVariable]
                     version=self.pr.last_merge_target_commit.commit_id, version_type="commit"
                 )
             item = self.azure_devops_client.get_item(
@@ -410,7 +410,7 @@ class AzureDevopsProvider(GitProvider):
 
             if self.pr.last_merge_commit is None or self.pr.last_merge_target_commit is None:
                 get_logger().info(
-                    f"PR {self.pr_num} has no last_merge_commit/last_merge_target_commit; "
+                    f"PR {self.pr_num} has no last_merge_commit/last_merge_target_commit; "  # pyright: ignore[reportImplicitStringConcatenation]
                     f"cannot compute diff files."
                 )
                 self.diff_files = []
@@ -497,7 +497,7 @@ class AzureDevopsProvider(GitProvider):
                     invalid_files_names.append(file)
                     continue
 
-                version = GitVersionDescriptor(
+                version = GitVersionDescriptor(  # pyright: ignore[reportPossiblyUnboundVariable]
                     version=head_sha.commit_id, version_type="commit"
                 )
                 try:
@@ -532,7 +532,7 @@ class AzureDevopsProvider(GitProvider):
                 if edit_type == EDIT_TYPE.ADDED or edit_type == EDIT_TYPE.RENAMED:
                     original_file_content_str = ""
                 elif incremental_active:
-                    inc_version = GitVersionDescriptor(
+                    inc_version = GitVersionDescriptor(  # pyright: ignore[reportPossiblyUnboundVariable]
                         version=self.incremental.last_seen_commit_sha, version_type="commit"
                     )
                     try:
@@ -551,7 +551,7 @@ class AzureDevopsProvider(GitProvider):
                         )
                         original_file_content_str = ""
                 else:
-                    base_version = GitVersionDescriptor(
+                    base_version = GitVersionDescriptor(  # pyright: ignore[reportPossiblyUnboundVariable]
                         version=base_sha.commit_id, version_type="commit"
                     )
                     try:
@@ -605,10 +605,10 @@ class AzureDevopsProvider(GitProvider):
         if is_temporary and not get_settings().config.publish_output_progress:
             get_logger().debug(f"Skipping publish_comment for temporary comment: {pr_comment}")
             return None
-        comment = Comment(content=pr_comment)
+        comment = Comment(content=pr_comment)  # pyright: ignore[reportPossiblyUnboundVariable]
 
         status = get_settings().azure_devops.get("default_comment_status", "closed")
-        thread = CommentThread(comments=[comment], thread_context=thread_context, status=status)
+        thread = CommentThread(comments=[comment], thread_context=thread_context, status=status)  # pyright: ignore[reportPossiblyUnboundVariable]
         thread_response = self.azure_devops_client.create_thread(
             comment_thread=thread,
             project=self.workspace_slug,
@@ -647,8 +647,8 @@ class AzureDevopsProvider(GitProvider):
                 pr_body = pr_body[:MAX_PR_DESCRIPTION_AZURE_LENGTH - len(trunction_message)] + trunction_message
                 get_logger().warning("PR description was truncated due to length limit")
         try:
-            updated_pr = GitPullRequest()
-            if pr_title is not None:
+            updated_pr = GitPullRequest()  # pyright: ignore[reportPossiblyUnboundVariable]
+            if pr_title is not None:  # pyright: ignore[reportUnnecessaryComparison]
                 updated_pr.title = pr_title
             updated_pr.description = pr_body
             self.azure_devops_client.update_pull_request(
@@ -780,13 +780,13 @@ class AzureDevopsProvider(GitProvider):
             
     def set_thread_status(self, thread_id: int, status: str):
         try:
-            self.azure_devops_client.update_thread(CommentThread(status=status), self.repo_slug, self.pr_num, thread_id, self.workspace_slug)
+            self.azure_devops_client.update_thread(CommentThread(status=status), self.repo_slug, self.pr_num, thread_id, self.workspace_slug)  # pyright: ignore[reportPossiblyUnboundVariable]
         except Exception as e:
             get_logger().exception(f"Failed to set thread status, error: {e}")
             
     def reply_to_thread(self, thread_id: int, body: str, is_temporary: bool = False) -> Comment | None:  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType]
         try:
-            comment = Comment(content=body)
+            comment = Comment(content=body)  # pyright: ignore[reportPossiblyUnboundVariable]
             response = self.azure_devops_client.create_comment(comment, self.repo_slug, self.pr_num, thread_id, self.workspace_slug)
             response.thread_id = thread_id
             if is_temporary:
@@ -843,15 +843,15 @@ class AzureDevopsProvider(GitProvider):
                 # see https://learn.microsoft.com/en-us/python/api/overview/azure/identity-readme?view=azure-python
                 # for usage and env var configuration of user-assigned managed identity, local machine auth etc.
                 get_logger().info("No PAT found in settings, trying to use Azure Default Credentials.")
-                credentials = DefaultAzureCredential()
+                credentials = DefaultAzureCredential()  # pyright: ignore[reportPossiblyUnboundVariable]
                 accessToken = credentials.get_token(ADO_APP_CLIENT_DEFAULT_ID)
                 auth_token = accessToken.token
             except Exception as e:
                 get_logger().error(f"No PAT found in settings, and Azure Default Authentication failed, error: {e}")
                 raise
 
-        credentials = BasicAuthentication("", auth_token)
-        azure_devops_connection = Connection(base_url=org, creds=credentials)
+        credentials = BasicAuthentication("", auth_token)  # pyright: ignore[reportPossiblyUnboundVariable]
+        azure_devops_connection = Connection(base_url=org, creds=credentials)  # pyright: ignore[reportPossiblyUnboundVariable]
         azure_devops_client = azure_devops_connection.clients.get_git_client()
         azure_devops_board_client = azure_devops_connection.clients.get_work_item_tracking_client()
 

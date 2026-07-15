@@ -16,7 +16,7 @@ from pr_agent.tools.pr_reviewer import PRReviewer
 def is_true(value: str | bool) -> bool:
     if isinstance(value, bool):
         return value
-    if isinstance(value, str):
+    if isinstance(value, str):  # pyright: ignore[reportUnnecessaryIsInstance]
         return value.lower() == 'true'
     return False
 
@@ -213,13 +213,13 @@ async def run_action():
             if pr_url:
                 # legacy - supporting both GITHUB_ACTION and GITHUB_ACTION_CONFIG
                 auto_review = get_setting_or_env("GITHUB_ACTION.AUTO_REVIEW", None)  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
-                if auto_review is None:
+                if auto_review is None:  # pyright: ignore[reportUnnecessaryComparison]
                     auto_review = get_setting_or_env("GITHUB_ACTION_CONFIG.AUTO_REVIEW", None)  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
                 auto_describe = get_setting_or_env("GITHUB_ACTION.AUTO_DESCRIBE", None)  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
-                if auto_describe is None:
+                if auto_describe is None:  # pyright: ignore[reportUnnecessaryComparison]
                     auto_describe = get_setting_or_env("GITHUB_ACTION_CONFIG.AUTO_DESCRIBE", None)  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
                 auto_improve = get_setting_or_env("GITHUB_ACTION.AUTO_IMPROVE", None)  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
-                if auto_improve is None:
+                if auto_improve is None:  # pyright: ignore[reportUnnecessaryComparison]
                     auto_improve = get_setting_or_env("GITHUB_ACTION_CONFIG.AUTO_IMPROVE", None)  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
                 # Set the configuration for auto actions
                 get_settings().config.is_auto_command = True  # Set the flag to indicate that the command is auto
@@ -227,11 +227,11 @@ async def run_action():
                 get_logger().info(f"Running auto actions: auto_describe={auto_describe}, auto_review={auto_review}, auto_improve={auto_improve}")
 
                 # invoke by default all three tools
-                if auto_describe is None or is_true(auto_describe):
+                if auto_describe is None or is_true(auto_describe):  # pyright: ignore[reportUnnecessaryComparison]
                     await PRDescription(pr_url).run()
-                if auto_review is None or is_true(auto_review):
+                if auto_review is None or is_true(auto_review):  # pyright: ignore[reportUnnecessaryComparison]
                     await PRReviewer(pr_url).run()
-                if auto_improve is None or is_true(auto_improve):
+                if auto_improve is None or is_true(auto_improve):  # pyright: ignore[reportUnnecessaryComparison]
                     await PRCodeSuggestions(pr_url).run()
         else:
             get_logger().info(f"Skipping action: {action}")
@@ -289,7 +289,7 @@ async def run_action():
         workflow_run = event_payload.get("workflow_run", {})
         if workflow_run.get("event") not in ("pull_request", "pull_request_target"):
             get_logger().info(
-                f"Skipping workflow_run: originating event is '{workflow_run.get('event')}', "
+                f"Skipping workflow_run: originating event is '{workflow_run.get('event')}', "  # pyright: ignore[reportImplicitStringConcatenation]
                 "not 'pull_request' or 'pull_request_target'"
             )
             return
@@ -313,26 +313,26 @@ async def run_action():
         _inject_artifact_context()
 
         auto_review = get_setting_or_env("GITHUB_ACTION.AUTO_REVIEW", None)  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
-        if auto_review is None:
+        if auto_review is None:  # pyright: ignore[reportUnnecessaryComparison]
             auto_review = get_setting_or_env("GITHUB_ACTION_CONFIG.AUTO_REVIEW", None)  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
         auto_describe = get_setting_or_env("GITHUB_ACTION.AUTO_DESCRIBE", None)  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
-        if auto_describe is None:
+        if auto_describe is None:  # pyright: ignore[reportUnnecessaryComparison]
             auto_describe = get_setting_or_env("GITHUB_ACTION_CONFIG.AUTO_DESCRIBE", None)  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
         auto_improve = get_setting_or_env("GITHUB_ACTION.AUTO_IMPROVE", None)  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
-        if auto_improve is None:
+        if auto_improve is None:  # pyright: ignore[reportUnnecessaryComparison]
             auto_improve = get_setting_or_env("GITHUB_ACTION_CONFIG.AUTO_IMPROVE", None)  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
         get_settings().config.is_auto_command = True
         get_settings().pr_description.final_update_message = False
         get_logger().info(
-            f"Running auto actions for workflow_run: auto_describe={auto_describe}, "
+            f"Running auto actions for workflow_run: auto_describe={auto_describe}, "  # pyright: ignore[reportImplicitStringConcatenation]
             f"auto_review={auto_review}, auto_improve={auto_improve}"
         )
 
-        if auto_describe is None or is_true(auto_describe):
+        if auto_describe is None or is_true(auto_describe):  # pyright: ignore[reportUnnecessaryComparison]
             await PRDescription(pr_url).run()
-        if auto_review is None or is_true(auto_review):
+        if auto_review is None or is_true(auto_review):  # pyright: ignore[reportUnnecessaryComparison]
             await PRReviewer(pr_url).run()
-        if auto_improve is None or is_true(auto_improve):
+        if auto_improve is None or is_true(auto_improve):  # pyright: ignore[reportUnnecessaryComparison]
             await PRCodeSuggestions(pr_url).run()
 
 

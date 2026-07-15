@@ -483,7 +483,7 @@ class PRCodeSuggestions:
         suggestion_truncation_message = get_settings().get("PR_CODE_SUGGESTIONS.SUGGESTION_TRUNCATION_MESSAGE", "")
         if max_code_suggestion_length > 0:
             if len(suggestion['improved_code']) > max_code_suggestion_length:
-                get_logger().info(f"Truncated suggestion from {len(suggestion['improved_code'])} "
+                get_logger().info(f"Truncated suggestion from {len(suggestion['improved_code'])} "  # pyright: ignore[reportImplicitStringConcatenation]
                                   f"characters to {max_code_suggestion_length} characters")
                 suggestion['improved_code'] = suggestion['improved_code'][:max_code_suggestion_length]
                 suggestion['improved_code'] += f"\n{suggestion_truncation_message}"
@@ -495,7 +495,7 @@ class PRCodeSuggestions:
                          first_key="code_suggestions", last_key="label")
         if isinstance(data, list):
             data = {'code_suggestions': data}
-        elif not isinstance(data, dict):
+        elif not isinstance(data, dict):  # pyright: ignore[reportUnnecessaryIsInstance]
             data = {'code_suggestions': []}
         # remove or edit invalid suggestions
         suggestion_list = []

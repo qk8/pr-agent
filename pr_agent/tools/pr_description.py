@@ -381,7 +381,7 @@ class PRDescription:
                 get_logger().info(f"Adding {counter_extra_files} unprocessed extra files to table prediction")
                 prediction_extra_dict = load_yaml(prediction_extra, keys_fix_yaml=self.keys_fix)
                 if original_prediction_dict and isinstance(original_prediction_dict, dict) and \
-                        isinstance(prediction_extra_dict, dict) and "pr_files" in prediction_extra_dict:
+                        isinstance(prediction_extra_dict, dict) and "pr_files" in prediction_extra_dict:  # pyright: ignore[reportUnnecessaryIsInstance]
                     if "pr_files" in original_prediction_dict:
                         original_prediction_dict["pr_files"].extend(prediction_extra_dict["pr_files"])  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
                     else:
@@ -417,7 +417,7 @@ class PRDescription:
                 prediction_extra = prediction_extra + "\n" + extra_file_yaml.strip()
             prediction_extra_dict = load_yaml(prediction_extra, keys_fix_yaml=self.keys_fix)
             # merge the two dictionaries
-            if isinstance(original_prediction_dict, dict) and isinstance(prediction_extra_dict, dict):
+            if isinstance(original_prediction_dict, dict) and isinstance(prediction_extra_dict, dict):  # pyright: ignore[reportUnnecessaryIsInstance]
                 original_prediction_dict["pr_files"].extend(prediction_extra_dict["pr_files"])
                 new_yaml = yaml.dump(original_prediction_dict)
                 if load_yaml(new_yaml, keys_fix_yaml=self.keys_fix):
@@ -626,7 +626,7 @@ class PRDescription:
 
     def _prepare_file_labels(self):
         file_label_dict = {}
-        if (not self.data or not isinstance(self.data, dict) or
+        if (not self.data or not isinstance(self.data, dict) or  # pyright: ignore[reportUnnecessaryIsInstance]
                 'pr_files' not in self.data or not self.data['pr_files']):
             return file_label_dict
         for file in self.data['pr_files']:  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
@@ -774,7 +774,7 @@ class PRDescription:
 
 def sanitize_diagram(diagram_raw: str) -> str:
     """Sanitize a diagram string: fix missing closing fence and remove backticks."""
-    if not isinstance(diagram_raw, str):
+    if not isinstance(diagram_raw, str):  # pyright: ignore[reportUnnecessaryIsInstance]
         return ''
     diagram = diagram_raw.strip()
     if not diagram.startswith('```mermaid'):

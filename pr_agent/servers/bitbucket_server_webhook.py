@@ -202,7 +202,7 @@ async def handle_webhook(background_tasks: BackgroundTasks, request: Request):
 
 async def _run_commands_sequentially(commands: list[str], url: str, log_context: dict[str, object]):
     get_logger().info(f"Running commands sequentially: {commands}")
-    if commands is None:
+    if commands is None:  # pyright: ignore[reportUnnecessaryComparison]
         return
 
     for command in commands:

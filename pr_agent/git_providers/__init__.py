@@ -1,5 +1,4 @@
 from __future__ import annotations
-from typing import Any
 from starlette_context import context
 
 from pr_agent.config_loader import get_settings

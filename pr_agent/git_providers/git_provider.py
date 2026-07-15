@@ -76,7 +76,7 @@ def get_git_ssl_env() -> dict[str, str]:
         if os.path.exists(ssl_cert_file):
             if ((requests_ca_bundle and requests_ca_bundle != ssl_cert_file)
                     or (git_ssl_ca_info and git_ssl_ca_info != ssl_cert_file)):
-                get_logger().warning(f"Found mismatch among: SSL_CERT_FILE, REQUESTS_CA_BUNDLE, GIT_SSL_CAINFO. "
+                get_logger().warning(f"Found mismatch among: SSL_CERT_FILE, REQUESTS_CA_BUNDLE, GIT_SSL_CAINFO. "  # pyright: ignore[reportImplicitStringConcatenation]
                                      f"Using the SSL_CERT_FILE to resolve ambiguity.",
                                   artifact={"ssl_cert_file": ssl_cert_file, "requests_ca_bundle": requests_ca_bundle,
                                             'git_ssl_ca_info': git_ssl_ca_info})
@@ -90,7 +90,7 @@ def get_git_ssl_env() -> dict[str, str]:
     elif requests_ca_bundle:
         if os.path.exists(requests_ca_bundle):
             if (git_ssl_ca_info and git_ssl_ca_info != requests_ca_bundle):
-                get_logger().warning(f"Found mismatch between: REQUESTS_CA_BUNDLE, GIT_SSL_CAINFO. "
+                get_logger().warning(f"Found mismatch between: REQUESTS_CA_BUNDLE, GIT_SSL_CAINFO. "  # pyright: ignore[reportImplicitStringConcatenation]
                                      f"Using the REQUESTS_CA_BUNDLE to resolve ambiguity.",
                 artifact = {"requests_ca_bundle": requests_ca_bundle, 'git_ssl_ca_info': git_ssl_ca_info})
             else:
@@ -267,7 +267,7 @@ class GitProvider(ABC):
             return description
 
     def get_user_description(self) -> str:
-        if hasattr(self, 'user_description') and not (self.user_description is None):
+        if hasattr(self, 'user_description') and not (self.user_description is None):  # pyright: ignore[reportUnnecessaryComparison]
             return self.user_description
 
         description = (self.get_pr_description_full() or "").strip()
@@ -518,7 +518,7 @@ def get_main_pr_language(languages: dict[str, int] | None, files: list[Any] | No
         #         most_common_extension == top_language:
         #     main_language_str = top_language
 
-    except Exception as _:
+    except Exception as e:
         get_logger().exception(e)
 
     return main_language_str

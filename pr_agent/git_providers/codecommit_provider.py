@@ -119,7 +119,7 @@ class CodeCommitProvider(GitProvider):
         files = self.get_files()
         for diff_item in files:
             patch_filename = ""
-            if diff_item.a_blob_id is not None:
+            if diff_item.a_blob_id is not None:  # pyright: ignore[reportUnnecessaryComparison]
                 patch_filename = diff_item.a_path
                 original_file_content_str = self.codecommit_client.get_file(
                     self.repo_name, diff_item.a_path, self.pr.destination_commit)  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
@@ -128,7 +128,7 @@ class CodeCommitProvider(GitProvider):
             else:
                 original_file_content_str = ""
 
-            if diff_item.b_blob_id is not None:
+            if diff_item.b_blob_id is not None:  # pyright: ignore[reportUnnecessaryComparison]
                 patch_filename = diff_item.b_path
                 new_file_content_str = self.codecommit_client.get_file(self.repo_name, diff_item.b_path, self.pr.source_commit)  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
                 if isinstance(new_file_content_str, (bytes, bytearray)):

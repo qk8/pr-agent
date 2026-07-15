@@ -18,7 +18,7 @@ from pr_agent.algo.utils import update_settings_from_args
 from pr_agent.config_loader import get_settings, global_settings
 from pr_agent.git_providers import (get_git_provider,
                                     get_git_provider_with_context)
-from pr_agent.git_providers.git_provider import IncrementalPR
+
 from pr_agent.git_providers.utils import apply_repo_settings
 from pr_agent.identity_providers import get_identity_provider
 from pr_agent.identity_providers.identity_provider import Eligibility
@@ -115,7 +115,7 @@ async def handle_comments_on_pr(body: dict[str, Any],
     comment_id = body.get("comment", {}).get("id")
     provider = get_git_provider_with_context(pr_url=api_url)
     with get_logger().contextualize(**log_context):
-        if get_identity_provider().verify_eligibility("github", sender_id, api_url) is not Eligibility.NOT_ELIGIBLE:
+        if get_identity_provider().verify_eligibility("github", sender_id, api_url) is not Eligibility.NOT_ELIGIBLE:  # pyright: ignore[reportUnnecessaryComparison]
             get_logger().info(f"Processing comment on PR {api_url=}, comment_body={comment_body}")
             await agent.handle_request(api_url, comment_body,
                         notify=lambda: provider.add_eyes_reaction(comment_id, disable_eyes=disable_eyes))
@@ -138,7 +138,7 @@ async def handle_new_pr_opened(body: dict[str, Any],
     if action in get_settings().github_app.handle_pr_actions:  # ['opened', 'reopened', 'ready_for_review']
         # logic to ignore PRs with specific titles (e.g. "[Auto] ...")
         apply_repo_settings(api_url)
-        if get_identity_provider().verify_eligibility("github", sender_id, api_url) is not Eligibility.NOT_ELIGIBLE:
+        if get_identity_provider().verify_eligibility("github", sender_id, api_url) is not Eligibility.NOT_ELIGIBLE:  # pyright: ignore[reportUnnecessaryComparison]
             await _perform_auto_commands_github("pr_commands", agent, body, api_url, log_context)
         else:
             get_logger().info(f"User {sender=} is not eligible to process PR {api_url=}")
@@ -196,7 +196,7 @@ async def handle_push_trigger_for_new_commits(body: dict[str, Any],
             get_logger().info(f"Finished waiting to process push trigger for {api_url=} - continue with flow")
 
     try:
-        if get_identity_provider().verify_eligibility("github", sender_id, api_url) is not Eligibility.NOT_ELIGIBLE:
+        if get_identity_provider().verify_eligibility("github", sender_id, api_url) is not Eligibility.NOT_ELIGIBLE:  # pyright: ignore[reportUnnecessaryComparison]
             get_logger().info(f"Performing incremental review for {api_url=} because of {event=} and {action=}")
             await _perform_auto_commands_github("push_commands", agent, body, api_url, log_context)
 

@@ -1,7 +1,6 @@
 from __future__ import annotations
 import json
 import boto3
-from botocore.exceptions import ClientError
 
 from pr_agent.config_loader import get_settings
 from pr_agent.log import get_logger

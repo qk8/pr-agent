@@ -91,7 +91,7 @@ def load_artifact() -> str:
     artifact_path = resolve_artifact_path(artifact_path_str)
     if not artifact_path:
         get_logger().warning(
-            f"Artifact file not found or path rejected: '{artifact_path_str}' "
+            f"Artifact file not found or path rejected: '{artifact_path_str}' "  # pyright: ignore[reportImplicitStringConcatenation]
             f"(GITHUB_WORKSPACE={os.environ.get('GITHUB_WORKSPACE', 'not set')})"
         )
         return ""

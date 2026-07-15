@@ -16,7 +16,6 @@ from pr_agent.git_providers import get_git_provider
 from pr_agent.git_providers.git_provider import get_main_pr_language
 from pr_agent.git_providers.github_provider import GithubProvider
 from pr_agent.log import get_logger
-from pr_agent.servers.help import HelpMessage
 
 class PR_LineQuestions:
     def __init__(self, pr_url: str, args=None, ai_handler: partial | type[BaseAiHandler] = LiteLLMAIHandler):  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportMissingTypeArgument]

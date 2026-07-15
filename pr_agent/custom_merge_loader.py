@@ -38,7 +38,7 @@ def load(obj: "DynaBox", env: str | None = None, silent: bool = True, key: str |
     settings_files = obj.settings_files if hasattr(obj, 'settings_files') else (
         obj.settings_file) if hasattr(obj, 'settings_file') else []  # type: ignore[attr-defined]
     if not settings_files or not isinstance(settings_files, list):
-        get_logger().warning("No settings files specified, or missing keys "
+        get_logger().warning("No settings files specified, or missing keys "  # pyright: ignore[reportImplicitStringConcatenation]
                              "(tried looking for 'settings_files' or 'settings_file'), or not a list. Skipping loading.",
                              artifact={'toml_obj_attributes_names': dir(obj)})
         return
@@ -79,14 +79,14 @@ def load(obj: "DynaBox", env: str | None = None, silent: bool = True, key: str |
                 file_data: dict[str, dict[str, object]] = tomllib.load(f)
 
             # Handle sections (like [config], [default], etc.)
-            if not isinstance(file_data, dict):
+            if not isinstance(file_data, dict):  # pyright: ignore[reportUnnecessaryIsInstance]
                 get_logger().warning(f"TOML root is not a table in '{settings_file}'. Skipping.")
                 continue
 
             # Security: Check file contents for forbidden directives
             validate_file_security(file_data, settings_file)  # pyright: ignore[reportUnknownParameterType,reportMissingParameterType,reportUnknownMemberType,reportUnknownVariableType,reportCallIssue,reportGeneralTypeIssues,reportOperatorIssue,reportAssignmentType,reportFunctionMemberAccess,reportUnknownArgumentType]
             for section_name, section_data in file_data.items():
-                if not isinstance(section_data, dict):
+                if not isinstance(section_data, dict):  # pyright: ignore[reportUnnecessaryIsInstance]
                     get_logger().warning(f"Section '{section_name}' in '{settings_file}' is not a table. Skipping.")
                     continue
                 for field, field_value in section_data.items():
@@ -156,7 +156,7 @@ def validate_file_security(file_data: dict[str, object], filename: str) -> None:
     def check_dict(data: dict[str, object], path: str = "", max_depth: int = MAX_DEPTH) -> None:
         if max_depth <= 0:
             raise SecurityError(
-                f"Maximum nesting depth exceeded at {path}. "
+                f"Maximum nesting depth exceeded at {path}. "  # pyright: ignore[reportImplicitStringConcatenation]
                 f"Possible attempt to cause stack overflow."
             )
 
@@ -165,7 +165,7 @@ def validate_file_security(file_data: dict[str, object], filename: str) -> None:
 
             if key.lower() in forbidden_keys_to_reasons:
                 raise SecurityError(
-                    f"Security error in {filename}: "
+                    f"Security error in {filename}: "  # pyright: ignore[reportImplicitStringConcatenation]
                     f"Forbidden directive '{key}' found at {full_path}. Reason: {forbidden_keys_to_reasons[key.lower()]}"
                 )
 
